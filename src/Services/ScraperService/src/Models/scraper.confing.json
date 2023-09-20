@@ -1,0 +1,6 @@
+{
+    "faengslet": {
+        "useHeadless": true,
+        "browser": "chrome"
+    } 
+}
