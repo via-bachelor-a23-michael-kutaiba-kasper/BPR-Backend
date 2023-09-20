@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScraperService.API", "ScraperService.API\ScraperService.API.csproj", "{718C96EF-E210-47BE-91B1-31788F3ECEBD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScraperService.Application", "ScraperService.Application\ScraperService.Application.csproj", "{78A254BA-761A-4C6D-95B7-06C28E251984}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScraperService.Domain", "ScraperService.Domain\ScraperService.Domain.csproj", "{3A3EDB58-974F-4417-BA88-AF2AF806173B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScraperService.Infrastructure", "ScraperService.Infrastructure\ScraperService.Infrastructure.csproj", "{54E5B370-5E4C-4A33-8A77-E892CD8AE4CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScraperService.Main", "ScraperService.Main\ScraperService.Main.csproj", "{7C228869-FCF6-40F3-AF72-8B45E2D28932}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,10 +20,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{718C96EF-E210-47BE-91B1-31788F3ECEBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{718C96EF-E210-47BE-91B1-31788F3ECEBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{718C96EF-E210-47BE-91B1-31788F3ECEBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{718C96EF-E210-47BE-91B1-31788F3ECEBD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{78A254BA-761A-4C6D-95B7-06C28E251984}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{78A254BA-761A-4C6D-95B7-06C28E251984}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78A254BA-761A-4C6D-95B7-06C28E251984}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,5 +32,9 @@ Global
 		{54E5B370-5E4C-4A33-8A77-E892CD8AE4CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54E5B370-5E4C-4A33-8A77-E892CD8AE4CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54E5B370-5E4C-4A33-8A77-E892CD8AE4CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C228869-FCF6-40F3-AF72-8B45E2D28932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C228869-FCF6-40F3-AF72-8B45E2D28932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C228869-FCF6-40F3-AF72-8B45E2D28932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C228869-FCF6-40F3-AF72-8B45E2D28932}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
