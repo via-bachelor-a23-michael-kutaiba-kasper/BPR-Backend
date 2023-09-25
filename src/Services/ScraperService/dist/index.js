@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Faengslet_1 = require("./Strategy/Faengslet");
-console.log("Started scraping");
-const strategy = new Faengslet_1.FaengsletScraperStrategy();
-console.log("Scraper created");
-strategy.scrape().then((d) => console.log(d));
+const load_config_1 = require("./Configuration/load-config");
+const config = (0, load_config_1.loadConfig)();
+console.log(config);
 //# sourceMappingURL=index.js.map
