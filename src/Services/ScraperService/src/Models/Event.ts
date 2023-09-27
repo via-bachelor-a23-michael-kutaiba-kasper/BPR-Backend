@@ -1,5 +1,6 @@
 export interface Event {
     title: string;
+    host: string;
     url: string;
     location: Location;
     dateDisplay?: string;

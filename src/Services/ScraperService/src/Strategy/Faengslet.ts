@@ -56,6 +56,7 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
             const event = {
                 title,
                 price,
+                host: "Faengslet",
                 description,
                 url: page.url(),
                 location: {
