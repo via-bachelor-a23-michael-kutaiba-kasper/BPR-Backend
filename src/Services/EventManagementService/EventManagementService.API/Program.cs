@@ -1,6 +1,9 @@
 using System.Text.Json;
+using Dapper;
+using EventManagementService.Domain.Models;
 using Google.Api.Gax;
 using Google.Cloud.PubSub.V1;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,19 +39,19 @@ TopicName topicName = new TopicName("pubsubtest", "test");
 
 PublisherServiceApiClient publisherService = await new PublisherServiceApiClientBuilder
 {
-EmulatorDetection = EmulatorDetection.EmulatorOrProduction
+    EmulatorDetection = EmulatorDetection.EmulatorOrProduction
 }.BuildAsync();
 
 // Use the client as you'd normally do, to create a topic in this example.
 try
 {
-
     publisherService.CreateTopic(topicName);
 }
-catch(Exception e)
+catch (Exception e)
 {
     Console.WriteLine(e.Message);
 }
+
 // Create the SubscriberServiceApiClient using the SubscriberServiceApiClientBuilder
 // and setting the EmulatorDection property.
 SubscriberServiceApiClient subscriberService = await new SubscriberServiceApiClientBuilder
@@ -59,13 +62,14 @@ SubscriberServiceApiClient subscriberService = await new SubscriberServiceApiCli
 // Use the client as you'd normally do, to create a subscription in this example.
 SubscriptionName subscriptionName = new SubscriptionName("pubsubtest", "testsub");
 try
-{ 
+{
     subscriberService.CreateSubscription(subscriptionName, topicName, pushConfig: null, ackDeadlineSeconds: 60);
 }
 catch (Exception e)
 {
     Console.WriteLine(e.Message);
 }
+
 Console.WriteLine(subscriberService.GetSubscription(subscriptionName).Topic);
 
 // Create the SubscriberClient using SubscriberClientBuild to set the EmulatorDetection property.
@@ -77,13 +81,37 @@ SubscriberClient subscriber = await new SubscriberClientBuilder
 
 List<PubsubMessage> receivedMessages = new List<PubsubMessage>();
 
+Console.WriteLine("Server started. Setting up subscription...");
 // Use the client as you'd normally do, to listen for messages in this example.
 await subscriber.StartAsync((msg, cancellationToken) =>
 {
-    Console.WriteLine($"HERE {JsonSerializer.Serialize(msg)}");
-    receivedMessages.Add(msg);
-    Console.WriteLine($"Received message {msg.MessageId} published at {msg.PublishTime.ToDateTime()}");
-    Console.WriteLine($"Text: '{msg.Data.ToStringUtf8()}'");
+    Console.WriteLine("Pubsub trigger");
+    var messageContents = msg.Data.ToStringUtf8();
+    Console.WriteLine(messageContents);
+    var events = JsonSerializer.Deserialize<List<Event>>(messageContents, new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true
+    });
+
+    using (var connection =
+           new NpgsqlConnection("Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres"))
+    {
+        connection.Open();
+        Console.WriteLine("Inserting new event");
+        events.ForEach(e =>
+        {
+            const string cmd =
+                "INSERT INTO public.event(title, url, location, description) values (@title, @url, @location, @description)";
+            var parameters = new
+            {
+                @title = e.Title, @url = e.Url, @description = e.Description,
+                @location = JsonSerializer.Serialize(e.Location)
+            };
+
+            connection.Execute(cmd,parameters);
+        });
+    }
+
     // In this example we stop the subscriber when the message is received.
     // You may leave the subscriber running, and it will continue to received published messages
     // if any.
@@ -101,6 +129,7 @@ foreach (ReceivedMessage received in response.ReceivedMessages)
     Console.WriteLine($"Received message {msg.MessageId} published at {msg.PublishTime.ToDateTime()}");
     Console.WriteLine($"Text: '{msg.Data.ToStringUtf8()}'");
 }
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

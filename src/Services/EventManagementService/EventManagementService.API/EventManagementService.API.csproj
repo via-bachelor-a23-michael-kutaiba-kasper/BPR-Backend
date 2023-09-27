@@ -15,6 +15,8 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\EventManagementService.DbUp\EventManagementService.DbUp.csproj" />
+    <ProjectReference Include="..\EventManagementService.Domain\EventManagementService.Domain.csproj" />
     <ProjectReference Include="..\EventManagementService.Infrastructure\EventManagementService.Infrastructure.csproj" />
   </ItemGroup>
 
