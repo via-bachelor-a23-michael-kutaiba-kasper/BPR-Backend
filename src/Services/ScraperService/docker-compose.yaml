@@ -19,6 +19,7 @@ services:
       - PUBSUB_PORT=8085
       - PUBSUB_PROJECT=pubsubtest
       - PUBSUB_TOPIC=test
+      - PUBSUB_SUBSCRIPTION=testsub
 networks:
   default:
     name: vibeverse-network

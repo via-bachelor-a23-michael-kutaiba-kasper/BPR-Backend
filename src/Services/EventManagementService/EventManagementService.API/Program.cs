@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Google.Api.Gax;
 using Google.Cloud.PubSub.V1;
 
@@ -30,15 +31,24 @@ Console.WriteLine("Test start");
 
 // Create the PublisherServiceApiClient using the PublisherServiceApiClientBuilder
 // and setting the EmulatorDection property.
+// Use the client as you'd normally do, to create a topic in this example.
+TopicName topicName = new TopicName("pubsubtest", "test");
+
 PublisherServiceApiClient publisherService = await new PublisherServiceApiClientBuilder
 {
-    EmulatorDetection = EmulatorDetection.EmulatorOrProduction
+EmulatorDetection = EmulatorDetection.EmulatorOrProduction
 }.BuildAsync();
 
 // Use the client as you'd normally do, to create a topic in this example.
-TopicName topicName = new TopicName("pubsubtest", "test");
-publisherService.CreateTopic(topicName);
+try
+{
 
+    publisherService.CreateTopic(topicName);
+}
+catch(Exception e)
+{
+    Console.WriteLine(e.Message);
+}
 // Create the SubscriberServiceApiClient using the SubscriberServiceApiClientBuilder
 // and setting the EmulatorDection property.
 SubscriberServiceApiClient subscriberService = await new SubscriberServiceApiClientBuilder
@@ -47,18 +57,16 @@ SubscriberServiceApiClient subscriberService = await new SubscriberServiceApiCli
 }.BuildAsync();
 
 // Use the client as you'd normally do, to create a subscription in this example.
-SubscriptionName subscriptionName = new SubscriptionName("pubsubtest", "test");
-subscriberService.CreateSubscription(subscriptionName, topicName, pushConfig: null, ackDeadlineSeconds: 60);
-
-// Create the PublisherClient using PublisherClientBuilder to set the EmulatorDetection property.
-PublisherClient publisher = await new PublisherClientBuilder
+SubscriptionName subscriptionName = new SubscriptionName("pubsubtest", "testsub");
+try
+{ 
+    subscriberService.CreateSubscription(subscriptionName, topicName, pushConfig: null, ackDeadlineSeconds: 60);
+}
+catch (Exception e)
 {
-    TopicName = topicName,
-    EmulatorDetection = EmulatorDetection.EmulatorOrProduction
-}.BuildAsync();
-// Use the client as you'd normally do, to send a message in this example.
-await publisher.PublishAsync("Hello, Pubsub");
-await publisher.ShutdownAsync(TimeSpan.FromSeconds(15));
+    Console.WriteLine(e.Message);
+}
+Console.WriteLine(subscriberService.GetSubscription(subscriptionName).Topic);
 
 // Create the SubscriberClient using SubscriberClientBuild to set the EmulatorDetection property.
 SubscriberClient subscriber = await new SubscriberClientBuilder
@@ -66,11 +74,13 @@ SubscriberClient subscriber = await new SubscriberClientBuilder
     SubscriptionName = subscriptionName,
     EmulatorDetection = EmulatorDetection.EmulatorOrProduction
 }.BuildAsync();
+
 List<PubsubMessage> receivedMessages = new List<PubsubMessage>();
 
 // Use the client as you'd normally do, to listen for messages in this example.
 await subscriber.StartAsync((msg, cancellationToken) =>
 {
+    Console.WriteLine($"HERE {JsonSerializer.Serialize(msg)}");
     receivedMessages.Add(msg);
     Console.WriteLine($"Received message {msg.MessageId} published at {msg.PublishTime.ToDateTime()}");
     Console.WriteLine($"Text: '{msg.Data.ToStringUtf8()}'");
@@ -84,6 +94,13 @@ await subscriber.StartAsync((msg, cancellationToken) =>
 });
 //
 
+var response = subscriberService.Pull(subscriptionName, maxMessages: 10);
+foreach (ReceivedMessage received in response.ReceivedMessages)
+{
+    PubsubMessage msg = received.Message;
+    Console.WriteLine($"Received message {msg.MessageId} published at {msg.PublishTime.ToDateTime()}");
+    Console.WriteLine($"Text: '{msg.Data.ToStringUtf8()}'");
+}
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
