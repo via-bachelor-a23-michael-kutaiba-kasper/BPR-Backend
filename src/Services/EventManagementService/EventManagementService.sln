@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagementService.Doma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagementService.Infrastructure", "EventManagementService.Infrastructure\EventManagementService.Infrastructure.csproj", "{7BF03513-D2B5-474E-A3F5-3091A0112E70}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventManagementService.DbUp", "EventManagementService.DbUp\EventManagementService.DbUp.csproj", "{FD45B04B-5314-4267-8782-E29225AEB050}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{7BF03513-D2B5-474E-A3F5-3091A0112E70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BF03513-D2B5-474E-A3F5-3091A0112E70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BF03513-D2B5-474E-A3F5-3091A0112E70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD45B04B-5314-4267-8782-E29225AEB050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD45B04B-5314-4267-8782-E29225AEB050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD45B04B-5314-4267-8782-E29225AEB050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD45B04B-5314-4267-8782-E29225AEB050}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

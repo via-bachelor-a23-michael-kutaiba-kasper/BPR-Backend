@@ -8,6 +8,22 @@ services:
       - 8080:80
     env_file:
       - ./.env
+  eventmanagement_postgres: 
+    container_name: eventmanagement_postgres
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+volumes:
+  postgres_data:
+    driver: local
+    
 networks:
   default:
     name: vibeverse-network
