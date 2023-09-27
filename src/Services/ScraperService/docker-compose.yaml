@@ -1,0 +1,23 @@
+version: '3'
+services:
+  scraper:
+    container_name: scraper-service
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+    - 8082:80
+  pubsub:
+    image: gcr.io/google.com/cloudsdktool/cloud-sdk:emulators
+    ports: 
+      - 8085:8085
+    command: gcloud beta emulators pubsub start --project=pubsubtest --host-port=0.0.0.0:8085
+    environment:
+      - PUBSUB_PORT=8085
+      - PUBSUB_PROJECT=pubsubtest
+      - PUBSUB_TOPIC=mytopic
+      - PUBSUB_SUBSCRIPTION=mysubscription
+networks:
+  default:
+    name: vibeverse-network
+    external: true
