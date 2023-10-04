@@ -1,0 +1,22 @@
+{
+    "name": "scraperservice",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc",
+        "prestart": "npm run build",
+        "start": "node dist/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@playwright/test": "^1.38.0",
+        "@types/node": "^20.6.3",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "@google-cloud/pubsub": "^4.0.6"
+    }
+}

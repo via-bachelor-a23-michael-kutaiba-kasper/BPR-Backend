@@ -5,8 +5,10 @@ import (
 	"couch-cli/internal/dotnet"
 	"couch-cli/internal/osutil"
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
+	"runtime"
 )
 
 func CreatNewService(name string) error {
@@ -24,7 +26,7 @@ func CreatNewService(name string) error {
 		log.Fatal(fmt.Sprintf("Existing service with name %v detected. Please use another name or delete existing service\n", name))
 	}
 
-	err = os.Mkdir(name, 0644)
+	err = os.Mkdir(name, fs.FileMode(getPermissionCode()))
 	if err != nil {
 		return err
 	}
@@ -173,4 +175,12 @@ func addDependenciesForProject(project string, csprojPath string) error {
 	}
 
 	return nil
+}
+
+func getPermissionCode() int {
+	if runtime.GOOS == "darwin" {
+		return 0777
+	}
+
+	return 0644
 }

@@ -1,14 +1,37 @@
 services:
-    eventmanagementservice:
-        container_name: eventmanagementservice-service
-        build:
-            context: .
-            dockerfile: ./Dockerfile
-        ports:
-            - 8080:80
-        env_file:
-            - ./.env
+  eventmanagementservice:
+    container_name: eventmanagementservice-service
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:80
+    env_file:
+      - ./.env
+  eventmanagement_postgres: 
+    container_name: eventmanagement_postgres
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  eventmanagement_dbup:
+    container_name: eventmanagements_DbUp
+    build:
+      context: .
+      dockerfile: ./EventManagementService.DbUp/Dockerfile
+    depends_on:
+      - eventmanagement_postgres
+    
+volumes:
+  postgres_data:
+    driver: local
+    
 networks:
-    default:
-        name: couch-potatoes-network
-        external: true
+  default:
+    name: vibeverse-network
+    external: true

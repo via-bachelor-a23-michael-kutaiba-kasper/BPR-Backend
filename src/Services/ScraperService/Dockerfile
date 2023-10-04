@@ -1,13 +1,15 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 as build-env
-WORKDIR /src
-COPY . .
-RUN dotnet restore
-COPY . .
-RUN dotnet publish -c Release -o /publish
+FROM node:18
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 as runtime
 WORKDIR /app
-COPY --from=build-env /publish .
-EXPOSE 80
-ENTRYPOINT ["dotnet"]
-CMD ["ScraperService.API.dll"]
+
+COPY package*.json ./
+COPY . .
+
+RUN npm install
+RUN npx playwright install-deps
+RUN npx playwright install
+RUN npm run build
+
+
+EXPOSE 3000
+CMD [ "npm", "start" ]
