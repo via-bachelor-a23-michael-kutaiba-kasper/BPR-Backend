@@ -1,0 +1,26 @@
+{
+    "queries": [
+        {
+            "name": "books",
+            "args": [],
+            "resolver": {
+                "url": "http://eventmanagementservice-service:8081/api/v1/books",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "book",
+            "args": [
+                {
+                    "name": "id",
+                    "type": "String",
+                    "for": "url"
+                }
+            ],
+            "resolver": {
+                "url": "http://eventmanagementservice-service:8081/api/v1/books/{id}",
+                "method": "GET"
+            }
+        }
+    ]
+}

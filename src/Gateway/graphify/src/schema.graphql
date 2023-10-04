@@ -1,0 +1,26 @@
+type GeoLocation {
+    lat: String
+    long: String
+}
+
+type Location {
+    country: String
+    city: String
+    postalCode: String
+    streetNumber: String
+    houseNumber: String
+    floor: String
+    geolocation: GeoLocation
+}
+
+type Event {
+    title: String
+    location: Location
+    url: String
+    description: String
+}
+
+type Query {
+    events: [Event]
+    event(id: Int): Event
+}
