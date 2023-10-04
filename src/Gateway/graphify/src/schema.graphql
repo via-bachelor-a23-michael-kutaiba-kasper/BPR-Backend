@@ -20,7 +20,15 @@ type Event {
     description: String
 }
 
+type Todo {
+    userId: Int
+    id: Int
+    title: String
+    completed: Boolean
+}
+
 type Query {
     events: [Event]
     event(id: Int): Event
+    todos: [Todo]
 }

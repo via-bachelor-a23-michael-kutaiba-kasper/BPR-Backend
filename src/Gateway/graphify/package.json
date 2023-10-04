@@ -6,7 +6,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "clean": "rimraf dist/",
-        "copyFiles": "copyfiles -u 1 src/**/*.graphql dist/",
+        "copyFiles": "copyfiles -u 1 src/**/*.graphql src/**/*.json dist/",
         "prebuild": "npm run clean",
         "build": "tsc && npm run copyFiles",
         "prestart": "npm run build",
