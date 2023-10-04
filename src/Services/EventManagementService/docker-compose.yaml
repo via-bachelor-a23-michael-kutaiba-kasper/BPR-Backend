@@ -24,8 +24,6 @@ services:
     build:
       context: .
       dockerfile: ./EventManagementService.DbUp/Dockerfile
-    ports:
-      - 8081:80
     depends_on:
       - eventmanagement_postgres
     
