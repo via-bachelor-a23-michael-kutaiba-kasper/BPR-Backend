@@ -17,7 +17,7 @@ async function main() {
     const app = gateway({
         typeDefs: graphqlSchema,
         resolvers: buildQueryResolvers(queryConfig),
-        port: 8080,
+        port: 4242,
     });
 
     await app.start();

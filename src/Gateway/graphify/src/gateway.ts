@@ -21,7 +21,7 @@ export function gateway(config: GatewayConfig): Gateway {
 
     const start = async () => {
         const { url } = await startStandaloneServer(server, {
-            listen: { port: config.port ?? 8080 },
+            listen: { port: config.port ?? 4242, host: "0.0.0.0" },
         });
 
         console.log(`🚀  Server ready at: ${url}`);
