@@ -16,7 +16,6 @@
 
 
     <ItemGroup>
-      <None Remove="Migrations\0001_Initial.sql" />
       <EmbeddedResource Include="Migrations\0001_Initial.sql" />
     </ItemGroup>
 

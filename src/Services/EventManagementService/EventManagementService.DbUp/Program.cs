@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using DbUp;
 
-var connectionString = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres";
-
+var connectionString = "Server=eventmanagement_postgres;Port=5432;Database=postgres;User Id=postgres;Password=postgres";
+EnsureDatabase.For.PostgresqlDatabase(connectionString);
 var upgrader =
     DeployChanges.To
         .PostgresqlDatabase(connectionString)

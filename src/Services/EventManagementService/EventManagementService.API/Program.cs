@@ -39,7 +39,7 @@ Console.WriteLine("Test start");
 // Create the PublisherServiceApiClient using the PublisherServiceApiClientBuilder
 // and setting the EmulatorDection property.
 // Use the client as you'd normally do, to create a topic in this example.
-new Thread( async () =>
+Thread thread = new Thread(async () =>
 {
     TopicName topicName = new TopicName("pubsubtest", "test");
 
@@ -129,11 +129,13 @@ new Thread( async () =>
         // You may leave the subscriber running, and it will continue to received published messages
         // if any.
         // This is non-blocking, and the returned Task may be awaited.
-        subscriber.StopAsync(TimeSpan.FromSeconds(15));
+        //subscriber.StopAsync(TimeSpan.FromSeconds(15));
         // Return Reply.Ack to indicate this message has been handled.
         return Task.FromResult(SubscriberClient.Reply.Ack);
     });
-}).Start();
+});
+//thread.IsBackground = false;
+thread.Start();
 //
 
 

@@ -19,6 +19,15 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  eventmanagement_dbup:
+    container_name: eventmanagements_DbUp
+    build:
+      context: .
+      dockerfile: ./EventManagementService.DbUp/Dockerfile
+    ports:
+      - 8081:80
+    depends_on:
+      - eventmanagement_postgres
     
 volumes:
   postgres_data:
