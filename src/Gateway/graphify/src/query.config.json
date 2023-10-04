@@ -1,0 +1,34 @@
+{
+    "queries": [
+        {
+            "name": "events",
+            "args": [],
+            "resolver": {
+                "url": "http://eventmanagementservice-service:8081/api/v1/books",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "event",
+            "args": [
+                {
+                    "name": "id",
+                    "type": "Int",
+                    "for": "url"
+                }
+            ],
+            "resolver": {
+                "url": "http://eventmanagementservice-service:8081/api/v1/books/{id}",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "todos",
+            "args": [],
+            "resolver": {
+                "url": "https://jsonplaceholder.typicode.com/todos",
+                "method": "GET"
+            }
+        }
+    ]
+}
