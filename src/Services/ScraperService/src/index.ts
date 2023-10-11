@@ -16,6 +16,7 @@ async function main() {
 
     // Send a message to the topic
     await topic.publishMessage({ json: event });
+
     console.log("Message published");
 }
 main();
