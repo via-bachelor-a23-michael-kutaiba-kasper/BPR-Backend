@@ -1,0 +1,30 @@
+name: Scraper service CI/CD flow
+
+on:
+    push:
+        branches:
+            - "main"
+        paths:
+            - src/Services/ScraperService/src/**
+            - src/Services/ScraperService/Dockerfile
+
+jobs:
+    test:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v3
+
+            - name: Setup docker
+              uses: docker/setup-buildx-action@v2
+
+            - name: Login to docker
+              uses: docker/login-action@v2
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_PASSWORD }}
+            - name: Build image
+              run: docker build -t "$DOCKERHUB_USERNAME"/vibeverse-scraperservice:latest .
+              working-directory: src/Services/ScraperService
+              env:
+                  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

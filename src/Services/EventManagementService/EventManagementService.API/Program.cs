@@ -41,7 +41,7 @@ Console.WriteLine("Test start");
 // Use the client as you'd normally do, to create a topic in this example.
 Thread thread = new Thread(async () =>
 {
-    TopicName topicName = new TopicName("pubsubtest", "test");
+    TopicName topicName = new TopicName("bachelorshenanigans", "test");
 
     PublisherServiceApiClient publisherService = await new PublisherServiceApiClientBuilder
     {
@@ -66,7 +66,7 @@ Thread thread = new Thread(async () =>
     }.BuildAsync();
 
 // Use the client as you'd normally do, to create a subscription in this example.
-    SubscriptionName subscriptionName = new SubscriptionName("pubsubtest", "testsub");
+    SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "testsub");
     try
     {
         subscriberService.CreateSubscription(subscriptionName, topicName, pushConfig: null, ackDeadlineSeconds: 60);
@@ -101,7 +101,7 @@ Thread thread = new Thread(async () =>
         {
             using (var connection =
                    new NpgsqlConnection(
-                       "Server=eventmanagement_postgres;Port=5432;Database=postgres;User Id=postgres;Password=postgres"))
+                       "Server=34.159.144.157;Port=5432;Database=postgres;User Id=postgres;Password=postgres"))
             {
                 connection.Open();
                 Console.WriteLine("Inserting new event");
@@ -139,7 +139,7 @@ thread.Start();
 //
 
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
