@@ -9,5 +9,5 @@ services:
 
 networks:
     default:
-        name: couch-potatoes-network
+        name: vibeverse-network
         external: true
