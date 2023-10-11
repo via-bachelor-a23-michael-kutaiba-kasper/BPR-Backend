@@ -3,6 +3,7 @@ using Dapper;
 using EventManagementService.Application.ScraperEvents;
 using EventManagementService.Domain.Models;
 using Google.Api.Gax;
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.PubSub.V1;
 using Npgsql;
 
@@ -43,9 +44,11 @@ Thread thread = new Thread(async () =>
 {
     TopicName topicName = new TopicName("bachelorshenanigans", "test");
 
+    var serviceAccountKeyJson = Environment.GetEnvironmentVariable("SERVICE_ACCOUNT_KEY_JSON");
     PublisherServiceApiClient publisherService = await new PublisherServiceApiClientBuilder
     {
-        EmulatorDetection = EmulatorDetection.EmulatorOrProduction
+        EmulatorDetection = EmulatorDetection.EmulatorOrProduction,
+        Credential = GoogleCredential.FromJson(serviceAccountKeyJson)
     }.BuildAsync();
 
 // Use the client as you'd normally do, to create a topic in this example.
@@ -62,7 +65,8 @@ Thread thread = new Thread(async () =>
 // and setting the EmulatorDection property.
     SubscriberServiceApiClient subscriberService = await new SubscriberServiceApiClientBuilder
     {
-        EmulatorDetection = EmulatorDetection.EmulatorOrProduction
+        EmulatorDetection = EmulatorDetection.EmulatorOrProduction,
+        Credential = GoogleCredential.FromJson(serviceAccountKeyJson)
     }.BuildAsync();
 
 // Use the client as you'd normally do, to create a subscription in this example.

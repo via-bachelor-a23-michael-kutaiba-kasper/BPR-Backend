@@ -8,14 +8,12 @@ COPY package*.json ./
 COPY . .
 
 # Restore service account key
-RUN echo ${SERVICE_ACCOUNT_KEY} > /app/service_account_key.json
-
 RUN npm install
 RUN npx playwright install-deps
 RUN npx playwright install
 RUN npm run build
 
-ENV GOOGLE_APPLICATION_CREDENTIALS=/app/service_account_key.json
+ENV SERVICE_ACCOUNT_KEY_JSON=${SERVICE_ACCOUNT_KEY}
 
 
 EXPOSE 3000

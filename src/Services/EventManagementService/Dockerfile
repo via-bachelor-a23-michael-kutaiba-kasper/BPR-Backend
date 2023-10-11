@@ -11,10 +11,8 @@ COPY --from=build-env /publish .
 
 ARG SERVICE_ACCOUNT_KEY=NOTHING
 
-RUN echo ${SERVICE_ACCOUNT_KEY} > /app/service_account_key.json
-
 EXPOSE 80
-ENV GOOGLE_APPLICATION_CREDENTIALS=/app/service_acount_key.json
+ENV SERVICE_ACCOUNT_KEY_JSON=${SERVICE_ACCOUNT_KEY}
 
 ENTRYPOINT ["dotnet"]
 CMD ["EventManagementService.API.dll"]
