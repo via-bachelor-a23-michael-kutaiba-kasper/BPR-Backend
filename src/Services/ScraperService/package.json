@@ -17,6 +17,7 @@
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@google-cloud/pubsub": "^4.0.6"
+        "@google-cloud/pubsub": "^4.0.6",
+        "google-auth-library": "^9.1.0"
     }
 }
