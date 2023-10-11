@@ -5,7 +5,7 @@ on:
         branches:
             - "main"
         paths:
-            - src/Services/ScraperService/src/**
+            - src/Services/ScraperService/**
             - src/Services/ScraperService/Dockerfile
 
 jobs:
