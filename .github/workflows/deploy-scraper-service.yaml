@@ -23,8 +23,10 @@ jobs:
               with:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
                   password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
             - name: Build image
-              run: docker build -t "$DOCKERHUB_USERNAME"/vibeverse-scraperservice:latest .
+              run: docker build --build-arg SERVICE_ACCOUNT_KEY=${SERVICE_ACCOUNT_KEY_JSON} -t "$DOCKERHUB_USERNAME"/vibeverse-scraperservice:latest .
               working-directory: src/Services/ScraperService
               env:
                   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+                  SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}

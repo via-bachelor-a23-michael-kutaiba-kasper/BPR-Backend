@@ -5,7 +5,7 @@ on:
         branches:
             - "main"
         paths:
-            - src/Services/EventManagementService/EvenemtnManagementService.*/**
+            - src/Services/EventManagementService/EventManagementService.*/**
             - src/Services/EventManagementService/Dockerfile
 
 jobs:
@@ -23,8 +23,10 @@ jobs:
               with:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
                   password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
             - name: Build image
-              run: docker build -t "$DOCKERHUB_USERNAME"/vibeverse-eventmanagementservice:latest .
+              run: docker build  --build-arg SERVICE_ACCOUNT_KEY=${SERVICE_ACCOUNT_KEY_JSON} -t "$DOCKERHUB_USERNAME"/vibeverse-eventmanagementservice:latest .
               working-directory: src/Services/EventManagementService
               env:
                   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+                  SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
