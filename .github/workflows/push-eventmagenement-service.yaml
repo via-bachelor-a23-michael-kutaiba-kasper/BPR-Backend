@@ -1,11 +1,12 @@
-name: Scraper service CD flow
+name: Event Management container image
 
 on:
     push:
         branches:
             - "main"
         paths:
-            - src/Services/ScraperService/*/**
+            - src/Services/EventManagementService/EventManagementService.*/**
+            - src/Services/EventManagementService/Dockerfile
 
 jobs:
     push-container-image:
@@ -24,13 +25,13 @@ jobs:
                   password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
             - name: Build image
-              run: docker build --build-arg SERVICE_ACCOUNT_KEY="$SERVICE_ACCOUNT_KEY_JSON" -t "$DOCKERHUB_USERNAME"/vibeverse-scraperservice:latest .
-              working-directory: src/Services/ScraperService
+              run: docker build --build-arg SERVICE_ACCOUNT_KEY="$SERVICE_ACCOUNT_KEY_JSON" -t "$DOCKERHUB_USERNAME"/vibeverse-eventmanagementservice:latest .
+              working-directory: src/Services/EventManagementService
               env:
                   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
                   SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
 
             - name: Push image
-              run: docker push "$DOCKERHUB_USERNAME"/vibeverse-scraperservice:latest
+              run: docker push "$DOCKERHUB_USERNAME"/vibeverse-eventmanagementservice:latest
               env:
                   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
