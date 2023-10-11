@@ -30,3 +30,8 @@ jobs:
               env:
                   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
                   SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
+
+            - name: Push image
+              run: docker push "$DOCKERHUB_USERNAME"/vibeverse-scraperservice:latest"
+              env:
+                  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
