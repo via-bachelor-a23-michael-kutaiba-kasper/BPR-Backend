@@ -19,7 +19,6 @@ async function main() {
         resolvers: buildQueryResolvers(queryConfig),
         port: 4242,
     });
-
     await app.start();
 }
 
