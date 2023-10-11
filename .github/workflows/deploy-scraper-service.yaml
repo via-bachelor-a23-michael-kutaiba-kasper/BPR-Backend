@@ -5,8 +5,7 @@ on:
         branches:
             - "main"
         paths:
-            - src/Services/ScraperService/**
-            - src/Services/ScraperService/Dockerfile
+            - src/Services/ScraperService/*/**
 
 jobs:
     push-container-image:
