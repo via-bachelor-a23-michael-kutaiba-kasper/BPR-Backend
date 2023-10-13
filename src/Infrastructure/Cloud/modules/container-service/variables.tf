@@ -38,3 +38,11 @@ variable "gcp_service_account_key_path" {
   description = "Allows for overwriting path to the GCP service account key in our services"
   default     = "./service-account-key.json"
 }
+
+variable "container_envs" {
+  type = map(string)
+
+  description = "Optional list of environment variables to pass to the service"
+  sensitive   = false
+  default     = {}
+}

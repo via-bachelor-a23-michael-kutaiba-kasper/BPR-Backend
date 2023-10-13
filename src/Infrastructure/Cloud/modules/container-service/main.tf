@@ -18,13 +18,16 @@ resource "google_cloud_run_v2_service" "service" {
     }
     containers {
       image = var.image
-      env {
-        name  = "TMDB_API_KEY"
-        value = var.tmdb_api_key
-      }
 
+      dynamic "env" {
+        for_each = var.container_envs
+        content {
+          name  = env.key
+          value = env.value
+        }
+      }
       env {
-        name  = "GCP_SERVICE_ACCOUNT_KEY_JSON"
+        name  = "SERVICE_ACCOUNT_KEY_JSON"
         value = var.gcp_service_account_key_json
       }
 
