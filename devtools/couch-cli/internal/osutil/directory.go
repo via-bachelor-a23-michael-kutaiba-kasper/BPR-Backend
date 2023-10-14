@@ -1,6 +1,8 @@
 package osutil
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -22,19 +24,18 @@ func ChangeDirectoryRelative(relativePath string) error {
 func GetProjectRootDir() (string, error) {
 	projectRootDirName := "BPR-Backend"
 
-	for {
-		path, err := os.Getwd()
-		if err != nil {
-			return "", err
-		}
+	cwd, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
 
-		pathParts := strings.Split(filepath.ToSlash(path), "/")
-		if pathParts[len(pathParts)-1] == projectRootDirName {
-			return path, nil
-		}
+	pathParts := strings.Split(filepath.ToSlash(cwd), "/")
 
-		if err = ChangeDirectoryRelative(".."); err != nil {
-			return "", err
+	for idx, part := range pathParts {
+		if part == projectRootDirName {
+			return strings.Join(pathParts[0:idx+1], string(os.PathSeparator)), nil
 		}
 	}
+
+	return "", errors.New(fmt.Sprintf("Failed to locate %v", projectRootDirName))
 }

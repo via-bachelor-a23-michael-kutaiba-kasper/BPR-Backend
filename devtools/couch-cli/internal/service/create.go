@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"log"
 	"os"
+	"path"
 	"runtime"
 )
 
@@ -81,6 +82,14 @@ func CreatNewService(name string, withDbUp bool) error {
 		}
 	}
 
+	for _, project := range projectsToCreate {
+		csProjPath := fmt.Sprintf("%v/%v.%v/%v.%v.csproj", currentDir, name, project, name, project)
+		err := addReferencesForProject(project, csProjPath, name)
+		if err != nil {
+			return err
+		}
+	}
+
 	log.Println("Creating docker-compose.yaml...")
 	err = docker.WriteComposeFile(name)
 	if err != nil {
@@ -131,17 +140,87 @@ func getTemplateForProject(project string) string {
 	switch project {
 	case "API":
 		template = "webapi"
+		break
 	case "Application":
 		template = "classlib"
+		break
 	case "Domain":
 		template = "classlib"
+		break
 	case "Infrastructure":
 		template = "console"
+		break
 	case "DbUp":
 		template = "console"
+		break
 	}
 
 	return template
+}
+
+func addReferencesForProject(project string, csprojPath string, serviceName string) error {
+	message := "Adding references for %v project..."
+	getCsProjForProject := func(project string, serviceName string) (string, error) {
+		projectRootDir, err := osutil.GetProjectRootDir()
+		if err != nil {
+			return "", err
+		}
+
+		serviceRootDirPath := path.Join(projectRootDir, "src", "Services", serviceName)
+		toBeAddedCsProj := path.Join(serviceRootDirPath, fmt.Sprintf("%v.%v", serviceName, project), fmt.Sprintf("%v.%v.csproj", serviceName, project))
+		return toBeAddedCsProj, nil
+	}
+
+	switch project {
+	case "API":
+		log.Printf(message, project)
+		projectsToAdd := []string{"Application", "DbUp", "Domain", "Infrastructure"}
+		for _, p := range projectsToAdd {
+			toCsProjPath, err := getCsProjForProject(p, serviceName)
+			if err != nil {
+				return err
+			}
+			output, err := dotnet.AddProjectReference(csprojPath, toCsProjPath)
+			if err != nil {
+				return err
+			}
+			log.Println(output)
+		}
+		break
+
+	case "Application":
+		log.Printf(message, project)
+		projectsToAdd := []string{"Domain", "Infrastructure"}
+		for _, p := range projectsToAdd {
+			toCsProjPath, err := getCsProjForProject(p, serviceName)
+			if err != nil {
+				return err
+			}
+			output, err := dotnet.AddProjectReference(csprojPath, toCsProjPath)
+			if err != nil {
+				return err
+			}
+			log.Println(output)
+		}
+		break
+
+	case "Infrastructure":
+		log.Printf(message, project)
+		projectsToAdd := []string{"Domain"}
+		for _, p := range projectsToAdd {
+			toCsProjPath, err := getCsProjForProject(p, serviceName)
+			if err != nil {
+				return err
+			}
+			output, err := dotnet.AddProjectReference(csprojPath, toCsProjPath)
+			if err != nil {
+				return err
+			}
+			log.Println(output)
+		}
+		break
+	}
+	return nil
 }
 
 func addDependenciesForProject(project string, csprojPath string) error {
