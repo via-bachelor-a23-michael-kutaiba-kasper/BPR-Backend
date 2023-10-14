@@ -66,6 +66,19 @@ func CreatNewService(name string, withDbUp bool) error {
 		}
 		log.Println(projectOutput)
 
+		if project == "DbUp" {
+			projectRootDir, err := osutil.GetProjectRootDir()
+			if err != nil {
+				return err
+			}
+
+			programCsFilePath := path.Join(projectRootDir, "src", "Services", name, fmt.Sprintf("%v.%v", name, project), "Program.cs")
+			err = os.WriteFile(programCsFilePath, []byte(getDbUpSource()), 0777)
+			if err != nil {
+				return err
+			}
+		}
+
 		currentDir, err = os.Getwd()
 		if err != nil {
 			return err
@@ -283,4 +296,39 @@ func getPermissionCode() int {
 	}
 
 	return 0644
+}
+
+func getDbUpSource() string {
+	return `
+    using System.Reflection;
+using DbUp;
+
+var connectionString = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres";
+EnsureDatabase.For.PostgresqlDatabase(connectionString);
+var upgrader =
+    DeployChanges.To
+        .PostgresqlDatabase(connectionString)
+        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+        .LogToConsole()
+        .Build();
+
+var result = upgrader.PerformUpgrade();
+
+if (!result.Successful)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine(result.Error);
+    Console.ResetColor();
+#if DEBUG
+    Console.ReadLine();
+#endif
+    return -1;
+}
+
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine("Success!");
+Console.ResetColor();
+
+return 0;
+    `
 }
