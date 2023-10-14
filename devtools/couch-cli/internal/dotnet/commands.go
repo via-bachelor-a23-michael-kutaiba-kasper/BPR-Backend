@@ -46,6 +46,16 @@ func AddNugetPackageToProject(csprojFile string, packageName string) (string, er
 	return string(output), nil
 }
 
+func AddProjectReference(fromCsProjFile string, toCsProjFile string) (string, error) {
+	cmd := exec.Command("dotnet", "add", fromCsProjFile, "reference", toCsProjFile)
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	return string(output), nil
+}
+
 func Run() error {
 	cmd := exec.Command("dotnet", "run")
 

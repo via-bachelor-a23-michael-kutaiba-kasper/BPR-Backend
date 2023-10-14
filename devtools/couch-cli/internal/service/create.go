@@ -11,7 +11,7 @@ import (
 	"runtime"
 )
 
-func CreatNewService(name string) error {
+func CreatNewService(name string, withDbUp bool) error {
 	log.Printf("Service to create: %v\n", name)
 	if err := changeToServicesDirectory(); err != nil {
 		return err
@@ -51,6 +51,9 @@ func CreatNewService(name string) error {
 	solutionFilePath := fmt.Sprintf("%v/%v", currentDir, solutionFile)
 
 	projectsToCreate := []string{"API", "Application", "Domain", "Infrastructure"}
+	if withDbUp {
+		projectsToCreate = append(projectsToCreate, "DbUp")
+	}
 
 	for _, project := range projectsToCreate {
 		template := getTemplateForProject(project)
@@ -134,6 +137,8 @@ func getTemplateForProject(project string) string {
 		template = "classlib"
 	case "Infrastructure":
 		template = "console"
+	case "DbUp":
+		template = "console"
 	}
 
 	return template
@@ -145,17 +150,15 @@ func addDependenciesForProject(project string, csprojPath string) error {
 	switch project {
 	case "API":
 		log.Printf(installMessage, project)
-		output, err := dotnet.AddNugetPackageToProject(csprojPath, "MediatR")
-		if err != nil {
-			return err
+		dependencies := []string{"MediatR", "AutoMapper"}
+		for _, dependency := range dependencies {
+			output, err := dotnet.AddNugetPackageToProject(csprojPath, dependency)
+			if err != nil {
+				return err
+			}
+			log.Println(output)
 		}
-		log.Println(output)
-
-		output, err = dotnet.AddNugetPackageToProject(csprojPath, "AutoMapper")
-		if err != nil {
-			return err
-		}
-		log.Println(output)
+		break
 
 	case "Application":
 		log.Printf(installMessage, project)
@@ -164,14 +167,32 @@ func addDependenciesForProject(project string, csprojPath string) error {
 			return err
 		}
 		log.Println(output)
+		break
 
 	case "Infrastructure":
 		log.Printf(installMessage, project)
-		output, err := dotnet.AddNugetPackageToProject(csprojPath, "AutoMapper")
-		if err != nil {
-			return err
+		dependencies := []string{"AutoMapper", "Google.Cloud.PubSub.V1"}
+		for _, dependency := range dependencies {
+			output, err := dotnet.AddNugetPackageToProject(csprojPath, dependency)
+			if err != nil {
+				return err
+			}
+			log.Println(output)
 		}
-		log.Println(output)
+		break
+
+	case "DbUp":
+		log.Printf(installMessage, project)
+		dependencies := []string{"Dapper", "Npgsql", "dbup", "dbup-postgresql"}
+		for _, dependency := range dependencies {
+			output, err := dotnet.AddNugetPackageToProject(csprojPath, dependency)
+			if err != nil {
+				return err
+			}
+			log.Println(output)
+
+		}
+		break
 	}
 
 	return nil

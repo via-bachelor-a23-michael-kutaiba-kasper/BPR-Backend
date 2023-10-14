@@ -5,9 +5,12 @@ Copyright © 2023 Michael Bui 293886@via.dk
 package cmd
 
 import (
-    "couch-cli/internal/service"
-    "github.com/spf13/cobra"
+	"couch-cli/internal/service"
+
+	"github.com/spf13/cobra"
 )
+
+var withDbUp bool
 
 var (
 	// serviceCmd represents the service command
@@ -24,7 +27,7 @@ This includes:
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			serviceName := args[0]
-			err := service.CreatNewService(serviceName)
+			err := service.CreatNewService(serviceName, withDbUp)
 			if err != nil {
 				return err
 			}
@@ -46,4 +49,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// serviceCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	serviceCmd.Flags().BoolVar(&withDbUp, "with-dbup", false, "Include DbUp project. Usage: couch-cli new service --with-dbup MyService")
 }

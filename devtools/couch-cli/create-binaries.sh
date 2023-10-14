@@ -2,6 +2,8 @@
 
 # Clean previous binaries
 
+echo "CLeaning binaries..."
+
 MAC_FILE=../../couch-cli-mac
 WINDOWS_FILE=../../couch-cli.exe
 
@@ -14,6 +16,7 @@ if [[ -f "$WINDOWS_FILE" ]]; then
 fi
 
 # Building binary for Mac M2 (arm64)
+echo "Building Mac OSX target"
 export GOOS=darwin
 export GOARCH=arm64
 
@@ -22,7 +25,10 @@ chmod +x "$MAC_FILE"
 
 
 # Building binary for Windows (amd64)
+echo "Building Windows target"
 export GOOS=windows
 export GOARCH=amd64
 
 go build -o ../../couch-cli.exe ./main.go
+
+echo "Binaries are now available at the project root directory."
