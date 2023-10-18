@@ -24,7 +24,7 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
         };
 
         const url = expandUrlParams(args, config);
-        const res = await fetch(config.resolver.url, requestOptions);
+        const res = await fetch(url, requestOptions);
         return res.json();
     };
 }
@@ -32,20 +32,23 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
 function expandUrlParams(args: any, config: QueryDeclaration): string {
     const argMap = new Map<string, any>();
     const urlArgs = config.args.filter((arg) => arg.for === "url");
-
     if (urlArgs.length === 0) {
-        return config.resolver.url;
+        return `${config.resolver.host}${config.resolver.endpoint}`;
     }
-
     urlArgs.forEach((arg) => argMap.set(arg.name, args[arg.name]));
 
-    const urlParts = config.resolver.url.split("/");
-    urlParts.forEach((part, idx) => {
+    const endpointParts = config.resolver.endpoint.split("/");
+    endpointParts.forEach((part, idx) => {
         if (part.startsWith("{") && part.endsWith("}")) {
             const argName = part.slice(1, part.length - 1);
-            urlParts[idx] = argMap.get(argName);
+            endpointParts[idx] = argMap.get(argName);
         }
     });
 
-    return urlParts.join("/");
+    let endpointExpanded = endpointParts.join("/");
+    let host =
+        process.env[`QUERY_${config.name.toUpperCase()}_HOST`] ??
+        config.resolver.host;
+
+    return `${host}${endpointExpanded}`;
 }

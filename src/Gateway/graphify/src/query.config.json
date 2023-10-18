@@ -4,7 +4,8 @@
             "name": "events",
             "args": [],
             "resolver": {
-                "url": "http://eventmanagementservice-service:8081/api/v1/books",
+                "host": "http://eventmanagementservice-service:8081",
+                "endpoint": "/api/v1/events",
                 "method": "GET"
             }
         },
@@ -18,7 +19,8 @@
                 }
             ],
             "resolver": {
-                "url": "http://eventmanagementservice-service:8081/api/v1/books/{id}",
+                "host": "http://eventmanagementservice-service:8081",
+                "endpoint": "/api/v1/events/{id}",
                 "method": "GET"
             }
         },
@@ -26,7 +28,8 @@
             "name": "todos",
             "args": [],
             "resolver": {
-                "url": "https://jsonplaceholder.typicode.com/todos",
+                "host": "https://jsonplaceholder.typicode.com",
+                "endpoint": "/todos",
                 "method": "GET"
             }
         }
