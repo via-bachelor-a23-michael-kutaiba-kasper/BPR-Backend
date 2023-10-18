@@ -29,6 +29,7 @@ type Todo {
 
 type Query {
     events: [Event]
+    allPublicEvents: [Event]
     event(id: Int): Event
     todos: [Todo]
 }

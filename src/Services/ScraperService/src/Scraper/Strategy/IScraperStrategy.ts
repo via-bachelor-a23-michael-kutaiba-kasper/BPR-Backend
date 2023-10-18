@@ -1,4 +1,4 @@
-import { Event } from "../Models/Event";
+import { Event } from "../../Models/Event";
 export interface IScraperStrategy {
     scrape(): Promise<Event[]>;
 }
