@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Dapper;
 using EventManagementService.API.Settings;
-using EventManagementService.Application.ScraperEvents;
+using EventManagementService.Application;
 using EventManagementService.Domain.Models;
 using Google.Api.Gax;
 using Google.Apis.Auth.OAuth2;
@@ -21,7 +21,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IScraperEvents, ScraperEvents>();
+builder.Services.AddApplicationServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

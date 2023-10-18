@@ -1,4 +1,5 @@
 using EventManagementService.Application.ScraperEvents;
+using EventManagementService.Application.ScraperEvents.Repository;
 using EventManagementService.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,16 +9,16 @@ namespace EventManagementService.API.Controllers;
 [Route("api/v1/events")]
 public class EventController : ControllerBase
 {
-    private IScraperEvents _scraperEvents;
+    private ISqlScraperEvents _sqlScraperEvents;
 
-    public EventController(IScraperEvents scraperEvents)
+    public EventController(ISqlScraperEvents sqlScraperEvents)
     {
-        _scraperEvents = scraperEvents;
+        _sqlScraperEvents = sqlScraperEvents;
     }
 
     [HttpGet("allEvents")]
     public async Task<ActionResult<List<Event>>> GetEvents()
     {
-        return Ok(await _scraperEvents.GetEvents());
+        return Ok(await _sqlScraperEvents.GetEvents());
     }
 }

@@ -1,23 +1,31 @@
 using Dapper;
+using EventManagementService.Application.ScraperEvents.Model;
 using EventManagementService.Domain.Models;
 using EventManagementService.Infrastructure.AppSettings;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
-namespace EventManagementService.Application.ScraperEvents;
+namespace EventManagementService.Application.ScraperEvents.Repository;
 
-public interface IScraperEvents
+public interface ISqlScraperEvents
 {
     Task<List<Event>> GetEvents();
 }
 
-public class ScraperEvents : IScraperEvents
+public class SqlScraperEvents : ISqlScraperEvents
 {
     private readonly IOptions<ConnectionStrings> _options;
+    private readonly ILogger<SqlScraperEvents> _logger;
 
-    public ScraperEvents(IOptions<ConnectionStrings> options)
+    public SqlScraperEvents
+    (
+        IOptions<ConnectionStrings> options,
+        ILogger<SqlScraperEvents> logger
+    )
     {
         _options = options;
+        _logger = logger;
     }
 
     public async Task<List<Event>> GetEvents()
