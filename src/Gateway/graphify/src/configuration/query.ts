@@ -18,7 +18,8 @@ export type QueryArgument = {
 };
 
 export type ResolverDeclaration = {
-    url: string;
+    host: string;
+    endpoint: string;
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 };
 
