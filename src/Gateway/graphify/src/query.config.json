@@ -4,8 +4,17 @@
             "name": "events",
             "args": [],
             "resolver": {
-                "host": "http://eventmanagementservice-service:8081",
+                "host": "http://eventmanagementservice-service:8080",
                 "endpoint": "/api/v1/events",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "allPublicEvents",
+            "args": [],
+            "resolver": {
+                "host": "http://eventmanagementservice-service:8080",
+                "endpoint": "/api/v1/events/allPublicEvents",
                 "method": "GET"
             }
         },
@@ -19,7 +28,7 @@
                 }
             ],
             "resolver": {
-                "host": "http://eventmanagementservice-service:8081",
+                "host": "http://eventmanagementservice-service:8080",
                 "endpoint": "/api/v1/events/{id}",
                 "method": "GET"
             }
