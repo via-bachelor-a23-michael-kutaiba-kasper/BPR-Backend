@@ -14,6 +14,9 @@ async function main() {
     const scraperConfig = loadConfig();
     const scraper = new Scraper(scraperConfig);
 
+    const GCP_PROJECT = process.env["GCP_PROJECT"] || "bachelorshenanigans";
+    const TOPIC_NAME = process.env["GCP_TOPIC_NAME"] || "test";
+
     const app: Express = express();
     app.use(bodyParser.json());
     app.use(cors());
@@ -24,7 +27,7 @@ async function main() {
         const dto: ScrapeDTO = req.body;
         const events = await scraper.scrape(dto.strategy);
         console.log(events);
-        await publishEvents(events);
+        await publishEvents(events, GCP_PROJECT, TOPIC_NAME);
         res.status(204).send({});
     });
 
