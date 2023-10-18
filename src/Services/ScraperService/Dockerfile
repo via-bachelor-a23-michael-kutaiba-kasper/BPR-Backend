@@ -13,7 +13,7 @@ RUN npx playwright install-deps
 RUN npx playwright install
 RUN npm run build
 
-ENV SERVICE_ACCOUNT_KEY_JSON=${SERVICE_ACCOUNT_KEY}
+# ENV SERVICE_ACCOUNT_KEY_JSON=${SERVICE_ACCOUNT_KEY}
 
 
 EXPOSE 3000

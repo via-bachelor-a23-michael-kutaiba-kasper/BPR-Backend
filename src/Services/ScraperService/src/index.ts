@@ -4,7 +4,7 @@ import { quickstart } from "./Infrastructure/PubsubTopicFactory";
 
 async function main() {
     // Creates a new topic
-    const topic = await quickstart("bachelorshenanigans");
+    const topic = await quickstart("pubsubtest");
     console.log(await topic.exists());
 
     console.log("Started scraping");
