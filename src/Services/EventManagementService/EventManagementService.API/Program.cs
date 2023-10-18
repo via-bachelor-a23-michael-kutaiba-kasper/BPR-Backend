@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Dapper;
+using EventManagementService.API.Settings;
 using EventManagementService.Application.ScraperEvents;
 using EventManagementService.Domain.Models;
 using Google.Api.Gax;
@@ -8,6 +9,10 @@ using Google.Cloud.PubSub.V1;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Options configs
+builder.Services.AddSettingsConfigurations(builder.Configuration);
+;
 
 // Add services to the container.
 
@@ -42,14 +47,25 @@ Console.WriteLine("Test start");
 // Use the client as you'd normally do, to create a topic in this example.
 Thread thread = new Thread(async () =>
 {
-    TopicName topicName = new TopicName("bachelorshenanigans", "test");
+    TopicName topicName = new TopicName("pubsubtest", "test");
 
     var serviceAccountKeyJson = Environment.GetEnvironmentVariable("SERVICE_ACCOUNT_KEY_JSON");
-    PublisherServiceApiClient publisherService = await new PublisherServiceApiClientBuilder
+    PublisherServiceApiClient publisherService;
+    if (serviceAccountKeyJson != null)
     {
-        EmulatorDetection = EmulatorDetection.EmulatorOrProduction,
-        Credential = GoogleCredential.FromJson(serviceAccountKeyJson)
-    }.BuildAsync();
+        publisherService = await new PublisherServiceApiClientBuilder
+        {
+            EmulatorDetection = EmulatorDetection.EmulatorOrProduction,
+            Credential = GoogleCredential.FromJson(serviceAccountKeyJson)
+        }.BuildAsync();
+    }
+    else
+    {
+        publisherService = await new PublisherServiceApiClientBuilder
+        {
+            EmulatorDetection = EmulatorDetection.EmulatorOrProduction
+        }.BuildAsync();
+    }
 
 // Use the client as you'd normally do, to create a topic in this example.
     try
@@ -63,14 +79,25 @@ Thread thread = new Thread(async () =>
 
 // Create the SubscriberServiceApiClient using the SubscriberServiceApiClientBuilder
 // and setting the EmulatorDection property.
-    SubscriberServiceApiClient subscriberService = await new SubscriberServiceApiClientBuilder
+    SubscriberServiceApiClient subscriberService;
+    if (serviceAccountKeyJson != null)
     {
-        EmulatorDetection = EmulatorDetection.EmulatorOrProduction,
-        Credential = GoogleCredential.FromJson(serviceAccountKeyJson)
-    }.BuildAsync();
+        subscriberService = await new SubscriberServiceApiClientBuilder
+        {
+            EmulatorDetection = EmulatorDetection.EmulatorOrProduction,
+            Credential = GoogleCredential.FromJson(serviceAccountKeyJson)
+        }.BuildAsync();
+    }
+    else
+    {
+        subscriberService = await new SubscriberServiceApiClientBuilder
+        {
+            EmulatorDetection = EmulatorDetection.EmulatorOrProduction
+        }.BuildAsync();
+    }
 
 // Use the client as you'd normally do, to create a subscription in this example.
-    SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "testsub");
+    SubscriptionName subscriptionName = new SubscriptionName("pubsubtest", "testsub");
     try
     {
         subscriberService.CreateSubscription(subscriptionName, topicName, pushConfig: null, ackDeadlineSeconds: 60);
@@ -105,7 +132,7 @@ Thread thread = new Thread(async () =>
         {
             using (var connection =
                    new NpgsqlConnection(
-                       "Server=34.159.144.157;Port=5432;Database=postgres;User Id=postgres;Password=postgres"))
+                       "Server=eventmanagement_postgres;Port=5432;Database=postgres;User Id=postgres;Password=postgres"))
             {
                 connection.Open();
                 Console.WriteLine("Inserting new event");
