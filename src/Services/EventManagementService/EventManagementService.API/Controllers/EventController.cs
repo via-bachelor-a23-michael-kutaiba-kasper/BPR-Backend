@@ -24,8 +24,8 @@ public class EventController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("allEvents")]
-    public async Task<ActionResult<List<Event>>> GetEvents()
+    [HttpGet("allPublicEvents")]
+    public async Task<ActionResult<List<Event>>> GetPublicEvents()
     {
         TopicName topicName = new TopicName("pubsubtest", "test");
         SubscriptionName subscriptionName = new SubscriptionName("pubsubtest", "testsub");
