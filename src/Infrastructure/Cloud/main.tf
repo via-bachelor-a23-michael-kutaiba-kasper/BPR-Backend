@@ -18,7 +18,30 @@ module "api_gateway" {
   gcp_service_account_key_json = var.gcp_service_account_key_json
   max_instances                = 1
   container_envs = {
-    "QUERY_EVENTS_URL" = "TEST"
-    "QUERY_EVENT_URL"  = "TEST2"
+    "QUERY_EVENTS_URL" = module.scraper_service.service_url
+    "QUERY_EVENT_URL"  = module.scraper_service.service_url
   }
 }
+
+# module "eventmanagement_service" {
+#   source                       = "./modules/container-service"
+#   service_name                 = "event-management"
+#   image                        = "docker.io/${var.docker_username}/vibeverse-eventmanagementservice"
+#   port                         = 4242
+#   gcp_service_account_key_json = var.gcp_service_account_key_json
+#   max_instances                = 1
+# }
+
+# module "scraper_service" {
+#   source                       = "./modules/container-service"
+#   service_name                 = "scraper"
+#   image                        = "docker.io/${var.docker_username}/vibeverse-scraperservice"
+#   port                         = 4242
+#   gcp_service_account_key_json = var.gcp_service_account_key_json
+#   max_instances                = 1
+
+#   container_envs = {
+#     "GCP_PROJECT"    = var.gcp_project_id
+#     "GCP_TOPIC_NAME" = "test"
+#   }
+# }
