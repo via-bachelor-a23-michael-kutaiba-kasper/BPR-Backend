@@ -6,7 +6,10 @@ export async function quickstart(
     topicNameOrId = "test" // Name for the new topic to create
 ): Promise<Topic> {
     // Instantiates a client
-    const credentials = JSON.parse(process.env["SERVICE_ACCOUNT_KEY_JSON"]!);
+    const serviceAccountJson = process.env["SERVICE_ACCOUNT_KEY_JSON"];
+    const credentials = serviceAccountJson
+        ? JSON.parse(serviceAccountJson)
+        : undefined;
     let pubsub: PubSub;
     if (credentials) {
         pubsub = new PubSub({ projectId, credentials });

@@ -1,22 +1,35 @@
-import { FaengsletScraperStrategy } from "./Strategy/Faengslet";
+import express, { Express, Request, Response } from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
 
-import { quickstart } from "./Infrastructure/PubsubTopicFactory";
+import { loadConfig } from "./Configuration/load-config";
+import { Scraper } from "./Scraper/Scraper";
+import { publishEvents } from "./Infrastructure/publish-events";
+
+export type ScrapeDTO = {
+    strategy: string;
+};
 
 async function main() {
-    // Creates a new topic
-    const topic = await quickstart("bachelorshenanigans");
-    console.log(await topic.exists());
+    const scraperConfig = loadConfig();
+    const scraper = new Scraper(scraperConfig);
 
-    console.log("Started scraping");
-    const strategy = new FaengsletScraperStrategy();
-    console.log("Scraper created");
-    const event = await strategy.scrape();
+    const app: Express = express();
+    app.use(bodyParser.json());
+    app.use(cors());
 
-    console.log(topic.name);
+    const port = process.env["PORT"] || 8082;
 
-    // Send a message to the topic
-    await topic.publishMessage({ json: event });
+    app.post("/scrape", async (req: Request, res: Response) => {
+        const dto: ScrapeDTO = req.body;
+        const events = await scraper.scrape(dto.strategy);
+        console.log(events);
+        await publishEvents(events);
+        res.status(204).send({});
+    });
 
-    console.log("Message published");
+    app.listen(port, () => {
+        console.log(`🚀 Scraper Service is now listening on ${port}`);
+    });
 }
 main();
