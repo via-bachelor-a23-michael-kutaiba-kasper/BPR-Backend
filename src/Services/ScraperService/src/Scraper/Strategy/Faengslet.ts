@@ -1,4 +1,4 @@
-import { Event } from "../Models/Event";
+import { Event } from "../../Models/Event";
 import { IScraperStrategy } from "./IScraperStrategy";
 import { chromium } from "playwright";
 
@@ -25,17 +25,14 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
         const urls2 = await Promise.all(urls);
 
         for (let url of urls2) {
-            console.log(url);
             await page.goto(url);
 
             const titleElement = page.locator("h1.h1-small");
             const title = (await titleElement.textContent()) ?? "";
-            console.log(title);
 
             const timeElement = page.locator("div.event-line").first();
             let timeString = await timeElement.textContent();
             timeString = timeString ? timeString.trim() : "";
-            console.log(timeString);
 
             let price = "";
 
@@ -43,8 +40,6 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
                 const priceElement = page.locator("div.event-line").nth(1);
                 price = (await priceElement.textContent()) ?? "";
             }
-
-            console.log(price);
 
             const descriptionElement = page.locator("div.rte > p").first();
             const description =
@@ -68,7 +63,6 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
                 },
                 images: [imageUrl],
             };
-            console.log(event);
             scrapedEvents.push(event);
         }
         await browser.close();

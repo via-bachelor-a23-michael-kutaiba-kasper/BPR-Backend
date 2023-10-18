@@ -6,9 +6,11 @@ services:
       context: .
       dockerfile: ./Dockerfile
     ports:
-    - 8082:80
+    - 8082:8082
     environment:
     - PUBSUB_EMULATOR_HOST=pubsub:8085
+    - GCP_PROJECT=pubsubtest
+    - GCP_TOPIC_NAME=test
   pubsub:
     container_name: pubsub
     image: gcr.io/google.com/cloudsdktool/cloud-sdk:emulators
