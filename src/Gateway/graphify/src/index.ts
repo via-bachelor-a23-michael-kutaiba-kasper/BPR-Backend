@@ -14,10 +14,12 @@ async function main() {
         path.join(__dirname, "query.config.json")
     );
 
+    const port = process.env["PORT"] ?? 4242;
+
     const app = gateway({
         typeDefs: graphqlSchema,
         resolvers: buildQueryResolvers(queryConfig),
-        port: 4242,
+        port: port,
     });
     await app.start();
 }

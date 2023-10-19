@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "@google-cloud/pubsub": "^4.0.6",
+        "@sparticuz/chromium": "^117.0.0",
         "body-parser": "^1.20.2",
         "cors": "^2.8.5",
         "express": "^4.18.2",
