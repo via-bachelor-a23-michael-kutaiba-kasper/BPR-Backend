@@ -4,7 +4,8 @@
             "name": "events",
             "args": [],
             "resolver": {
-                "host": "http://eventmanagementservice-service:8080",
+                "host": "http://eventmanagementservice-service",
+                "port": 80,
                 "endpoint": "/api/v1/events",
                 "method": "GET"
             }
@@ -13,7 +14,8 @@
             "name": "allPublicEvents",
             "args": [],
             "resolver": {
-                "host": "http://eventmanagementservice-service:8080",
+                "host": "http://eventmanagementservice-service",
+                "port": 80,
                 "endpoint": "/api/v1/events/allPublicEvents",
                 "method": "GET"
             }
@@ -28,8 +30,9 @@
                 }
             ],
             "resolver": {
-                "host": "http://eventmanagementservice-service:8080",
+                "host": "http://eventmanagementservice-service",
                 "endpoint": "/api/v1/events/{id}",
+                "port": 80,
                 "method": "GET"
             }
         },
@@ -39,6 +42,7 @@
             "resolver": {
                 "host": "https://jsonplaceholder.typicode.com",
                 "endpoint": "/todos",
+                "port": 80,
                 "method": "GET"
             }
         }
