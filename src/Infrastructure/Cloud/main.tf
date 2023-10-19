@@ -20,6 +20,7 @@ variable "GCP_SERVICE_ACCOUNT_KEY_JSON" {
 #   container_envs = {
 #     "QUERY_EVENTS_URL" = module.eventmanagement_service.service_url
 #     "QUERY_EVENT_URL"  = module.eventmanagement_service.service_url
+#     "QUERY_ALLPUBLICEVENTS_URL" = module.eventmanagement_service.service_url
 #   }
 # }
 
