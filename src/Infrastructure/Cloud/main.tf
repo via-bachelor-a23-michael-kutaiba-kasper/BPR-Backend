@@ -18,10 +18,11 @@ module "api_gateway" {
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
   max_instances                = 1
   container_envs = {
-    "QUERY_EVENTS_URL"          = module.eventmanagement_service.service_url
-    "QUERY_EVENT_URL"           = module.eventmanagement_service.service_url
-    "QUERY_ALLPUBLICEVENTS_URL" = module.eventmanagement_service.service_url
+    "QUERY_EVENTS_HOST"          = module.eventmanagement_service.service_url
+    "QUERY_EVENT_HOST"           = module.eventmanagement_service.service_url
+    "QUERY_ALLPUBLICEVENTS_HOST" = module.eventmanagement_service.service_url
   }
+  cloud_sql_instance = google_sql_database_instance.main.connection_name
 }
 
 module "eventmanagement_service" {
@@ -31,6 +32,7 @@ module "eventmanagement_service" {
   port                         = 80
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
   max_instances                = 1
+  cloud_sql_instance           = google_sql_database_instance.main.connection_name
 }
 
 module "scraper_service" {
@@ -40,6 +42,7 @@ module "scraper_service" {
   port                         = 80
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
   max_instances                = 1
+  cloud_sql_instance           = google_sql_database_instance.main.connection_name
 
   container_envs = {
     "GCP_PROJECT"    = var.gcp_project_id

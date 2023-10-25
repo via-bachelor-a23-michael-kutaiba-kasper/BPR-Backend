@@ -24,6 +24,7 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
         };
 
         const url = expandUrlParams(args, config);
+        console.log(`Routing request to: ${url}`);
         const res = await fetch(url, requestOptions);
         return res.json();
     };
@@ -31,9 +32,14 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
 
 function expandUrlParams(args: any, config: QueryDeclaration): string {
     const argMap = new Map<string, any>();
+
+    let host =
+        process.env[`QUERY_${config.name.toUpperCase()}_HOST`] ??
+        config.resolver.host;
+
     const urlArgs = config.args.filter((arg) => arg.for === "url");
     if (urlArgs.length === 0) {
-        return `${config.resolver.host}${config.resolver.endpoint}`;
+        return `${host}${config.resolver.endpoint}`;
     }
     urlArgs.forEach((arg) => argMap.set(arg.name, args[arg.name]));
 
@@ -46,9 +52,6 @@ function expandUrlParams(args: any, config: QueryDeclaration): string {
     });
 
     let endpointExpanded = endpointParts.join("/");
-    let host =
-        process.env[`QUERY_${config.name.toUpperCase()}_HOST`] ??
-        config.resolver.host;
 
     return `${host}:${config.resolver.port}${endpointExpanded}`;
 }

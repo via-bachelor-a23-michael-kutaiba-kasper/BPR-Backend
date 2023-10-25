@@ -12,15 +12,18 @@ resource "google_cloud_run_v2_service" "service" {
   location = var.gcp_region
   ingress  = "INGRESS_TRAFFIC_ALL"
 
-
-
   template {
     scaling {
       max_instance_count = var.max_instances
     }
+
     containers {
       image = var.image
 
+      volume_mounts {
+        name       = "cloudsql"
+        mount_path = "/cloudsql"
+      }
       resources {
         limits = {
           cpu    = "2"
@@ -45,6 +48,13 @@ resource "google_cloud_run_v2_service" "service" {
       }
       ports {
         container_port = var.port
+      }
+    }
+
+    volumes {
+      name = "cloudsql"
+      cloud_sql_instance {
+        instances = [var.cloud_sql_instance]
       }
     }
   }

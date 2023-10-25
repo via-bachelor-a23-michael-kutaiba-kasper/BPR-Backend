@@ -46,3 +46,9 @@ variable "container_envs" {
   sensitive   = false
   default     = {}
 }
+
+variable "cloud_sql_instance" {
+  type        = string
+  sensitive   = false
+  description = "name of cloud sql connection"
+}
