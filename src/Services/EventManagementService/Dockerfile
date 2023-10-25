@@ -11,5 +11,7 @@ COPY --from=build-env /publish .
 
 EXPOSE 80
 
+RUN dotnet EventManagementService.DbUp.dll
+
 ENTRYPOINT ["dotnet"]
 CMD ["EventManagementService.API.dll"]

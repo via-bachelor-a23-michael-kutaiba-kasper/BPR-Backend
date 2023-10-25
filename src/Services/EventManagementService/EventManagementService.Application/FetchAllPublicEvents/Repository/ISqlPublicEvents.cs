@@ -36,7 +36,7 @@ public class SqlPublicEvents : ISqlPublicEvents
         using (var connection = new NpgsqlConnection(_options.Value.PostgresLocal))
         {
             await connection.OpenAsync();
-            const string sql = """SELECT * FROM public.Event""";
+            const string sql = """SELECT * FROM public.event""";
             var result = await connection.QueryAsync<EventTableModel>(sql);
 
             return result.Select(e => new Event
