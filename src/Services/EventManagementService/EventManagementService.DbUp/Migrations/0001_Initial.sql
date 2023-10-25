@@ -5,6 +5,5 @@ create table if not exists event
     url         varchar NOT NULL,
     location    varchar NOT NULL,
     description varchar,
-    UNIQUE (url),
     PRIMARY KEY (id)
 )
