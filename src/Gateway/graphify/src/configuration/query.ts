@@ -19,6 +19,7 @@ export type QueryArgument = {
 
 export type ResolverDeclaration = {
     host: string;
+    port: number;
     endpoint: string;
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 };

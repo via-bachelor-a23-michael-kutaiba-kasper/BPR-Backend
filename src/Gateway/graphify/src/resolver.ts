@@ -50,5 +50,5 @@ function expandUrlParams(args: any, config: QueryDeclaration): string {
         process.env[`QUERY_${config.name.toUpperCase()}_HOST`] ??
         config.resolver.host;
 
-    return `${host}${endpointExpanded}`;
+    return `${host}:${config.resolver.port}${endpointExpanded}`;
 }
