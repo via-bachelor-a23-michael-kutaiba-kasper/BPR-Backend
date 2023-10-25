@@ -9,8 +9,8 @@ services:
     - 8082:8082
     environment:
     - PUBSUB_EMULATOR_HOST=pubsub:8085
-    - GCP_PROJECT=pubsubtest
-    - GCP_TOPIC_NAME=test
+    - GCP_PROJECT=bachelorshenanigans
+    - GCP_TOPIC_NAME=vibeverse_events_scraped
   pubsub:
     container_name: pubsub
     image: gcr.io/google.com/cloudsdktool/cloud-sdk:emulators

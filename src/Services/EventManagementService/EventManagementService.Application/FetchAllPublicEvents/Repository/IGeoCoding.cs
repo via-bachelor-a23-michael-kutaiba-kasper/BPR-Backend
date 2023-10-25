@@ -15,20 +15,18 @@ public class GeoCoding : IGeoCoding
 {
     private readonly ILogger<GeoCoding> _logger;
     private readonly HttpClient _httpClient;
-    private readonly string _apiKey;
 
     public GeoCoding(ILogger<GeoCoding> logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
         _httpClient = httpClientFactory.CreateClient("HTTP_CLIENT");
-        ;
-        _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ?? throw new InvalidOperationException();
     }
 
     public async Task<GoogleGeoLocation> FetchGeoLocationForAddress(string address)
     {
         _logger.LogInformation("Fetching the GeoLocation for address{Address}", address);
-        var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={_apiKey}";
+        var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ?? throw new InvalidOperationException();
+        var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={apiKey}";
 
         var result = await _httpClient.GetAsync(uri);
 
