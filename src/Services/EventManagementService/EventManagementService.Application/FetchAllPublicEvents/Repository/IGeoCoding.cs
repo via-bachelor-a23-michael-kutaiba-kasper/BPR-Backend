@@ -2,12 +2,13 @@ using System.Text.Json;
 using EventManagementService.Domain.Models.Google;
 using EventManagementService.Infrastructure.Exceptions;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
-namespace EventManagementService.Application.ScraperEvents.Repository;
+namespace EventManagementService.Application.FetchAllPublicEvents.Repository;
 
 public interface IGeoCoding
 {
-    Task<GeoLocation> FetchGeoLocationForAddress(string address);
+    Task<GoogleGeoLocation> FetchGeoLocationForAddress(string address);
 }
 
 public class GeoCoding : IGeoCoding
@@ -24,7 +25,7 @@ public class GeoCoding : IGeoCoding
         _apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY") ?? throw new InvalidOperationException();
     }
 
-    public async Task<GeoLocation> FetchGeoLocationForAddress(string address)
+    public async Task<GoogleGeoLocation> FetchGeoLocationForAddress(string address)
     {
         _logger.LogInformation("Fetching the GeoLocation for address{Address}", address);
         var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={_apiKey}";
@@ -35,7 +36,7 @@ public class GeoCoding : IGeoCoding
         var responseString = await result.Content.ReadAsStringAsync();
         ValidateResponseContent(responseString);
 
-        var response = JsonSerializer.Deserialize<GeoLocation>(responseString, new JsonSerializerOptions
+        var response = JsonSerializer.Deserialize<GoogleGeoLocation>(responseString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         });

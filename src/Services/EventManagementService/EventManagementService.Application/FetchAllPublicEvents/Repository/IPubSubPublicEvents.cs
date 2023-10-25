@@ -1,7 +1,5 @@
 using System.Text.Json;
-using Dapper;
-using EventManagementService.Application.ScraperEvents.Exceptions;
-using EventManagementService.Domain.Models;
+using EventManagementService.Application.FetchAllPublicEvents.Exceptions;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Google.Api.Gax;
@@ -9,11 +7,10 @@ using Google.Apis.Auth.OAuth2;
 using Google.Cloud.PubSub.V1;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Npgsql;
 
-namespace EventManagementService.Application.ScraperEvents.Repository;
+namespace EventManagementService.Application.FetchAllPublicEvents.Repository;
 
-public interface IPubSubScraperEvents
+public interface IPubSubPublicEvents
 {
     Task PublishEvents(TopicName topicName, IReadOnlyCollection<Event> events);
 
@@ -21,14 +18,14 @@ public interface IPubSubScraperEvents
         CancellationToken cancellationToken);
 }
 
-public class PubSubScraperEvents : IPubSubScraperEvents
+public class PubSubPublicEvents : IPubSubPublicEvents
 {
-    private readonly ILogger<PubSubScraperEvents> _logger;
+    private readonly ILogger<PubSubPublicEvents> _logger;
     private readonly string? _serviceAccountKeyJson;
 
-    public PubSubScraperEvents
+    public PubSubPublicEvents
     (
-        ILogger<PubSubScraperEvents> logger,
+        ILogger<PubSubPublicEvents> logger,
         IOptions<PubSub> options
     )
     {

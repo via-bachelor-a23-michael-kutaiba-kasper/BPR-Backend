@@ -1,5 +1,4 @@
-using EventManagementService.Application.ScraperEvents;
-using EventManagementService.Application.ScraperEvents.Repository;
+using EventManagementService.Application.FetchAllPublicEvents;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using Google.Cloud.PubSub.V1;

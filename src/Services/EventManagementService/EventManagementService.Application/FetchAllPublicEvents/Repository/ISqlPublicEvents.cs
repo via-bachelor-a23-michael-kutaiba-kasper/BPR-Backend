@@ -1,31 +1,30 @@
 using System.Text.Json;
 using Dapper;
-using EventManagementService.Application.ScraperEvents.Exceptions;
-using EventManagementService.Application.ScraperEvents.Model;
-using EventManagementService.Domain.Models;
+using EventManagementService.Application.FetchAllPublicEvents.Exceptions;
+using EventManagementService.Application.FetchAllPublicEvents.Model;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
-namespace EventManagementService.Application.ScraperEvents.Repository;
+namespace EventManagementService.Application.FetchAllPublicEvents.Repository;
 
-public interface ISqlScraperEvents
+public interface ISqlPublicEvents
 {
     Task<List<Event>> GetEvents();
     Task UpsertEvents(IReadOnlyCollection<Event> events);
 }
 
-public class SqlScraperEvents : ISqlScraperEvents
+public class SqlPublicEvents : ISqlPublicEvents
 {
     private readonly IOptions<ConnectionStrings> _options;
-    private readonly ILogger<SqlScraperEvents> _logger;
+    private readonly ILogger<SqlPublicEvents> _logger;
 
-    public SqlScraperEvents
+    public SqlPublicEvents
     (
         IOptions<ConnectionStrings> options,
-        ILogger<SqlScraperEvents> logger
+        ILogger<SqlPublicEvents> logger
     )
     {
         _options = options;
@@ -34,7 +33,7 @@ public class SqlScraperEvents : ISqlScraperEvents
 
     public async Task<List<Event>> GetEvents()
     {
-        using (var connection = new NpgsqlConnection(_options.Value.Postgres))
+        using (var connection = new NpgsqlConnection(_options.Value.PostgresLocal))
         {
             await connection.OpenAsync();
             const string sql = """SELECT * FROM public.Event""";
@@ -43,15 +42,8 @@ public class SqlScraperEvents : ISqlScraperEvents
             return result.Select(e => new Event
             {
                 Description = e.description,
-                Location = new Location
-                {
-                    City = "test",
-                    Country = "Test",
-                    HouseNumber = "Test",
-                    PostalCode = "Test",
-                    StreetNumber = "test",
-                    Floor = "test"
-                },
+                Location = JsonSerializer.Deserialize<Location>(e.location,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!,
                 Title = e.title,
                 Url = e.url
             }).ToList();
@@ -64,15 +56,15 @@ public class SqlScraperEvents : ISqlScraperEvents
         {
             var command = InsertEventSql();
 
-            using (var connection = new NpgsqlConnection(_options.Value.Postgres))
+            using (var connection = new NpgsqlConnection(_options.Value.PostgresLocal))
             {
                 await connection.OpenAsync();
                 foreach (var item in events)
                 {
                     var parameters = new
                     {
-                        @title = item.Title, 
-                        @url = item.Url, 
+                        @title = item.Title,
+                        @url = item.Url,
                         @description = item.Description,
                         @location = JsonSerializer.Serialize(item.Location)
                     };

@@ -1,6 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace EventManagementService.Domain.Models.Google;
 
-public record GeoLocation
+public record GoogleGeoLocation
 (
     IReadOnlyCollection<Result> Results,
     string Status
@@ -37,6 +39,7 @@ public record Result
     /// A particular component may be missing in a later response.
     /// To handle the array of components, you should parse the response and select appropriate values via expressions.
     /// </summary>
+    [JsonPropertyName("address_components")]
     public required IReadOnlyCollection<AddressComponent> AddressComponents { get; set; } = AddressComponents;
 
     /// <summary>
@@ -52,6 +55,7 @@ public record Result
     /// formatted address field.
     /// </remarks>
     /// </summary>
+    [JsonPropertyName("formatted_address")]
     public required string FormattedAddress { get; set; } = FormattedAddress;
 
     /// <summary>
@@ -70,6 +74,7 @@ public record Result
     /// Suggestions triggered in this way will also be marked as a partial match.
     /// </remarks>
     /// </summary>
+    [JsonPropertyName("partial_match")]
     public required bool PartialMatch { get; set; } = PartialMatch;
 
     /// <summary>
@@ -77,6 +82,7 @@ public record Result
     /// For example, you can use the place_id in a Places API request to get details of a local business,
     /// such as phone number, opening hours, user reviews, and more.
     /// </summary>
+    [JsonPropertyName("place_id")]
     public required string PlaceId { get; set; } = PlaceId;
 
     /// <summary>
@@ -99,6 +105,7 @@ public record Result
     /// (where buildings are not numbered or streets are not named).
     /// The API does not always return plus codes.
     /// </summary>
+    [JsonPropertyName("plus_code")]
     public PlusCode? PlusCode { get; set; } = PlusCode;
 }
 
@@ -112,6 +119,7 @@ public record AddressComponent
     /// <summary>
     /// Is the full text description or name of the address component as returned by the Geocoder.
     /// </summary>
+    [JsonPropertyName("long_name")]
     public required string LongName { get; set; } = LongName;
 
     /// <summary>
@@ -125,14 +133,15 @@ public record AddressComponent
     /// For example, an address component for the state of Alaska may have a long_name of "Alaska" and a short_name of
     /// "AK" using the 2-letter postal abbreviation.
     /// </summary>
+    [JsonPropertyName("short_name")]
     public string? ShortName { get; set; } = ShortName;
 }
 
 public record Geometry
 (
     Location Location,
-    string LocationType,
     Viewport Viewport,
+    string LocationType,
     Bounds? Bounds = null
 )
 {
@@ -154,6 +163,7 @@ public record Geometry
     /// (for example, a street) or polygon (region).
     /// "APPROXIMATE" indicates that the returned result is approximate.
     /// </summary>
+    [JsonPropertyName("location_type")]
     public required string LocationType { get; set; } = LocationType;
 
     /// <summary>
@@ -184,12 +194,12 @@ public record Bounds
 
 public record Location
 (
-    string Lat,
-    string Lng
+    float Lat,
+    float Lng
 )
 {
-    public string Lat { get; set; } = Lat;
-    public string Lng { get; set; } = Lng;
+    public float Lat { get; set; } = Lat;
+    public float Lng { get; set; } = Lng;
 }
 
 public record Viewport
@@ -204,22 +214,22 @@ public record Viewport
 
 public record Northeast
 (
-    string Lat,
-    string Lng
+    float Lat,
+    float Lng
 )
 {
-    public string Lat { get; set; } = Lat;
-    public string Lng { get; set; } = Lng;
+    public float Lat { get; set; } = Lat;
+    public float Lng { get; set; } = Lng;
 }
 
 public record Southwest
 (
-    string Lat,
-    string Lng
+    float Lat,
+    float Lng
 )
 {
-    public string Lat { get; set; } = Lat;
-    public string Lng { get; set; } = Lng;
+    public float Lat { get; set; } = Lat;
+    public float Lng { get; set; } = Lng;
 }
 
 public record PlusCode
@@ -232,10 +242,12 @@ public record PlusCode
     /// is a 6 character or longer local code with an explicit location (CWC8+R9, Mountain View, CA, USA).
     /// Do not programmatically parse this content.
     /// </summary>
+    [JsonPropertyName("compound_code")]
     public required string CompoundCode { get; set; } = CompoundCode;
 
     /// <summary>
     /// Is a 4 character area code and 6 character or longer local code (849VCWC8+R9).
     /// </summary>
+    [JsonPropertyName("global_code")]
     public string? GlobalCode { get; set; } = GlobalCode;
 }

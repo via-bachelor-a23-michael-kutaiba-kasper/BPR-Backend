@@ -1,14 +1,14 @@
-using EventManagementService.Application.ScraperEvents.Repository;
+using EventManagementService.Application.FetchAllPublicEvents.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventManagementService.Application.ScraperEvents;
+namespace EventManagementService.Application.FetchAllPublicEvents;
 
 public static class ScraperEventsServiceExtension
 {
     public static IServiceCollection AddScraperEvents(this IServiceCollection services)
     {
-        services.AddScoped<IPubSubScraperEvents, PubSubScraperEvents>();
-        services.AddScoped<ISqlScraperEvents, SqlScraperEvents>();
+        services.AddScoped<IPubSubPublicEvents, PubSubPublicEvents>();
+        services.AddScoped<ISqlPublicEvents, SqlPublicEvents>();
         services.AddScoped<IGeoCoding, GeoCoding>();
         
         return services;

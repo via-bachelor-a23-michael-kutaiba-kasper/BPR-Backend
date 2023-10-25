@@ -1,4 +1,4 @@
-namespace EventManagementService.Application.ScraperEvents.Exceptions;
+namespace EventManagementService.Application.FetchAllPublicEvents.Exceptions;
 
 public class PubSubPublisherException : Exception
 {

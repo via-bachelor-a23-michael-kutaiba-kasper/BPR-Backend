@@ -1,4 +1,4 @@
-﻿using EventManagementService.Application.ScraperEvents;
+﻿using EventManagementService.Application.FetchAllPublicEvents;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventManagementService.Application;
