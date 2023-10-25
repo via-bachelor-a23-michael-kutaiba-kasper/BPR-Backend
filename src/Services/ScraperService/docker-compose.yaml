@@ -16,12 +16,12 @@ services:
     image: gcr.io/google.com/cloudsdktool/cloud-sdk:emulators
     ports: 
       - 8085:8085
-    command: gcloud beta emulators pubsub start --project=pubsubtest --host-port=0.0.0.0:8085
+    command: gcloud beta emulators pubsub start --project=bachelorshenanigans --host-port=0.0.0.0:8085
     environment:
       - PUBSUB_PORT=8085
-      - PUBSUB_PROJECT=pubsubtest
-      - PUBSUB_TOPIC=test
-      - PUBSUB_SUBSCRIPTION=testsub
+      - PUBSUB_PROJECT=bachelorshenanigans
+      - PUBSUB_TOPIC=vibeverse_events_scraped
+      - PUBSUB_SUBSCRIPTION=eventmanagement
 networks:
   default:
     name: vibeverse-network

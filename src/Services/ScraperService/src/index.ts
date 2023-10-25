@@ -15,7 +15,8 @@ async function main() {
     const scraper = new Scraper(scraperConfig);
 
     const GCP_PROJECT = process.env["GCP_PROJECT"] || "bachelorshenanigans";
-    const TOPIC_NAME = process.env["GCP_TOPIC_NAME"] || "events:scraped";
+    const TOPIC_NAME =
+        process.env["GCP_TOPIC_NAME"] || "vibeverse_events_scraped";
 
     const app: Express = express();
     app.use(bodyParser.json());
