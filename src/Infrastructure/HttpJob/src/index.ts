@@ -1,25 +1,44 @@
-const url = process.env["JOB_URL"];
-const method = process.env["JOB_METHOD"];
-const body = process.env["JOB_BODY"];
+type Job = {
+    url: string;
+    method: string;
+    body: any;
+};
 
-if (!url || !method) {
-    console.error(
-        "Missing method or url, please set JOB_URL and JOB_METHOD environment variables."
-    );
-    process.exit(1);
+async function executeJob(job: Job, incrementer: () => void) {
+    let res: Response;
+    if (job.body) {
+        res = await fetch(job.url, {
+            method: job.method,
+            body: JSON.parse(job.body),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    } else {
+        res = await fetch(job.url, {
+            method: job.method,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
+    const status = res.status;
+    console.log(`Job executed with status: ${status}`);
+    incrementer();
 }
 
-fetch(url, {
-    body: body ?? body,
-    method: method,
-    headers: {
-        "Content-Type": "application/json",
-    },
-})
-    .then((res) => res.json())
-    .then((data) =>
-        console.log(
-            `Job executed and received: ${JSON.stringify(data, null, 4)}`
-        )
-    )
+async function executeJobs(): Promise<number> {
+    const jobs = process.env["JOBS"]?.trim();
+    const jobsParsed = JSON.parse(jobs ?? "[]") as Job[];
+    console.log(jobsParsed);
+    let exectuedJobs = 0;
+    await Promise.all(
+        jobsParsed.map((job) => executeJob(job, () => exectuedJobs++))
+    );
+
+    return exectuedJobs;
+}
+
+executeJobs()
+    .then((jobsExecuted) => console.log(`Executed ${jobsExecuted} jobs`))
     .catch((err) => console.error(err));
