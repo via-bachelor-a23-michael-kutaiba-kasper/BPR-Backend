@@ -51,4 +51,5 @@ variable "cloud_sql_instance" {
   type        = string
   sensitive   = false
   description = "name of cloud sql connection"
+  default     = ""
 }

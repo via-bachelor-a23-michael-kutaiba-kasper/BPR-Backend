@@ -1,3 +1,7 @@
+import express, { Express, Request, Response } from "express";
+import cors from "cors";
+import bodyParser = require("body-parser");
+
 type Job = {
     url: string;
     method: string;
@@ -5,11 +9,13 @@ type Job = {
 };
 
 async function executeJob(job: Job, incrementer: () => void) {
-    let res: Response;
+    let res;
+    console.log(`Sending HTTP request to: ${job.url}`);
     if (job.body) {
+        console.log(`Payload`, job.body);
         res = await fetch(job.url, {
             method: job.method,
-            body: JSON.parse(job.body),
+            body: JSON.stringify(job.body),
             headers: {
                 "Content-Type": "application/json",
             },
@@ -27,18 +33,26 @@ async function executeJob(job: Job, incrementer: () => void) {
     incrementer();
 }
 
-async function executeJobs(): Promise<number> {
-    const jobs = process.env["JOBS"]?.trim();
-    const jobsParsed = JSON.parse(jobs ?? "[]") as Job[];
-    console.log(jobsParsed);
+async function executeJobs(jobs: Job[]): Promise<number> {
+    console.log(jobs);
     let exectuedJobs = 0;
-    await Promise.all(
-        jobsParsed.map((job) => executeJob(job, () => exectuedJobs++))
-    );
+    await Promise.all(jobs.map((job) => executeJob(job, () => exectuedJobs++)));
 
     return exectuedJobs;
 }
 
-executeJobs()
-    .then((jobsExecuted) => console.log(`Executed ${jobsExecuted} jobs`))
-    .catch((err) => console.error(err));
+const app: Express = express();
+app.use(cors());
+app.use(bodyParser.json());
+
+app.post("/trigger", async (req: Request, res: Response) => {
+    const jobs: Job[] = req.body;
+    const executedJobs = await executeJobs(jobs);
+    console.log(`Executed ${executedJobs} jobs`);
+    res.status(204).send({});
+});
+
+const port = process.env["PORT"] || 8088;
+app.listen(port, () => {
+    console.log(`🚀 HTTP Jobs is now listening on ${port}`);
+});

@@ -9,39 +9,14 @@ resource "google_project_service" "iam_api" {
   disable_on_destroy = false
 }
 
-# Jobs
-# resource "google_cloud_run_v2_job" "periodic_jobs" {
-#   name     = "periodic-jobs"
-#   location = var.gcp_region
-
-#   template {
-#     template {
-#       containers {
-#         image = "docker.io/michaelbui293886/vibeverse-httpjob"
-
-#         env {
-#           name = "JOBS"
-#           value = jsonencode([
-#             {
-#               url    = "${module.scraper_service.service_url}/scrape"
-#               method = "POST"
-#               body   = { strategy = "faengslet" }
-#             },
-#             {
-#               url    = "${module.eventmanagement_service.service_url}/api/v1/events/allPublicEvents"
-#               method = "GET"
-#             }
-#           ])
-#         }
-#       }
-#     }
-#   }
-
-#   lifecycle {
-#     ignore_changes = [
-#       launch_stage,
-#     ]
-#   }
+# Jobs handler
+# module "periodic_jobs" {
+#   source                       = "./modules/container-service"
+#   service_name                 = "periodic-jobs"
+#   image                        = "docker.io/${var.DOCKER_USERNAME}/vibeverse-httpjob"
+#   port                         = 4242
+#   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
+#   max_instances                = 1
 # }
 
 # # Scheduler
@@ -59,14 +34,25 @@ resource "google_project_service" "iam_api" {
 #   }
 #   http_target {
 #     http_method = "POST"
-#     uri         = "https://${google_cloud_run_v2_job.periodic_jobs.location}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${var.gcp_project_number}/jobs/${google_cloud_run_v2_job.periodic_jobs.name}:run"
-
-#     oidc_token {
-#       service_account_email = google_service_account.job_invoker.email
+#     uri         = "${module.periodic_jobs.service_url}/trigger"
+#     # Add job endpoints here.
+#     body = base64encode(jsonencode([
+#       {
+#         url    = "${module.scraper_service.service_url}/scrape"
+#         method = "POST"
+#         body   = { strategy = "faengslet" }
+#       },
+#       {
+#         url    = "${module.eventmanagement_service.service_url}/api/v1/events/allPublicEvents"
+#         method = "GET"
+#       }
+#     ]))
+#     headers = {
+#       "Content-Type" = "application/json"
 #     }
 #   }
 
-#   depends_on = [resource.google_project_service.cloudscheduler_api, resource.google_cloud_run_v2_job.periodic_jobs, google_cloud_run_v2_job_iam_binding.binding]
+#   depends_on = [resource.google_project_service.cloudscheduler_api, google_project_iam_binding.binding]
 # }
 
 
@@ -79,17 +65,8 @@ resource "google_project_service" "iam_api" {
 #   provider     = google
 # }
 
-# resource "google_project_iam_binding" "job_invoker_binding" {
+# resource "google_project_iam_binding" "binding" {
 #   project = var.gcp_project_id
-#   role    = "roles/iam.serviceAccountTokenCreator"
+#   role    = "roles/run.invoker"
 #   members = ["serviceAccount:${google_service_account.job_invoker.email}"]
-# }
-
-# resource "google_cloud_run_v2_job_iam_binding" "binding" {
-#   project    = var.gcp_project_id
-#   location   = var.gcp_region
-#   name       = google_cloud_run_v2_job.periodic_jobs.name
-#   role       = "roles/viewer"
-#   members    = ["serviceAccount:${google_service_account.job_invoker.email}"]
-#   depends_on = [google_cloud_run_v2_job.periodic_jobs]
 # }
