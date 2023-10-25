@@ -129,7 +129,9 @@ public class PubSubScraperEvents : IPubSubScraperEvents
             await subscriber.AcknowledgeAsync(subscriptionName, response.ReceivedMessages.Select(m => m.AckId));
         }
 
-        await subscriber.DeleteSubscriptionAsync(subscriptionName);
+        // NOTE: Use same subscription every time, since there is no guarantees that 
+        //       messages published BEFORE subscription will be put into the new subscription
+        // await subscriber.DeleteSubscriptionAsync(subscriptionName);
         return events;
     }
 }
