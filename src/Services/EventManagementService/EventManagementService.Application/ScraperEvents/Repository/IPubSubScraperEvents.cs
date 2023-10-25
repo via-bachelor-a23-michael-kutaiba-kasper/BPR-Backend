@@ -2,6 +2,7 @@ using System.Text.Json;
 using Dapper;
 using EventManagementService.Application.ScraperEvents.Exceptions;
 using EventManagementService.Domain.Models;
+using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Google.Api.Gax;
 using Google.Apis.Auth.OAuth2;

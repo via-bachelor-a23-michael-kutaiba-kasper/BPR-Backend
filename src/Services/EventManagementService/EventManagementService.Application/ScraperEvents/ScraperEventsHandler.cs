@@ -1,5 +1,6 @@
 using EventManagementService.Application.ScraperEvents.Repository;
 using EventManagementService.Domain.Models;
+using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Google.Cloud.PubSub.V1;
 using MediatR;

@@ -1,4 +1,4 @@
-namespace EventManagementService.Domain.Models;
+namespace EventManagementService.Domain.Models.Events;
 
 public class Location
 {

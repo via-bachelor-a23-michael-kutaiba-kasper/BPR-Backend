@@ -9,6 +9,7 @@ public static class ScraperEventsServiceExtension
     {
         services.AddScoped<IPubSubScraperEvents, PubSubScraperEvents>();
         services.AddScoped<ISqlScraperEvents, SqlScraperEvents>();
+        services.AddScoped<IGeoCoding, GeoCoding>();
         
         return services;
     }

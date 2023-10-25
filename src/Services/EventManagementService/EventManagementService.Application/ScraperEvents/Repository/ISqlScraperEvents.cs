@@ -3,6 +3,7 @@ using Dapper;
 using EventManagementService.Application.ScraperEvents.Exceptions;
 using EventManagementService.Application.ScraperEvents.Model;
 using EventManagementService.Domain.Models;
+using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
