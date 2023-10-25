@@ -12,6 +12,8 @@ resource "google_cloud_run_v2_service" "service" {
   location = var.gcp_region
   ingress  = "INGRESS_TRAFFIC_ALL"
 
+
+
   template {
     scaling {
       max_instance_count = var.max_instances
@@ -19,6 +21,12 @@ resource "google_cloud_run_v2_service" "service" {
     containers {
       image = var.image
 
+      resources {
+        limits = {
+          cpu    = "2"
+          memory = "4Gi"
+        }
+      }
       dynamic "env" {
         for_each = var.container_envs
         content {
