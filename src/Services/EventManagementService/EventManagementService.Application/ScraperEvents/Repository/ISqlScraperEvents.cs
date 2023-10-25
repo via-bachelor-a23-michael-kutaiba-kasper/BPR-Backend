@@ -63,7 +63,7 @@ public class SqlScraperEvents : ISqlScraperEvents
         {
             var command = InsertEventSql();
 
-            using (var connection = new NpgsqlConnection("Server=eventmanagement_postgres;Port=5432;Database=postgres;User Id=postgres;Password=postgres"))
+            using (var connection = new NpgsqlConnection(_options.Value.Postgres))
             {
                 await connection.OpenAsync();
                 foreach (var item in events)
