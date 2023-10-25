@@ -28,7 +28,7 @@ public class EventController : ControllerBase
     public async Task<ActionResult<List<Event>>> GetPublicEvents()
     {
         // TODO: get these from appsetiing.json
-        TopicName topicName = new TopicName("bachelorshenanigans", "events:scraped");
+        TopicName topicName = new TopicName("bachelorshenanigans", "vibeverse_events_scraped");
         SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "eventmanagement");
 
         var events = await _mediator.Send(new ScraperEventsRequest(topicName, subscriptionName));

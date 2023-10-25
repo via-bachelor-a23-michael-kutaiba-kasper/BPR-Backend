@@ -46,6 +46,6 @@ module "scraper_service" {
 
   container_envs = {
     "GCP_PROJECT"    = var.gcp_project_id
-    "GCP_TOPIC_NAME" = "events:scraped"
+    "GCP_TOPIC_NAME" = "vibeverse_events_scraped"
   }
 }

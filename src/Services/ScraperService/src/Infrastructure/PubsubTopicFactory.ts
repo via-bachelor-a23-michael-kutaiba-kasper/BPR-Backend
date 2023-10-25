@@ -3,7 +3,7 @@ import { PubSub, Topic, Subscription } from "@google-cloud/pubsub";
 // re,ember renaming the project in the compose file
 export async function quickstart(
     projectId = "bachelorshenanigans", // Your Google Cloud Platform project ID
-    topicNameOrId = "events:scraped" // Name for the new topic to create
+    topicNameOrId = "vibeverse_events_scraped" // Name for the new topic to create
 ): Promise<Topic> {
     // Instantiates a client
     const serviceAccountJson = process.env["SERVICE_ACCOUNT_KEY_JSON"];
