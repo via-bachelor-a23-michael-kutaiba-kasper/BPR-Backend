@@ -50,13 +50,6 @@ resource "google_cloud_run_v2_service" "service" {
         container_port = var.port
       }
     }
-
-    volumes {
-      name = "cloudsql"
-      cloud_sql_instance {
-        instances = [var.cloud_sql_instance]
-      }
-    }
   }
 }
 

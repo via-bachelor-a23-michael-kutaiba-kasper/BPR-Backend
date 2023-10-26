@@ -12,3 +12,8 @@ variable "gcp_zone" {
   type    = string
   default = "europe-west1-b"
 }
+
+variable "gcp_project_number" {
+  type    = string
+  default = "853676413279"
+}
