@@ -1,3 +1,4 @@
+TRUNCATE TABLE IF EXISTS event CASCADE;
 create table if not exists event
 (
     id          bigint GENERATED ALWAYS AS IDENTITY,
