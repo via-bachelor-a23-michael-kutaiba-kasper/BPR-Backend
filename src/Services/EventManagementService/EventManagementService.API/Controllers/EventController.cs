@@ -1,6 +1,6 @@
-using EventManagementService.Application.ScraperEvents;
-using EventManagementService.Application.ScraperEvents.Repository;
+using EventManagementService.Application.FetchAllPublicEvents;
 using EventManagementService.Domain.Models;
+using EventManagementService.Domain.Models.Events;
 using Google.Cloud.PubSub.V1;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +31,7 @@ public class EventController : ControllerBase
         TopicName topicName = new TopicName("bachelorshenanigans", "vibeverse_events_scraped");
         SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "eventmanagement");
 
-        var events = await _mediator.Send(new ScraperEventsRequest(topicName, subscriptionName));
+        var events = await _mediator.Send(new AllPublicEventsRequest(topicName, subscriptionName));
         
         return Ok(events);
     }

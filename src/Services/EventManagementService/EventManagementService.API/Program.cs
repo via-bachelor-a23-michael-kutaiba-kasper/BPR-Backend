@@ -17,6 +17,15 @@ builder.Services.AddMediatR(config =>
         AppDomain.CurrentDomain.Load("EventManagementService.Application")));
 
 builder.Services.AddApplicationServices();
+
+// Register HTTP client here: 
+builder.Services.AddHttpClient("HTTP_CLIENT")
+    .ConfigureHttpClient((_, client) =>
+    {
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+        client.Timeout = TimeSpan.FromSeconds(30);
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,7 +40,6 @@ app.UseCors(options => { options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMetho
 // poc pubsub 
 var env = System.Environment.GetEnvironmentVariable("PUBSUB_EMULATOR_HOST");
 Console.WriteLine(env);
-
 
 
 // app.UseHttpsRedirection();

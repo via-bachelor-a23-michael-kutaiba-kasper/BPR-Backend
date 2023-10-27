@@ -1,4 +1,4 @@
-namespace EventManagementService.Application.ScraperEvents.Model;
+namespace EventManagementService.Application.FetchAllPublicEvents.Model;
 
 public class EventTableModel
 {
