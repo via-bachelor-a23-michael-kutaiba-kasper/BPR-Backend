@@ -10,6 +10,12 @@ variable "GCP_SERVICE_ACCOUNT_KEY_JSON" {
   description = "Contents of the service_account_key.json file to be passed to container images"
 }
 
+variable "GOOGLE_API_KEY" {
+  type        = string
+  sensitive   = true
+  description = "Google Maps Platform API Key"
+}
+
 module "api_gateway" {
   source                       = "./modules/container-service"
   service_name                 = "api-gateway"
@@ -33,6 +39,10 @@ module "eventmanagement_service" {
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
   max_instances                = 1
   cloud_sql_instance           = google_sql_database_instance.main.connection_name
+
+  container_envs = {
+    "GOOGLE_API_KEY" = var.GOOGLE_API_KEY
+  }
 }
 
 module "scraper_service" {
