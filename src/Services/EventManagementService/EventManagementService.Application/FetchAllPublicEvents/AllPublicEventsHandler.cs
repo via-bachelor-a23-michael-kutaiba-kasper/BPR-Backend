@@ -7,24 +7,24 @@ using Location = EventManagementService.Domain.Models.Events.Location;
 
 namespace EventManagementService.Application.FetchAllPublicEvents;
 
-public record ScraperEventsRequest
+public record AllPublicEventsRequest
 (
     TopicName TopicName, SubscriptionName SubscriptionName
 ) : IRequest<IReadOnlyCollection<Event>>;
 
-public class ScraperEventsHandler : IRequestHandler<ScraperEventsRequest, IReadOnlyCollection<Event>>
+public class AllPublicEventsHandler : IRequestHandler<AllPublicEventsRequest, IReadOnlyCollection<Event>>
 {
     private readonly IPubSubPublicEvents _pubSubPublicEvents;
     private readonly ISqlPublicEvents _sqlPublicEvents;
     private readonly IGeoCoding _geoCoding;
-    private readonly ILogger<ScraperEventsHandler> _logger;
+    private readonly ILogger<AllPublicEventsHandler> _logger;
 
-    public ScraperEventsHandler
+    public AllPublicEventsHandler
     (
         IPubSubPublicEvents pubSubPublicEvents,
         ISqlPublicEvents sqlPublicEvents,
         IGeoCoding geoCoding,
-        ILogger<ScraperEventsHandler> logger
+        ILogger<AllPublicEventsHandler> logger
     )
     {
         _pubSubPublicEvents = pubSubPublicEvents;
@@ -35,7 +35,7 @@ public class ScraperEventsHandler : IRequestHandler<ScraperEventsRequest, IReadO
 
     public async Task<IReadOnlyCollection<Event>> Handle
     (
-        ScraperEventsRequest request,
+        AllPublicEventsRequest request,
         CancellationToken cancellationToken
     )
     {
@@ -44,7 +44,7 @@ public class ScraperEventsHandler : IRequestHandler<ScraperEventsRequest, IReadO
 
     private async Task<IReadOnlyCollection<Event>> AllPublicEvents
     (
-        ScraperEventsRequest request,
+        AllPublicEventsRequest request,
         CancellationToken cancellationToken
     )
     {
@@ -56,7 +56,7 @@ public class ScraperEventsHandler : IRequestHandler<ScraperEventsRequest, IReadO
 
     private async Task<IReadOnlyCollection<Event>> PubSubEvents
     (
-        ScraperEventsRequest request,
+        AllPublicEventsRequest request,
         CancellationToken cancellationToken
     )
     {
@@ -65,7 +65,7 @@ public class ScraperEventsHandler : IRequestHandler<ScraperEventsRequest, IReadO
 
     private async Task<IReadOnlyCollection<Event>> SqlEvents()
     {
-        return await _sqlPublicEvents.GetEvents();
+        return await _sqlPublicEvents.GetAllEvents();
     }
 
     private async Task UpsertNewPublicEvents(IReadOnlyCollection<Event> events)
@@ -92,24 +92,22 @@ public class ScraperEventsHandler : IRequestHandler<ScraperEventsRequest, IReadO
             });
         }
 
-        await _sqlPublicEvents.UpsertEvents(events);
+        await _sqlPublicEvents.UpsertEvents(newEvents);
     }
 
     private async Task<GeoLocation> FetchGeoLocation(Location location)
     {
-        var address = @$"
-                        {location.StreetName} 
-                        {location.StreetNumber} 
-                        {location.HouseNumber ?? ""} 
-                        {location.PostalCode} 
-                        {location.City} 
-                        {location.Country}";
+        var address =
+            $"{location.StreetName} {location.StreetNumber} {location.HouseNumber ?? ""} {location.PostalCode} {location.City} {location.Country}";
         var geo = await _geoCoding.FetchGeoLocationForAddress(address);
 
-        return new GeoLocation
+        var latLong = new GeoLocation
         {
             Lat = geo.Results.First().Geometry.Location.Lat,
-            lng = geo.Results.First().Geometry.Location.Lng
+            Lng = geo.Results.First().Geometry.Location.Lng
         };
+
+        _logger.LogDebug($"Fetched GeoLocation ->: {latLong}");
+        return latLong;
     }
 }

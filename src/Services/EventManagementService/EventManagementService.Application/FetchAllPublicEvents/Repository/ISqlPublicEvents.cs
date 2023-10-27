@@ -12,7 +12,7 @@ namespace EventManagementService.Application.FetchAllPublicEvents.Repository;
 
 public interface ISqlPublicEvents
 {
-    Task<List<Event>> GetEvents();
+    Task<IReadOnlyCollection<Event>> GetAllEvents();
     Task UpsertEvents(IReadOnlyCollection<Event> events);
 }
 
@@ -31,27 +31,52 @@ public class SqlPublicEvents : ISqlPublicEvents
         _logger = logger;
     }
 
-    public async Task<List<Event>> GetEvents()
+    public async Task<IReadOnlyCollection<Event>> GetAllEvents()
     {
+        _logger.LogInformation("Fetching all public events from database");
+        var events = new List<Event>();
         using (var connection = new NpgsqlConnection(_options.Value.PostgresLocal))
         {
             await connection.OpenAsync();
             const string sql = """SELECT * FROM public.event""";
             var result = await connection.QueryAsync<EventTableModel>(sql);
+            
+            _logger.LogInformation($"{result.Count()} retrieved from database");
 
-            return result.Select(e => new Event
+            foreach (var e in result)
             {
-                Description = e.description,
-                Location = JsonSerializer.Deserialize<Location>(e.location,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!,
-                Title = e.title,
-                Url = e.url
-            }).ToList();
+                var l = JsonSerializer.Deserialize<Location>(e.location,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
+                events.Add(new Event
+                {
+                    Title = e.title,
+                    Url = e.url,
+                    Description = e.description,
+                    Location = new Location
+                    {
+                        Country = l.Country,
+                        HouseNumber = l.HouseNumber,
+                        PostalCode = l.PostalCode,
+                        City = l.City,
+                        StreetNumber = l.StreetNumber,
+                        StreetName = l.StreetName,
+                        Floor = l.Floor,
+                        GeoLocation = new GeoLocation
+                        {
+                            Lat = l.GeoLocation.Lat,
+                            Lng = l.GeoLocation.Lng
+                        }
+                    }
+                });
+            }
+
+            return events;
         }
     }
 
     public async Task UpsertEvents(IReadOnlyCollection<Event> events)
     {
+        _logger.LogInformation("Upserting public events");
         try
         {
             var command = InsertEventSql();
@@ -68,7 +93,7 @@ public class SqlPublicEvents : ISqlPublicEvents
                         @description = item.Description,
                         @location = JsonSerializer.Serialize(item.Location)
                     };
-
+                    _logger.LogDebug($"Location ->: {JsonSerializer.Serialize(item.Location)}");
                     connection.Execute(command, parameters);
                 }
             }

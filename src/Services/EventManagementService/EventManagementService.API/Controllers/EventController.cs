@@ -31,7 +31,7 @@ public class EventController : ControllerBase
         TopicName topicName = new TopicName("bachelorshenanigans", "vibeverse_events_scraped");
         SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "eventmanagement");
 
-        var events = await _mediator.Send(new ScraperEventsRequest(topicName, subscriptionName));
+        var events = await _mediator.Send(new AllPublicEventsRequest(topicName, subscriptionName));
         
         return Ok(events);
     }

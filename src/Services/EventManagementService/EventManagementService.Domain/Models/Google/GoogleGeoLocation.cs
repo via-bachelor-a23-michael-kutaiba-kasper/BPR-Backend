@@ -8,8 +8,10 @@ public record GoogleGeoLocation
     string Status
 )
 {
-    public required IReadOnlyCollection<Result> Results { get; set; } = Results;
-    public required string Status { get; set; } = Status;
+    [property:JsonPropertyName("results")]
+    public IReadOnlyCollection<Result> Results { get; set; } = Results;
+    [property:JsonPropertyName("status")]
+    public string Status { get; set; } = Status;
 };
 
 public record Result
@@ -39,8 +41,8 @@ public record Result
     /// A particular component may be missing in a later response.
     /// To handle the array of components, you should parse the response and select appropriate values via expressions.
     /// </summary>
-    [JsonPropertyName("address_components")]
-    public required IReadOnlyCollection<AddressComponent> AddressComponents { get; set; } = AddressComponents;
+    [property:JsonPropertyName("address_components")]
+    public IReadOnlyCollection<AddressComponent> AddressComponents { get; set; } = AddressComponents;
 
     /// <summary>
     /// String containing the human-readable address of this location.
@@ -55,13 +57,14 @@ public record Result
     /// formatted address field.
     /// </remarks>
     /// </summary>
-    [JsonPropertyName("formatted_address")]
-    public required string FormattedAddress { get; set; } = FormattedAddress;
+    [property:JsonPropertyName("formatted_address")]
+    public string FormattedAddress { get; set; } = FormattedAddress;
 
     /// <summary>
     /// Contains the location geo information
     /// </summary>
-    public required Geometry Geometry { get; set; } = Geometry;
+    [property:JsonPropertyName("geometry")]
+    public Geometry Geometry { get; set; } = Geometry;
 
     /// <summary>
     ///  Indicates that the geocoder did not return an exact match for the original request,
@@ -74,16 +77,16 @@ public record Result
     /// Suggestions triggered in this way will also be marked as a partial match.
     /// </remarks>
     /// </summary>
-    [JsonPropertyName("partial_match")]
-    public required bool PartialMatch { get; set; } = PartialMatch;
+    [property:JsonPropertyName("partial_match")]
+    public bool PartialMatch { get; set; } = PartialMatch;
 
     /// <summary>
     /// Is a unique identifier that can be used with other Google APIs.
     /// For example, you can use the place_id in a Places API request to get details of a local business,
     /// such as phone number, opening hours, user reviews, and more.
     /// </summary>
-    [JsonPropertyName("place_id")]
-    public required string PlaceId { get; set; } = PlaceId;
+    [property:JsonPropertyName("place_id")]
+    public string PlaceId { get; set; } = PlaceId;
 
     /// <summary>
     /// Indicates the type of the returned result.
@@ -96,7 +99,8 @@ public record Result
     /// Where available, the API returns both the global code and compound code. However, if the result is in a remote
     /// location (for example, an ocean or desert) only the global code may be returned.
     /// </summary>
-    public required IReadOnlyCollection<string> Types { get; set; } = Types;
+    [property:JsonPropertyName("types")]
+    public IReadOnlyCollection<string> Types { get; set; } = Types;
 
     /// <summary>
     /// is an encoded location reference, derived from latitude and longitude coordinates,
@@ -105,7 +109,7 @@ public record Result
     /// (where buildings are not numbered or streets are not named).
     /// The API does not always return plus codes.
     /// </summary>
-    [JsonPropertyName("plus_code")]
+    [property:JsonPropertyName("plus_code")]
     public PlusCode? PlusCode { get; set; } = PlusCode;
 }
 
@@ -119,21 +123,22 @@ public record AddressComponent
     /// <summary>
     /// Is the full text description or name of the address component as returned by the Geocoder.
     /// </summary>
-    [JsonPropertyName("long_name")]
-    public required string LongName { get; set; } = LongName;
+    [property:JsonPropertyName("long_name")]
+    public string LongName { get; set; } = LongName;
 
     /// <summary>
     /// Indicating the type of the address component.
     /// List of supported types: https://developers.google.com/maps/documentation/places/web-service/supported_types 
     /// </summary>
-    public required IReadOnlyCollection<string> Types { get; set; } = Types;
+    [property:JsonPropertyName("types")]
+    public IReadOnlyCollection<string> Types { get; set; } = Types;
 
     /// <summary>
     /// Is an abbreviated textual name for the address component, if available.
     /// For example, an address component for the state of Alaska may have a long_name of "Alaska" and a short_name of
     /// "AK" using the 2-letter postal abbreviation.
     /// </summary>
-    [JsonPropertyName("short_name")]
+    [property:JsonPropertyName("short_name")]
     public string? ShortName { get; set; } = ShortName;
 }
 
@@ -149,7 +154,8 @@ public record Geometry
     /// Contains the geocoded latitude, longitude value. For normal address lookups, this field is typically
     /// the most important.
     /// </summary>
-    public required Location Location { get; set; } = Location;
+    [property:JsonPropertyName("location")]
+    public Location Location { get; set; } = Location;
 
     /// <summary>
     /// Stores additional data about the specified location.
@@ -163,15 +169,16 @@ public record Geometry
     /// (for example, a street) or polygon (region).
     /// "APPROXIMATE" indicates that the returned result is approximate.
     /// </summary>
-    [JsonPropertyName("location_type")]
-    public required string LocationType { get; set; } = LocationType;
+    [property:JsonPropertyName("location_type")]
+    public string LocationType { get; set; } = LocationType;
 
     /// <summary>
     /// contains the recommended viewport for displaying the returned result, specified as two latitude,longitude
     /// values defining the southwest and northeast corner of the viewport bounding box. Generally the viewport is
     /// used to frame a result when displaying it to a user.
     /// </summary>
-    public required Viewport Viewport { get; set; } = Viewport;
+    [property:JsonPropertyName("viewport")]
+    public Viewport Viewport { get; set; } = Viewport;
 
     /// <summary>
     /// (optionally returned) stores the bounding box which can fully contain the returned result.
@@ -179,6 +186,7 @@ public record Geometry
     /// (For example, San Francisco includes the Farallon islands, which are technically part of the city,
     /// but probably should not be returned in the viewport.) 
     /// </summary>
+    [property:JsonPropertyName("bounds")]
     public Bounds? Bounds { get; set; } = Bounds;
 }
 
@@ -188,8 +196,10 @@ public record Bounds
     Southwest Southwest
 )
 {
-    public required Northeast Northeast { get; set; } = Northeast;
-    public required Southwest Southwest { get; set; } = Southwest;
+    [property:JsonPropertyName("northeast")]
+    public Northeast Northeast { get; set; } = Northeast;
+    [property:JsonPropertyName("southwest")]
+    public Southwest Southwest { get; set; } = Southwest;
 }
 
 public record Location
@@ -198,7 +208,9 @@ public record Location
     float Lng
 )
 {
+    [property:JsonPropertyName("lat")]
     public float Lat { get; set; } = Lat;
+    [property:JsonPropertyName("lng")]
     public float Lng { get; set; } = Lng;
 }
 
@@ -208,7 +220,9 @@ public record Viewport
     Southwest Southwest
 )
 {
+    [property:JsonPropertyName("northeast")]
     public Northeast Northeast { get; set; } = Northeast;
+    [property:JsonPropertyName("southwest")]
     public Southwest Southwest { get; set; } = Southwest;
 }
 
@@ -218,7 +232,9 @@ public record Northeast
     float Lng
 )
 {
+    [property:JsonPropertyName("lat")]
     public float Lat { get; set; } = Lat;
+    [property:JsonPropertyName("lng")]
     public float Lng { get; set; } = Lng;
 }
 
@@ -228,7 +244,9 @@ public record Southwest
     float Lng
 )
 {
+    [property:JsonPropertyName("lat")]
     public float Lat { get; set; } = Lat;
+    [property:JsonPropertyName("lng")]
     public float Lng { get; set; } = Lng;
 }
 
@@ -242,12 +260,12 @@ public record PlusCode
     /// is a 6 character or longer local code with an explicit location (CWC8+R9, Mountain View, CA, USA).
     /// Do not programmatically parse this content.
     /// </summary>
-    [JsonPropertyName("compound_code")]
-    public required string CompoundCode { get; set; } = CompoundCode;
+    [property:JsonPropertyName("compound_code")]
+    public string CompoundCode { get; set; } = CompoundCode;
 
     /// <summary>
     /// Is a 4 character area code and 6 character or longer local code (849VCWC8+R9).
     /// </summary>
-    [JsonPropertyName("global_code")]
+    [property:JsonPropertyName("global_code")]
     public string? GlobalCode { get; set; } = GlobalCode;
 }
