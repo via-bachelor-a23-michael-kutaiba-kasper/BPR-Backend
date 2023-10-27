@@ -43,32 +43,25 @@ public class SqlPublicEvents : ISqlPublicEvents
             
             _logger.LogInformation($"{result.Count()} retrieved from database");
 
-            foreach (var e in result)
+            events.AddRange(from e in result
+            let l = JsonSerializer.Deserialize<Location>(e.location, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!
+            select new Event
             {
-                var l = JsonSerializer.Deserialize<Location>(e.location,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!;
-                events.Add(new Event
+                Title = e.title,
+                Url = e.url,
+                Description = e.description,
+                Location = new Location
                 {
-                    Title = e.title,
-                    Url = e.url,
-                    Description = e.description,
-                    Location = new Location
-                    {
-                        Country = l.Country,
-                        HouseNumber = l.HouseNumber,
-                        PostalCode = l.PostalCode,
-                        City = l.City,
-                        StreetNumber = l.StreetNumber,
-                        StreetName = l.StreetName,
-                        Floor = l.Floor,
-                        GeoLocation = new GeoLocation
-                        {
-                            Lat = l.GeoLocation.Lat,
-                            Lng = l.GeoLocation.Lng
-                        }
-                    }
-                });
-            }
+                    Country = l.Country,
+                    HouseNumber = l.HouseNumber,
+                    PostalCode = l.PostalCode,
+                    City = l.City,
+                    StreetNumber = l.StreetNumber,
+                    StreetName = l.StreetName,
+                    Floor = l.Floor,
+                    GeoLocation = new GeoLocation { Lat = l.GeoLocation.Lat, Lng = l.GeoLocation.Lng }
+                }
+            });
 
             return events;
         }
