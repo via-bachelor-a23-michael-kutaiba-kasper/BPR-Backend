@@ -1,6 +1,6 @@
 type GeoLocation {
     lat: String
-    long: String
+    lng: String
 }
 
 type Location {
