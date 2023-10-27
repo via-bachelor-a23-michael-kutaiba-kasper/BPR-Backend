@@ -28,12 +28,12 @@ public class GeoCoding : IGeoCoding
         var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
         var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={apiKey}";
         
-        _logger.LogDebug($"API_KEY ->: {apiKey}");
+        _logger.LogInformation($"API_KEY ->: {apiKey}");
         
 
         var result = await _httpClient.GetAsync(uri);
 
-        _logger.LogDebug($"GEO RESULT -> {result}");
+        _logger.LogInformation($"GEO RESULT -> {result}");
         ValidateHttpResponse(result);
         var responseString = await result.Content.ReadAsStringAsync();
         ValidateResponseContent(responseString);
@@ -43,7 +43,7 @@ public class GeoCoding : IGeoCoding
             PropertyNameCaseInsensitive = true
         });
 
-        _logger.LogDebug($"GEO COUNT -> {response.Results.Count()}");
+        _logger.LogInformation($"GEO COUNT -> {response.Results.Count()}");
         return response!;
     }
 

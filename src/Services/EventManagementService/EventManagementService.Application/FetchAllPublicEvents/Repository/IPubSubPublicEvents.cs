@@ -102,7 +102,7 @@ public class PubSubPublicEvents : IPubSubPublicEvents
         }
         catch (Exception e)
         {
-            _logger.LogDebug("Sub already created");
+            _logger.LogInformation("Sub already created");
         }
 
         //subscriptionName, maxMessages: 10, returnImmediately: true
@@ -115,7 +115,7 @@ public class PubSubPublicEvents : IPubSubPublicEvents
         {
             var msg = received.Message;
             Console.WriteLine(msg.Data.ToStringUtf8());
-            _logger.LogDebug(msg.Data.ToStringUtf8());
+            _logger.LogInformation(msg.Data.ToStringUtf8());
             events.AddRange(JsonSerializer.Deserialize<List<Event>>(msg.Data.ToStringUtf8(), new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true

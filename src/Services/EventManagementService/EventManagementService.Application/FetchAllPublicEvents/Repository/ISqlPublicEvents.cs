@@ -86,7 +86,7 @@ public class SqlPublicEvents : ISqlPublicEvents
                         @description = item.Description,
                         @location = JsonSerializer.Serialize(item.Location)
                     };
-                    _logger.LogDebug($"Location ->: {JsonSerializer.Serialize(item.Location)}");
+                    _logger.LogInformation($"Location ->: {JsonSerializer.Serialize(item.Location)}");
                     connection.Execute(command, parameters);
                 }
             }

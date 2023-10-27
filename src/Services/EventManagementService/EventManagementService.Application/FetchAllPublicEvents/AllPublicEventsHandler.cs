@@ -107,7 +107,7 @@ public class AllPublicEventsHandler : IRequestHandler<AllPublicEventsRequest, IR
             Lng = geo.Results.First().Geometry.Location.Lng
         };
 
-        _logger.LogDebug($"Fetched GeoLocation ->: {latLong}");
+        _logger.LogInformation($"Fetched GeoLocation ->: lat: {latLong.Lat}, lng: {latLong.Lng}");
         return latLong;
     }
 }
