@@ -35,7 +35,7 @@ public class SqlPublicEvents : ISqlPublicEvents
     {
         _logger.LogInformation("Fetching all public events from database");
         var events = new List<Event>();
-        using (var connection = new NpgsqlConnection(_options.Value.PostgresLocal))
+        using (var connection = new NpgsqlConnection(_options.Value.Postgres))
         {
             await connection.OpenAsync();
             const string sql = """SELECT * FROM public.event""";
@@ -74,7 +74,7 @@ public class SqlPublicEvents : ISqlPublicEvents
         {
             var command = InsertEventSql();
 
-            using (var connection = new NpgsqlConnection(_options.Value.PostgresLocal))
+            using (var connection = new NpgsqlConnection(_options.Value.Postgres))
             {
                 await connection.OpenAsync();
                 foreach (var item in events)
