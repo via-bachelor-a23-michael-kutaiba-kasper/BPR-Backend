@@ -10,7 +10,7 @@ type Location {
     streetNumber: String
     houseNumber: String
     floor: String
-    geolocation: GeoLocation
+    geoLocation: GeoLocation
 }
 
 type Event {
