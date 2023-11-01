@@ -16,7 +16,7 @@
 
 
     <ItemGroup>
-      <EmbeddedResource Include="Migrations\0001_Initial.sql" />
+      <EmbeddedResource Include="Migrations\0001_Initial_event_schema.sql" />
     </ItemGroup>
 
 </Project>
