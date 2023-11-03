@@ -48,7 +48,23 @@
             "resolver": {
                 "host": "https://jsonplaceholder.typicode.com",
                 "endpoint": "/posts",
-                "port": 80,
+                "port": 443,
+                "method": "GET"
+            }
+        },
+        {
+            "name": "post",
+            "args": [
+                {
+                    "name": "id",
+                    "type": "Int!",
+                    "for": "urlPath"
+                }
+            ],
+            "resolver": {
+                "host": "https://jsonplaceholder.typicode.com",
+                "endpoint": "/posts/{id}",
+                "port": 443,
                 "method": "GET"
             }
         }

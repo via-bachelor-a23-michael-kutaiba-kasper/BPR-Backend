@@ -42,24 +42,32 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
         const requestOptions: RequestInit = {
             method: config.resolver.method,
             headers: config.resolver.headers as HeadersInit | undefined,
-            body,
         };
+
+        if (hasBodyArgs) {
+            requestOptions.body = body;
+        }
 
         const url = expandUrlParams(args, config);
         console.log(`Routing request to: ${url}`);
         console.log(
             `Request Options: ${JSON.stringify(requestOptions, null, 4)}`
         );
-        const res = await fetch(url, requestOptions);
-        const resBody = await res.json();
-        console.log(
-            `Received response: ${JSON.stringify(res.status, undefined, 4)}`
-        );
-        console.log(
-            `Response body: ${JSON.stringify(resBody, undefined, 4)}\n`
-        );
+        try {
+            const res = await fetch(url, requestOptions);
+            const resBody = await res.json();
+            console.log(
+                `Received response: ${JSON.stringify(res.status, undefined, 4)}`
+            );
+            console.log(
+                `Response body: ${JSON.stringify(resBody, undefined, 4)}\n`
+            );
 
-        return resBody;
+            return resBody;
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
     };
 }
 
