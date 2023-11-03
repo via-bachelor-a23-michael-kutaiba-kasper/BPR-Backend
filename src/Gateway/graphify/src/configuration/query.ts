@@ -3,6 +3,7 @@ import * as fs from "fs";
 
 export type QueryConfiguration = {
     queries: QueryDeclaration[];
+    mutations: QueryDeclaration[];
 };
 
 export type QueryDeclaration = {
@@ -14,7 +15,7 @@ export type QueryDeclaration = {
 export type QueryArgument = {
     name: string;
     type: string;
-    for: "url" | "body";
+    for: "urlPath" | "urlQueryParam" | "body";
 };
 
 export type ResolverDeclaration = {
@@ -22,6 +23,7 @@ export type ResolverDeclaration = {
     port: number;
     endpoint: string;
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+    headers?: Map<string, string>;
 };
 
 const QUERY_CONFIG_FILE = "query.config.json";

@@ -5,6 +5,7 @@ export type GatewayConfig = {
     typeDefs: string;
     resolvers: {
         Query: any;
+        Mutation: any;
     };
     port: number | undefined | null;
 };
@@ -24,7 +25,7 @@ export function gateway(config: GatewayConfig): Gateway {
             listen: { port: config.port ?? 4242, host: "0.0.0.0" },
         });
 
-        console.log(`🚀  Server ready at: ${url}`);
+        console.log(`🚀  Server ready on port: ${config.port}`);
     };
 
     return { start };
