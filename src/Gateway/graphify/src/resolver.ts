@@ -2,10 +2,15 @@ import { QueryConfiguration, QueryDeclaration } from "./configuration/query";
 
 export function buildQueryResolvers(config: QueryConfiguration): {
     Query: any;
+    Mutation: any;
 } {
-    const resolvers = {};
-    config.queries.forEach((query) => buildResolver(resolvers, query));
-    return { Query: resolvers };
+    const queryResolvers = {};
+    config.queries.forEach((query) => buildResolver(queryResolvers, query));
+    const mutationResolvers = {};
+    config.mutations.forEach((mutation) =>
+        buildResolver(mutationResolvers, mutation)
+    );
+    return { Query: queryResolvers, Mutation: mutationResolvers };
 }
 
 function buildResolver(resolvers: any, config: QueryDeclaration) {
@@ -15,18 +20,46 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
         contextValue: any,
         info: any
     ) => {
-        let bodyArg = config.args.find((arg) => arg.for === "body");
-        let body = bodyArg ? JSON.stringify(args[bodyArg.name]) : undefined;
+        let bodyObj = {} as any;
+        for (let passedArg of Object.keys(args)) {
+            const configuredArg = config.args.find(
+                (arg) => arg.name === passedArg
+            );
+            if (!configuredArg) {
+                continue;
+            }
+
+            if (configuredArg.for == "url") {
+                continue;
+            }
+
+            bodyObj[passedArg] = args[passedArg];
+        }
+        console.log(bodyObj);
+        let hasBodyArgs = config.args.some((arg) => arg.for === "body");
+        let body = hasBodyArgs ? JSON.stringify(bodyObj) : undefined;
 
         const requestOptions: RequestInit = {
             method: config.resolver.method,
+            headers: config.resolver.headers as HeadersInit | undefined,
             body,
         };
 
         const url = expandUrlParams(args, config);
         console.log(`Routing request to: ${url}`);
+        console.log(
+            `Request Options: ${JSON.stringify(requestOptions, null, 4)}`
+        );
         const res = await fetch(url, requestOptions);
-        return res.json();
+        const resBody = await res.json();
+        console.log(
+            `Received response: ${JSON.stringify(res.status, undefined, 4)}`
+        );
+        console.log(
+            `Response body: ${JSON.stringify(resBody, undefined, 4)}\n`
+        );
+
+        return resBody;
     };
 }
 

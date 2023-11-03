@@ -14,22 +14,27 @@ type Location {
 }
 
 type Event {
+    id: String
     title: String
     location: Location
     url: String
     description: String
 }
 
-type Todo {
+type Post {
     userId: Int
     id: Int
     title: String
-    completed: Boolean
+    body: String
 }
 
 type Query {
     events: [Event]
     allPublicEvents: [Event]
     event(id: Int): Event
-    todos: [Todo]
+    posts: [Post]
+}
+
+type Mutation {
+    createPost(userId: Int!, title: String!, body: String!): Post
 }

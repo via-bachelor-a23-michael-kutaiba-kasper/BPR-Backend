@@ -37,13 +37,44 @@
             }
         },
         {
-            "name": "todos",
+            "name": "posts",
             "args": [],
             "resolver": {
                 "host": "https://jsonplaceholder.typicode.com",
-                "endpoint": "/todos",
+                "endpoint": "/posts",
                 "port": 80,
                 "method": "GET"
+            }
+        }
+    ],
+    "mutations": [
+        {
+            "name": "createPost",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "Int!",
+                    "for": "body"
+                },
+                {
+                    "name": "title",
+                    "type": "String!",
+                    "for": "body"
+                },
+                {
+                    "name": "body",
+                    "type": "String!",
+                    "for": "body"
+                }
+            ],
+            "resolver": {
+                "host": "https://jsonplaceholder.typicode.com",
+                "endpoint": "/posts",
+                "port": 80,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "method": "POST"
             }
         }
     ]
