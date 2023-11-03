@@ -32,7 +32,7 @@ type Query {
     events: [Event]
     allPublicEvents: [Event]
     event(id: Int): Event
-    posts: [Post]
+    posts(userId: Int): [Post]
 }
 
 type Mutation {

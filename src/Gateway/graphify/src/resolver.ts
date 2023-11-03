@@ -29,7 +29,7 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
                 continue;
             }
 
-            if (configuredArg.for == "url") {
+            if (configuredArg.for != "body") {
                 continue;
             }
 
@@ -63,6 +63,26 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
     };
 }
 
+function formatToQueryParams(
+    args: any,
+    config: QueryDeclaration
+): string | undefined {
+    let values: string[] = [];
+    const queryParamArgs = config.args.filter(
+        (arg) => arg.for === "urlQueryParam"
+    );
+
+    if (queryParamArgs.length === 0) {
+        return undefined;
+    }
+
+    queryParamArgs.forEach((arg) => {
+        values.push(`${arg.name}=${args[arg.name]}`);
+    });
+
+    return values.join("&");
+}
+
 function expandUrlParams(args: any, config: QueryDeclaration): string {
     const argMap = new Map<string, any>();
 
@@ -70,9 +90,12 @@ function expandUrlParams(args: any, config: QueryDeclaration): string {
         process.env[`QUERY_${config.name.toUpperCase()}_HOST`] ??
         config.resolver.host;
 
-    const urlArgs = config.args.filter((arg) => arg.for === "url");
+    const urlArgs = config.args.filter((arg) => arg.for === "urlPath");
+    let queryParams = formatToQueryParams(args, config);
     if (urlArgs.length === 0) {
-        return `${host}${config.resolver.endpoint}`;
+        return queryParams
+            ? `${host}${config.resolver.endpoint}?${queryParams}`
+            : `${host}${config.resolver.endpoint}?`;
     }
     urlArgs.forEach((arg) => argMap.set(arg.name, args[arg.name]));
 
@@ -86,5 +109,7 @@ function expandUrlParams(args: any, config: QueryDeclaration): string {
 
     let endpointExpanded = endpointParts.join("/");
 
-    return `${host}:${config.resolver.port}${endpointExpanded}`;
+    return queryParams
+        ? `${host}:${config.resolver.port}${endpointExpanded}?${queryParams}`
+        : `${host}:${config.resolver.port}${endpointExpanded}`;
 }

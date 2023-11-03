@@ -15,7 +15,7 @@ export type QueryDeclaration = {
 export type QueryArgument = {
     name: string;
     type: string;
-    for: "url" | "body";
+    for: "urlPath" | "urlQueryParam" | "body";
 };
 
 export type ResolverDeclaration = {

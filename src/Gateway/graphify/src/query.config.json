@@ -26,7 +26,7 @@
                 {
                     "name": "id",
                     "type": "Int",
-                    "for": "url"
+                    "for": "urlPath"
                 }
             ],
             "resolver": {
@@ -38,7 +38,13 @@
         },
         {
             "name": "posts",
-            "args": [],
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "Int",
+                    "for": "urlQueryParam"
+                }
+            ],
             "resolver": {
                 "host": "https://jsonplaceholder.typicode.com",
                 "endpoint": "/posts",
