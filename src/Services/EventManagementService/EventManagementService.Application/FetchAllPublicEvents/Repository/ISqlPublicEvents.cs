@@ -43,7 +43,7 @@ public class SqlPublicEvents : ISqlPublicEvents
             
             _logger.LogInformation($"{result.Count()} retrieved from database");
 
-            events.AddRange(from e in result
+            /*events.AddRange(from e in result
             let l = JsonSerializer.Deserialize<Location>(e.location, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!
             select new Event
             {
@@ -61,7 +61,7 @@ public class SqlPublicEvents : ISqlPublicEvents
                     Floor = l.Floor,
                     GeoLocation = new GeoLocation { Lat = l.GeoLocation.Lat, Lng = l.GeoLocation.Lng }
                 }
-            });
+            });*/
 
             return events;
         }
