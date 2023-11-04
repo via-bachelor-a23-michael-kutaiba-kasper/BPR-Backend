@@ -17,7 +17,7 @@ public class EventTableModel
     public string location { get; set; }
 }
 
-public class Location
+public class LocationTable
 {
     public string street_number { get; set; }
     public string street_name { get; set; }
