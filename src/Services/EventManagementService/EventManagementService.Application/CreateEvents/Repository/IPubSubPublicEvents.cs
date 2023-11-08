@@ -8,7 +8,7 @@ using Google.Cloud.PubSub.V1;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace EventManagementService.Application.FetchAllPublicEvents.Repository;
+namespace EventManagementService.Application.CreateEvents.Repository;
 
 public interface IPubSubPublicEvents
 {

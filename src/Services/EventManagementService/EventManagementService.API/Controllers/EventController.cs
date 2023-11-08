@@ -1,8 +1,5 @@
 using EventManagementService.Application.FetchAllEvents;
-using EventManagementService.Application.FetchAllPublicEvents;
-using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
-using Google.Cloud.PubSub.V1;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,14 +22,16 @@ public class EventController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("allPublicEvents")]
-    public async Task<ActionResult<List<Event>>> GetPublicEvents()
+    [HttpGet("allEvents")]
+    public async Task<ActionResult<List<Event>>> GetAllEvents()
     {
         // TODO: get these from appsetiing.json
+        /*
         TopicName topicName = new TopicName("bachelorshenanigans", "vibeverse_events_scraped");
         SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "eventmanagement");
+        */
 
-        var events = await _mediator.Send(new AllPublicEventsRequest(topicName, subscriptionName));
+        var events = await _mediator.Send(new AllEventsRequest());
         
         return Ok(events);
     }

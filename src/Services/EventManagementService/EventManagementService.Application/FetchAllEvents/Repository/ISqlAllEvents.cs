@@ -1,29 +1,26 @@
-using System.Text.Json;
 using Dapper;
-using EventManagementService.Application.FetchAllEvents.Exceptions;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
-namespace EventManagementService.Application.FetchAllPublicEvents.Repository;
+namespace EventManagementService.Application.FetchAllEvents.Repository;
 
-public interface ISqlPublicEvents
+public interface ISqlAllEvents
 {
     Task<IReadOnlyCollection<Event>> GetAllEvents();
-    Task UpsertEvents(IReadOnlyCollection<Event> events);
 }
 
-public class SqlPublicEvents : ISqlPublicEvents
+public class SqlAllEvents : ISqlAllEvents
 {
     private readonly IOptions<ConnectionStrings> _options;
-    private readonly ILogger<SqlPublicEvents> _logger;
+    private readonly ILogger<SqlAllEvents> _logger;
 
-    public SqlPublicEvents
+    public SqlAllEvents
     (
         IOptions<ConnectionStrings> options,
-        ILogger<SqlPublicEvents> logger
+        ILogger<SqlAllEvents> logger
     )
     {
         _options = options;
@@ -62,36 +59,6 @@ public class SqlPublicEvents : ISqlPublicEvents
         }
     }
 
-    public async Task UpsertEvents(IReadOnlyCollection<Event> events)
-    {
-        _logger.LogInformation("Upserting public events");
-        try
-        {
-            var command = InsertEventSql();
-
-            using (var connection = new NpgsqlConnection(_options.Value.Postgres))
-            {
-                await connection.OpenAsync();
-                foreach (var item in events)
-                {
-                    var parameters = new
-                    {
-                        @title = item.Title,
-                        @url = item.Url,
-                        @description = item.Description,
-                        @location = JsonSerializer.Serialize(item.Location)
-                    };
-                    _logger.LogInformation($"Location ->: {JsonSerializer.Serialize(item.Location)}");
-                    connection.Execute(command, parameters);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            throw new UpsertScraperEventsException($"Cannot insert or update scraper events: {e.Message}", e);
-        }
-    }
-
     private static string GetEventsSql()
     {
         return """
@@ -112,16 +79,6 @@ public class SqlPublicEvents : ISqlPublicEvents
                        keyword_category kc ON e.id = kc.event_id
                LEFT JOIN 
                        keyword k ON kc.keyword = k.id;
-               """;
-    }
-
-    private static string InsertEventSql()
-    {
-        //TODO: update this insert -> look into temp tables to insert and then use merge to copy data using binary copy
-        //TODO: add new migration for access code
-        return """
-               INSERT INTO public.event(title,url,location,description)
-               values (@title, @url, @location, @description)
                """;
     }
 }

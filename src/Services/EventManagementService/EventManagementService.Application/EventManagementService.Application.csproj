@@ -21,7 +21,6 @@
   <ItemGroup>
     <Folder Include="CreateEvents\Exceptions\" />
     <Folder Include="CreateEvents\Model\" />
-    <Folder Include="CreateEvents\Repository\" />
   </ItemGroup>
 
 </Project>
