@@ -1,4 +1,4 @@
-namespace EventManagementService.Application.FetchAllEvents.Exceptions;
+namespace EventManagementService.Application.CreateEvents.Exceptions;
 
 public class UpsertScraperEventsException : Exception
 {

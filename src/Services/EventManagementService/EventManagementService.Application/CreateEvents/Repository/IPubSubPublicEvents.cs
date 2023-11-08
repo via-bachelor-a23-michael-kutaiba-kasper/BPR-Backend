@@ -1,5 +1,5 @@
 using System.Text.Json;
-using EventManagementService.Application.FetchAllEvents.Exceptions;
+using EventManagementService.Application.CreateEvents.Exceptions;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Google.Api.Gax;

@@ -1,38 +1,34 @@
+using Dapper;
+using EventManagementService.Application.CreateEvents.Exceptions;
+using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure.AppSettings;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Npgsql;
+
 namespace EventManagementService.Application.CreateEvents.Repository;
 
-public class ISqlCreateEvents
+public interface ISqlCreateEvents
 {
-    
-    /*public async Task UpsertEvents(IReadOnlyCollection<Event> events)
-    {
-        _logger.LogInformation("Upserting public events");
-        try
-        {
-            var command = InsertEventSql();
+    Task UpsertEvents(IReadOnlyCollection<Event> events);
+}
 
-            using (var connection = new NpgsqlConnection(_options.Value.Postgres))
-            {
-                await connection.OpenAsync();
-                foreach (var item in events)
-                {
-                    var parameters = new
-                    {
-                        @title = item.Title,
-                        @url = item.Url,
-                        @description = item.Description,
-                        @location = JsonSerializer.Serialize(item.Location)
-                    };
-                    _logger.LogInformation($"Location ->: {JsonSerializer.Serialize(item.Location)}");
-                    connection.Execute(command, parameters);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            throw new UpsertScraperEventsException($"Cannot insert or update scraper events: {e.Message}", e);
-        }
-    }*/
-    
+public class SqlCreateEvents : ISqlCreateEvents
+{
+    private readonly IOptions<ConnectionStrings> _options;
+    private readonly ILogger<SqlCreateEvents> _logger;
+
+    public SqlCreateEvents(ILogger<SqlCreateEvents> logger, IOptions<ConnectionStrings> options)
+    {
+        _logger = logger;
+        _options = options;
+    }
+
+    public async Task UpsertEvents(IReadOnlyCollection<Event> events)
+    {
+        throw new NotImplementedException();
+    }
+
     private static string InsertEventSql()
     {
         //TODO: update this insert -> look into temp tables to insert and then use merge to copy data using binary copy
