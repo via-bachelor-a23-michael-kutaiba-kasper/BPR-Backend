@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Location = EventManagementService.Domain.Models.Events.Location;
 
-namespace EventManagementService.Application.FetchAllPublicEvents;
+namespace EventManagementService.Application.FetchAllEvents;
 
 public record AllPublicEventsRequest
 (

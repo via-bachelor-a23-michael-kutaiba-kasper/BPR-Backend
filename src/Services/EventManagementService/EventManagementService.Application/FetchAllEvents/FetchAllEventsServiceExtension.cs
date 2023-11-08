@@ -1,11 +1,11 @@
 using EventManagementService.Application.FetchAllPublicEvents.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventManagementService.Application.FetchAllPublicEvents;
+namespace EventManagementService.Application.FetchAllEvents;
 
-public static class ScraperEventsServiceExtension
+public static class FetchAllEventsServiceExtension
 {
-    public static IServiceCollection AddScraperEvents(this IServiceCollection services)
+    public static IServiceCollection AddFetchAllEvents(this IServiceCollection services)
     {
         services.AddScoped<IPubSubPublicEvents, PubSubPublicEvents>();
         services.AddScoped<ISqlPublicEvents, SqlPublicEvents>();

@@ -1,5 +1,5 @@
 using Dapper;
-using EventManagementService.Application.FetchAllPublicEvents.Model;
+using EventManagementService.Application.FetchAllEvents.Model;
 using EventManagementService.Test.Shared;
 using Npgsql;
 

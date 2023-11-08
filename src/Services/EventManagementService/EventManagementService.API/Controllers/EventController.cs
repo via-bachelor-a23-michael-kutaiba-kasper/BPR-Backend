@@ -1,3 +1,4 @@
+using EventManagementService.Application.FetchAllEvents;
 using EventManagementService.Application.FetchAllPublicEvents;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;

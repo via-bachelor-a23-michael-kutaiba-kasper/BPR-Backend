@@ -1,7 +1,6 @@
 using System.Text.Json;
 using Dapper;
-using EventManagementService.Application.FetchAllPublicEvents.Exceptions;
-using EventManagementService.Application.FetchAllPublicEvents.Model;
+using EventManagementService.Application.FetchAllEvents.Exceptions;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
