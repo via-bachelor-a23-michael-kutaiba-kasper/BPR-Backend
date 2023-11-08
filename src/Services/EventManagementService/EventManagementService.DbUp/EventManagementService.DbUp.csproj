@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <EmbeddedResource Include="Migrations\0001_Initial_event_schema.sql" />
+      <EmbeddedResource Include="Migrations\0002_Add_access_code_to_event.sql" />
     </ItemGroup>
 
 </Project>

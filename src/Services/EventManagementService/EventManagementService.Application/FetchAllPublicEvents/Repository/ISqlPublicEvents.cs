@@ -98,7 +98,7 @@ public class SqlPublicEvents : ISqlPublicEvents
         return """
                SELECT 
                    e.*,
-                   l.*
+                   l.*  
                FROM 
                    postgres.public.event e
                JOIN 
@@ -119,6 +119,7 @@ public class SqlPublicEvents : ISqlPublicEvents
     private static string InsertEventSql()
     {
         //TODO: update this insert -> look into temp tables to insert and then use merge to copy data using binary copy
+        //TODO: add new migration for access code
         return """
                INSERT INTO public.event(title,url,location,description)
                values (@title, @url, @location, @description)
