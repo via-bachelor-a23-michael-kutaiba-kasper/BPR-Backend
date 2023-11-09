@@ -1,4 +1,8 @@
+using System.Net;
+using EventManagementService.API.Dtos;
 using EventManagementService.Application.FetchAllPublicEvents;
+using EventManagementService.Application.JoinEvent;
+using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using Google.Cloud.PubSub.V1;
@@ -34,5 +38,27 @@ public class EventController : ControllerBase
         var events = await _mediator.Send(new AllPublicEventsRequest(topicName, subscriptionName));
         
         return Ok(events);
+    }
+
+    [HttpPost("{eventId}/attendees")]
+    public async Task<ActionResult> JoinEvent([FromRoute] int eventId, [FromBody] JoinEventDto joinEventDto)
+    {
+        try
+        {
+            await _mediator.Send(new JoinEventRequest(joinEventDto.UserId, eventId));
+            return Ok();
+        }
+        catch (Exception e) when (e is UserNotFoundException or EventNotFoundException)
+        {
+            return NotFound(e.Message);
+        }
+        catch (AlreadyJoinedException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
     }
 }

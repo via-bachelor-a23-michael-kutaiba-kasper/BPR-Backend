@@ -18,4 +18,9 @@
     <ProjectReference Include="..\EventManagementService.Infrastructure\EventManagementService.Infrastructure.csproj" />
   </ItemGroup>
 
+
+
+
+
+
 </Project>
