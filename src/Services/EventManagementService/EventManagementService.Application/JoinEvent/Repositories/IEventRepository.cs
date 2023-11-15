@@ -8,9 +8,8 @@ namespace EventManagementService.Application.JoinEvent.Repositories;
 
 public interface IEventRepository
 {
-    public Task<Event> GetByIdAsync(int id);
+    public Task<Event?> GetByIdAsync(int id);
     public Task<bool> AddAttendeeToEventAsync(string userId, int eventId);
-    public Task<IReadOnlyCollection<string>> GetAttendeesAsync(int eventId);
 }
 
 public class EventRepository : IEventRepository
@@ -22,7 +21,7 @@ public class EventRepository : IEventRepository
         _connectionStringFactory = connectionStringFactory;
     }
 
-    public async Task<Event> GetByIdAsync(int id)
+    public async Task<Event?> GetByIdAsync(int id)
     {
         await using var connection = new NpgsqlConnection(_connectionStringFactory.GetConnectionString());
         await connection.OpenAsync();
@@ -43,17 +42,5 @@ public class EventRepository : IEventRepository
         var rowsAffected = await connection.ExecuteAsync(SqlQueries.AddAttendeeToEvent, queryParams);
          
         return rowsAffected > 0;
-    }
-
-    public async Task<IReadOnlyCollection<string>> GetAttendeesAsync(int eventId)
-    {
-        await using var connection = new NpgsqlConnection(_connectionStringFactory.GetConnectionString());
-        await connection.OpenAsync();
-        var queryParams = new
-        {
-            @eventId = eventId
-        };
-        var attendees = await connection.QueryAsync<string>(SqlQueries.GetAttendeesOfEvent, queryParams);
-        return attendees != null ? attendees.ToList() : new List<string>();
     }
 }

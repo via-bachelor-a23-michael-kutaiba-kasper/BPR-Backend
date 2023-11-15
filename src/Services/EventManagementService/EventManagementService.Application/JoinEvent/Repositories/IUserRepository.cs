@@ -5,12 +5,12 @@ namespace EventManagementService.Application.JoinEvent.Repositories;
 
 public interface IUserRepository
 {
-    Task<bool> UserExists(string userId);
+    Task<bool> UserExistsAsync(string userId);
 }
 
 public class UserRepository: IUserRepository
 {
-    public async Task<bool> UserExists(string userId)
+    public async Task<bool> UserExistsAsync(string userId)
     {
         var defaultInstance = FirebaseAuth.DefaultInstance;
         if (defaultInstance == null)

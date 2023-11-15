@@ -43,13 +43,12 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
             throw new EventNotFoundException(request.EventId);
         }
 
-        if (!await _userRepository.UserExists(request.UserId))
+        if (!await _userRepository.UserExistsAsync(request.UserId))
         {
             throw new UserNotFoundException(request.UserId);
         }
 
-        var attendees = await _eventRepository.GetAttendeesAsync(request.EventId);
-        var userAlreadyJoined = attendees.Any(attendee => attendee == request.UserId);
+        var userAlreadyJoined = existingEvent.Attendees.Any(attendee => attendee == request.UserId);
         if (userAlreadyJoined)
         {
             throw new AlreadyJoinedException(request.UserId, request.EventId);
