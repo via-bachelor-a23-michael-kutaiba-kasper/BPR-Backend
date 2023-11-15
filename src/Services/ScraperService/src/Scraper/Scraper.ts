@@ -13,15 +13,32 @@ export class Scraper implements IScraper {
     constructor(private _config: ScraperConfig) {}
 
     scrape(strategyName: string): Promise<Event[]> {
-        return this._strategyFactory.create(strategyName).scrape();
+        const strategyConfiguration = this._config.get(strategyName);
+        if (!strategyConfiguration) {
+            throw new Error(
+                `Strategy ${strategyName} has not been configured yet`
+            );
+        }
+        return this._strategyFactory
+            .create(strategyName)
+            .scrape(strategyConfiguration);
     }
 
     async scrapeAll(): Promise<Event[]> {
         let events = [] as Event[];
 
         for (let strategyName of this._config.keys()) {
+            const strategyConfiguration = this._config.get(strategyName);
+            if (!strategyConfiguration) {
+                throw new Error(
+                    `Strategy ${strategyName} has not been configured yet`
+                );
+            }
             const strategy = this._strategyFactory.create(strategyName);
-            events = [...events, ...(await strategy.scrape())];
+            events = [
+                ...events,
+                ...(await strategy.scrape(strategyConfiguration)),
+            ];
         }
 
         return events;

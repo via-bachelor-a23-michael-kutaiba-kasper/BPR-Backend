@@ -1,4 +1,4 @@
-using EventManagementService.Application.FetchAllEvents;
+using EventManagementService.Application.FetchAllPublicEvents;
 using EventManagementService.Domain.Models.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -34,5 +34,27 @@ public class EventController : ControllerBase
         var events = await _mediator.Send(new AllEventsRequest());
         
         return Ok(events);
+    }
+
+    [HttpPost("{eventId}/attendees")]
+    public async Task<ActionResult> JoinEvent([FromRoute] int eventId, [FromBody] JoinEventDto joinEventDto)
+    {
+        try
+        {
+            await _mediator.Send(new JoinEventRequest(joinEventDto.UserId, eventId));
+            return Ok();
+        }
+        catch (Exception e) when (e is UserNotFoundException or EventNotFoundException)
+        {
+            return NotFound(e.Message);
+        }
+        catch (AlreadyJoinedException e)
+        {
+            return Conflict(e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
     }
 }

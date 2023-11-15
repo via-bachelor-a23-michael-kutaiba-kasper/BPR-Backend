@@ -1,6 +1,7 @@
 {
     "faengslet": {
         "useHeadless": true,
-        "browser": "chrome"
+        "browser": "chrome",
+        "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2"
     }
 }

@@ -10,6 +10,7 @@ export interface Event {
     images?: string[];
     numberOfAtendees?: number;
     price?: string;
+    hostId: string;
 }
 
 export interface Location {
