@@ -8,6 +8,8 @@ services:
       - 8080:80
     env_file:
       - ./.env
+    environment:
+      - DEPLOYMENT_ENVIRONMENT=LOCAL_CONTAINER
     depends_on:
       - eventmanagement_postgres
        
