@@ -25,6 +25,16 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         _userRepository = userRepository;
     }
 
+    /// <summary>
+    /// Adds user to attendee list of the event.
+    /// If the user has already been invited, then the invitation will go from
+    /// "PENDING" to "ACCEPTED"
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <exception cref="EventNotFoundException">No event with the provided event id exists</exception>
+    /// <exception cref="UserNotFoundException">No user with the provided id exists</exception>
+    /// <exception cref="AlreadyJoinedException">User has already joined the event</exception>
     public async Task Handle(JoinEventRequest request, CancellationToken cancellationToken)
     {
         var existingEvent = await _eventRepository.GetByIdAsync(request.EventId);
