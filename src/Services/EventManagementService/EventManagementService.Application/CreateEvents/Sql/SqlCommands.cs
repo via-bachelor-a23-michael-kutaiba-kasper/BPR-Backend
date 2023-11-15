@@ -3,7 +3,7 @@ namespace EventManagementService.Application.CreateEvents.Sql;
 internal static class SqlCommands
 {
     internal const string CreateTempTables =
-        """
+        """"
         CREATE TEMP TABLE temp_location
         (
             street_number   VARCHAR,
@@ -14,20 +14,6 @@ internal static class SqlCommands
             country         VARCHAR,
             geolocation_lat DECIMAL,
             geolocation_lng DECIMAL
-        );
-        CREATE TEMP TABLE temp_category
-        (
-            name                    INT,
-            sub_premise             VARCHAR,
-            geolocation_lat         DECIMAL,
-            geolocation_lng         DECIMAL
-        );
-        CREATE TEMP TABLE keyword
-        (
-            name                    INT,
-            sub_premise             VARCHAR,
-            geolocation_lat         DECIMAL,
-            geolocation_lng         DECIMAL
         );
         CREATE TEMP TABLE temp_event
         (
@@ -52,17 +38,12 @@ internal static class SqlCommands
             uri                     VARCHAR,
             url                     VARCHAR
         );
-        CREATE TEMP TABLE temp_event_category
-        (
-            id                      INT,
-            url                     VARCHAR
-        );
         CREATE TEMP TABLE temp_event_keyword
         (
             id                      INT,
             url                     VARCHAR
         );
-        """;
+        """";
 
     internal const string UpsertLocations =
         """
@@ -82,7 +63,7 @@ internal static class SqlCommands
                          country,
                          geolocation_lat,
                          geolocation_lng
-                         ) 
+                         )
                 VALUES (
                        tlc.street_number,
                        tlc.street_name,
@@ -91,16 +72,16 @@ internal static class SqlCommands
                        tlc.postal_code,
                        tlc.country,
                        tlc.geolocation_lat,
-                       tlc.geolocation_lng 
+                       tlc.geolocation_lng
                 )
             
         """;
 
-    internal static string UpsertEvents = 
+    internal static string UpsertEvents =
         """
         MERGE INTO event et USING
         (
-            SELECT 
+            SELECT
                 lc.id,
                 tet.title,
                 tet.start_date,
@@ -116,20 +97,21 @@ internal static class SqlCommands
                 tet.description,
                 tet.sub_premise,
                 tet.geolocation_lat,
-                tet.geolocation_lng         
+                tet.geolocation_lng,
+                tet.category_id
             FROM location lc
-            JOIN temp_location tlc 
-                ON lc.sub_premise = tlc.sub_premise 
+            JOIN temp_location tlc
+                ON lc.sub_premise = tlc.sub_premise
                        AND lc.geolocation_lat = tlc.geolocation_lat
                        AND lc.geolocation_lng = tlc.geolocation_lng
             JOIN temp_event tet
-                ON tet.sub_premise = tlc.sub_premise 
+                ON tet.sub_premise = tlc.sub_premise
                           AND tet.geolocation_lat = tlc.geolocation_lat
                           AND tet.geolocation_lng = tlc.geolocation_lng
         ) as lc_u ON (lc_u.url = et.url)
-        WHEN MATCHED 
-            THEN UPDATE 
-                 SET 
+        WHEN MATCHED
+            THEN UPDATE
+                 SET
                      title =  lc_u.title,
                      start_date =  lc_u.start_date,
                      end_date =  lc_u.end_date,
@@ -141,21 +123,22 @@ internal static class SqlCommands
                      last_update_date =  lc_u.last_update_date,
                      url =  lc_u.url,
                      description =  lc_u.description
-        WHEN NOT MATCHED 
+        WHEN NOT MATCHED
             THEN INSERT (
-                         title, 
-                         start_date, 
-                         end_date, 
-                         created_date, 
-                         is_private, 
-                         adult_only, 
-                         is_free, 
-                         host_id, 
-                         max_number_of_attendees, 
-                         last_update_date, 
-                         url, 
-                         description, 
-                         location_id
+                         title,
+                         start_date,
+                         end_date,
+                         created_date,
+                         is_private,
+                         adult_only,
+                         is_free,
+                         host_id,
+                         max_number_of_attendees,
+                         last_update_date,
+                         url,
+                         description,
+                         location_id,
+                         category_id
                          ) VALUES (
                         lc_u.title,
                         lc_u.start_date,
@@ -168,60 +151,99 @@ internal static class SqlCommands
                         lc_u.last_update_date,
                         lc_u.url,
                         lc_u.description,
-                        lc_u.id
+                        lc_u.id,
+                        lc_u.category_id
                          )
         """;
-    
-    internal const string UpsertImage = 
+
+    internal const string UpsertImage =
         """
-        MERGE INTO image AS im 
+        MERGE INTO image AS im
         USING (
-        SELECT 
+        SELECT
             tim.uri,
             et.id
         FROM temp_image tim
         JOIN event et ON et.url = tim.url
             ) AS im_u ON (im_u.uri = im.uri)
-            WHEN MATCHED THEN DO NOTHING 
-            WHEN NOT MATCHED 
-                THEN INSERT (uri, event_id) 
+            WHEN MATCHED THEN DO NOTHING
+            WHEN NOT MATCHED
+                THEN INSERT (uri, event_id)
                      VALUES (im_u.uri, im_u.id)
         """;
-    
-    internal const string UpsertEventCategory = 
+
+    internal const string UpsertEventKeyword =
         """
-        MERGE INTO event_category AS etc 
+        MERGE INTO event_keyword AS etk
         USING (
-            SELECT 
-                tec.cat_id,
-                et.url,
-                et.id
-            FROM temp_event_category tec
-            JOIN event et ON et.url = tec.url
-        ) AS etc_u ON (etc_u.cat_id = etc.category_id)
-        WHEN MATCHED THEN DO NOTHING 
-        WHEN NOT MATCHED 
-            THEN INSERT (event_id, category_id) VALUES (etc_u.id, etc_u.cat_id)
-        """;
-    
-    internal const string UpsertEventKeyword = 
-        """
-        MERGE INTO event_keyword AS etk 
-        USING (
-            SELECT 
+            SELECT
                 tec.key_id,
                 et.url,
                 et.id
             FROM temp_event_keyword tec
             JOIN event et ON et.url = tec.url
         ) AS etc_u ON (etc_u.key_id = etk.keyword)
-        WHEN MATCHED THEN DO NOTHING 
-        WHEN NOT MATCHED 
+        WHEN MATCHED THEN DO NOTHING
+        WHEN NOT MATCHED
             THEN INSERT (event_id, keyword) VALUES (etc_u.id, etc_u.key_id)
         """;
-    
-    internal const string DeleteExpiredEvents = 
+
+    internal const string ImportLocationBinaryCopy =
         """
-        
+        COPY temp_location
+            (
+            street_number,
+            street_name,
+            sub_premise,
+            city,
+            postal_code,
+            country,
+            geolocation_lat,
+            geolocation_lng
+            )
+            FROM STDIN (FORMAT BINARY );
+        """;
+    
+    internal const string ImportEventBinaryCopy =
+        """
+        COPY temp_event
+            (
+            title,
+            start_date,
+            end_date,
+            created_date,
+            is_private,
+            adult_only,
+            is_free,
+            host_id,
+            max_number_of_attendees,
+            last_update_date,
+            url,
+            description,
+            sub_premise,
+            geolocation_lat,
+            geolocation_lng
+            )
+            FROM STDIN (FORMAT BINARY );
+        """;
+    
+    internal const string ImportImageBinaryCopy = 
+        """
+        COPY temp_image
+        (
+            uri,
+            url
+        )
+        FROM STDIN (FORMAT BINARY);
+        """;
+    
+    internal const string ImportKeywordBinaryCopy = 
+        """
+        COPY temp_event_keyword
+        (
+            id,
+            url
+        )
+        FROM STDIN (FORMAT BINARY);
         """;
 }
