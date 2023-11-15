@@ -12,7 +12,7 @@ namespace EventManagementService.Application.CreateEvents.Repository;
 
 public interface ISqlCreateEvents
 {
-    Task UpsertEvents(IReadOnlyCollection<Event> events);
+    Task BulkUpsertEvents(IReadOnlyCollection<Event> events);
 }
 
 public class SqlCreateEvents : ISqlCreateEvents
@@ -26,7 +26,7 @@ public class SqlCreateEvents : ISqlCreateEvents
         _options = options;
     }
 
-    public async Task UpsertEvents(IReadOnlyCollection<Event> events)
+    public async Task BulkUpsertEvents(IReadOnlyCollection<Event> events)
     {
         await using var connection = new NpgsqlConnection(_options.Value.Postgres);
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
@@ -105,7 +105,7 @@ public class SqlCreateEvents : ISqlCreateEvents
                 await writer.WriteAsync(et.IsPrivate, NpgsqlDbType.Boolean);
                 await writer.WriteAsync(et.IsPaid, NpgsqlDbType.Boolean);
                 await writer.WriteAsync(et.HostId, NpgsqlDbType.Varchar);
-                await writer.WriteAsync(et.EventCode, NpgsqlDbType.Varchar);
+                await writer.WriteAsync(et.AccessCode, NpgsqlDbType.Varchar);
                 await BinaryWriterHelper<int>.WriteNullableAsync(writer, et.MaxNumberOfAttendees, NpgsqlDbType.Integer);
                 await BinaryWriterHelper<DateTimeOffset>.WriteNullableAsync(writer, et.LastUpdateDate.ToUniversalTime(),
                     NpgsqlDbType.TimestampTz);
@@ -117,6 +117,10 @@ public class SqlCreateEvents : ISqlCreateEvents
                     NpgsqlDbType.Numeric);
                 await BinaryWriterHelper<float>.WriteNullableAsync(writer, et.Location.GeoLocation.Lng,
                     NpgsqlDbType.Numeric);
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.AccessCode,
+                    NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<int>.WriteNullableAsync(writer, (int)et.Category,
+                    NpgsqlDbType.Integer);
                 await writer.CompleteAsync();
             }
         }

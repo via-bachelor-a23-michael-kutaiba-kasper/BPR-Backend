@@ -16,7 +16,7 @@ public class Event
     public string Url { get; set; }
     public string? Description { get; set; }
     public Location Location { get; set; }
-    public string EventCode { get; set; }
+    public string AccessCode { get; set; }
     public Category Category { get; set; }
     public IEnumerable<Keyword> Keywords { get; set; }
     public IEnumerable<string> Images { get; set; }

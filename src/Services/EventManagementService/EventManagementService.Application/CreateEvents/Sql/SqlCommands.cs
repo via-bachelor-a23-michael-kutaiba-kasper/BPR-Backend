@@ -25,24 +25,25 @@ internal static class SqlCommands
             adult_only              BOOLEAN     NOT NULL,
             is_paid                 BOOLEAN     NOT NULL,
             host_id                 VARCHAR     NOT NULL,
-            event_code              VARCHAR NOT NULL, 
+            access_code             VARCHAR NOT NULL,
             max_number_of_attendees INT,
             last_update_date        TIMESTAMPTZ,
             url                     VARCHAR,
             description             VARCHAR,
             sub_premise             VARCHAR,
             geolocation_lat         DECIMAL,
-            geolocation_lng         DECIMAL
+            geolocation_lng         DECIMAL,
+            category_id             INT
         );
         CREATE TEMP TABLE temp_image
         (
-            uri                     VARCHAR,
-            url                     VARCHAR
+            uri                             VARCHAR,
+            access_code                     VARCHAR
         );
         CREATE TEMP TABLE temp_event_keyword
         (
-            id                      INT,
-            url                     VARCHAR
+            id                              INT,
+            access_code                     VARCHAR
         );
         """";
 
@@ -99,7 +100,8 @@ internal static class SqlCommands
                 tet.sub_premise,
                 tet.geolocation_lat,
                 tet.geolocation_lng,
-                tet.category_id
+                tet.category_id,
+                tet.access_code
             FROM location lc
             JOIN temp_location tlc
                 ON lc.sub_premise = tlc.sub_premise
@@ -109,7 +111,7 @@ internal static class SqlCommands
                 ON tet.sub_premise = tlc.sub_premise
                           AND tet.geolocation_lat = tlc.geolocation_lat
                           AND tet.geolocation_lng = tlc.geolocation_lng
-        ) as lc_u ON (lc_u.url = et.url)
+        ) as lc_u ON (lc_u.access_code = et.access_code)
         WHEN MATCHED
             THEN UPDATE
                  SET
@@ -139,7 +141,8 @@ internal static class SqlCommands
                          url,
                          description,
                          location_id,
-                         category_id
+                         category_id,
+                         access_code
                          ) VALUES (
                         lc_u.title,
                         lc_u.start_date,
@@ -153,7 +156,8 @@ internal static class SqlCommands
                         lc_u.url,
                         lc_u.description,
                         lc_u.id,
-                        lc_u.category_id
+                        lc_u.category_id,
+                        lc_u.access_code
                          )
         """;
 
@@ -165,7 +169,7 @@ internal static class SqlCommands
             tim.uri,
             et.id
         FROM temp_image tim
-        JOIN event et ON et.url = tim.url
+        JOIN event et ON et.access_code = tim.access_code
             ) AS im_u ON (im_u.uri = im.uri)
             WHEN MATCHED THEN DO NOTHING
             WHEN NOT MATCHED
@@ -179,10 +183,10 @@ internal static class SqlCommands
         USING (
             SELECT
                 tec.key_id,
-                et.url,
+                et.access_code,
                 et.id
             FROM temp_event_keyword tec
-            JOIN event et ON et.url = tec.url
+            JOIN event et ON et.access_code = tec.access_code
         ) AS etc_u ON (etc_u.key_id = etk.keyword)
         WHEN MATCHED THEN DO NOTHING
         WHEN NOT MATCHED
@@ -204,7 +208,7 @@ internal static class SqlCommands
             )
             FROM STDIN (FORMAT BINARY );
         """;
-    
+
     internal const string ImportEventBinaryCopy =
         """
         COPY temp_event
@@ -221,29 +225,31 @@ internal static class SqlCommands
             last_update_date,
             url,
             description,
+            category_id,
+            access_code,
             sub_premise,
             geolocation_lat,
             geolocation_lng
             )
             FROM STDIN (FORMAT BINARY );
         """;
-    
-    internal const string ImportImageBinaryCopy = 
+
+    internal const string ImportImageBinaryCopy =
         """
         COPY temp_image
         (
             uri,
-            url
+            access_code
         )
         FROM STDIN (FORMAT BINARY);
         """;
-    
-    internal const string ImportKeywordBinaryCopy = 
+
+    internal const string ImportKeywordBinaryCopy =
         """
         COPY temp_event_keyword
         (
             id,
-            url
+            access_code
         )
         FROM STDIN (FORMAT BINARY);
         """;
