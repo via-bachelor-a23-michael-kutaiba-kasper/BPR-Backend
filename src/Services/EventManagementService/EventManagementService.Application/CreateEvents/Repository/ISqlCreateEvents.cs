@@ -1,4 +1,6 @@
+using System.Transactions;
 using Dapper;
+using EventManagementService.Application.CreateEvents.Exceptions;
 using EventManagementService.Application.CreateEvents.Sql;
 using EventManagementService.Application.CreateEvents.Util;
 using EventManagementService.Domain.Models.Events;
@@ -30,10 +32,28 @@ public class SqlCreateEvents : ISqlCreateEvents
     {
         await using var connection = new NpgsqlConnection(_options.Value.Postgres);
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
-        await CreateTempTables(connection);
-        await InsertImportedData(connection, events);
-        await UpsertData(connection, transaction);
-        await transaction.CommitAsync();
+        try
+        {
+            await CreateTempTables(connection);
+            await InsertImportedData(connection, events);
+            await UpsertData(connection, transaction);
+            await transaction.CommitAsync();
+        }
+        catch (Exception e)
+        {
+            try
+            {
+                await transaction.RollbackAsync();
+                _logger.LogInformation(e, "Upsert events transaction successfully rolled back");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Something went wrong while rolling back upsert events transaction");
+                throw new TransactionException("Cannot role back upsert events transaction");
+            }
+
+            throw new UpsertEventsException("Cannot upsert events", e);
+        }
     }
 
     private static async Task CreateTempTables(NpgsqlConnection connection)
