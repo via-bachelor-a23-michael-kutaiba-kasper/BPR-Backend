@@ -23,8 +23,9 @@ internal static class SqlCommands
             created_date            TIMESTAMPTZ NOT NULL,
             is_private              BOOLEAN     NOT NULL,
             adult_only              BOOLEAN     NOT NULL,
-            is_free                 BOOLEAN     NOT NULL,
+            is_paid                 BOOLEAN     NOT NULL,
             host_id                 VARCHAR     NOT NULL,
+            event_code              VARCHAR NOT NULL, 
             max_number_of_attendees INT,
             last_update_date        TIMESTAMPTZ,
             url                     VARCHAR,
@@ -77,7 +78,7 @@ internal static class SqlCommands
             
         """;
 
-    internal static string UpsertEvents =
+    internal const string UpsertEvents =
         """
         MERGE INTO event et USING
         (
@@ -89,7 +90,7 @@ internal static class SqlCommands
                 tet.created_date,
                 tet.is_private,
                 tet.adult_only,
-                tet.is_free,
+                tet.is_paid,
                 tet.host_id,
                 tet.max_number_of_attendees,
                 tet.last_update_date,
@@ -118,7 +119,7 @@ internal static class SqlCommands
                      created_date =  lc_u.created_date,
                      is_private =  lc_u.is_private,
                      adult_only =  lc_u.adult_only,
-                     is_free =  lc_u.is_free,
+                     is_paid =  lc_u.is_paid,
                      host_id =  lc_u.host_id,
                      last_update_date =  lc_u.last_update_date,
                      url =  lc_u.url,
@@ -131,7 +132,7 @@ internal static class SqlCommands
                          created_date,
                          is_private,
                          adult_only,
-                         is_free,
+                         is_paid,
                          host_id,
                          max_number_of_attendees,
                          last_update_date,
@@ -146,7 +147,7 @@ internal static class SqlCommands
                         lc_u.created_date,
                         lc_u.is_private,
                         lc_u.adult_only,
-                        lc_u.is_free,
+                        lc_u.is_paid,
                         lc_u.host_id,
                         lc_u.last_update_date,
                         lc_u.url,
@@ -214,7 +215,7 @@ internal static class SqlCommands
             created_date,
             is_private,
             adult_only,
-            is_free,
+            is_paid,
             host_id,
             max_number_of_attendees,
             last_update_date,

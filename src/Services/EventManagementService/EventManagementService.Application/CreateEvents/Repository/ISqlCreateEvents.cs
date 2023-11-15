@@ -1,10 +1,12 @@
 using Dapper;
-using EventManagementService.Application.CreateEvents.Exceptions;
+using EventManagementService.Application.CreateEvents.Sql;
+using EventManagementService.Application.CreateEvents.Util;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace EventManagementService.Application.CreateEvents.Repository;
 
@@ -26,16 +28,143 @@ public class SqlCreateEvents : ISqlCreateEvents
 
     public async Task UpsertEvents(IReadOnlyCollection<Event> events)
     {
-        throw new NotImplementedException();
+        await using var connection = new NpgsqlConnection(_options.Value.Postgres);
+        await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
+        await CreateTempTables(connection);
+        await InsertImportedData(connection, events);
+        await UpsertData(connection, transaction);
+        await transaction.CommitAsync();
     }
 
-    private static string InsertEventSql()
+    private static async Task CreateTempTables(NpgsqlConnection connection)
     {
-        //TODO: update this insert -> look into temp tables to insert and then use merge to copy data using binary copy
-        //TODO: add new migration for access code
-        return """
-               INSERT INTO public.event(title,url,location,description)
-               values (@title, @url, @location, @description)
-               """;
+        await connection.ExecuteAsync(SqlCommands.CreateTempTables);
+    }
+
+    private static async Task InsertImportedData
+    (
+        NpgsqlConnection connection,
+        IReadOnlyCollection<Event> events
+    )
+    {
+        await InsertImportedLocationInTemp(connection, events);
+        await InsertImportedEventsTemp(connection, events);
+        await InsertImportedImagesTemp(connection, events);
+        await InsertImportedEventKeywordsTemp(connection, events);
+    }
+
+    private static async Task UpsertData(NpgsqlConnection connection, NpgsqlTransaction transaction)
+    {
+        await connection.ExecuteAsync(SqlCommands.UpsertLocations, null, transaction);
+        await connection.ExecuteAsync(SqlCommands.UpsertEvents, null, transaction);
+        await connection.ExecuteAsync(SqlCommands.UpsertImage, null, transaction);
+        await connection.ExecuteAsync(SqlCommands.UpsertEventKeyword, null, transaction);
+    }
+
+    private static async Task InsertImportedLocationInTemp
+    (
+        NpgsqlConnection connection,
+        IReadOnlyCollection<Event> events
+    )
+    {
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        {
+            foreach (var et in events)
+            {
+                await writer.StartRowAsync();
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Location.StreetNumber,
+                    NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Location.StreetName,
+                    NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Location.City, NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Location.PostalCode,
+                    NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Location.Country, NpgsqlDbType.Varchar);
+                await writer.WriteAsync(et.Location.GeoLocation.Lat, NpgsqlDbType.Numeric);
+                await writer.WriteAsync(et.Location.GeoLocation.Lng, NpgsqlDbType.Numeric);
+                await writer.CompleteAsync();
+            }
+        }
+    }
+
+    private static async Task InsertImportedEventsTemp
+    (
+        NpgsqlConnection connection,
+        IReadOnlyCollection<Event> events
+    )
+    {
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        {
+            foreach (var et in events)
+            {
+                await writer.StartRowAsync();
+                await writer.WriteAsync(et.Title, NpgsqlDbType.Varchar);
+                await writer.WriteAsync(et.StartDate.ToUniversalTime(), NpgsqlDbType.TimestampTz);
+                await writer.WriteAsync(et.EndDate.ToUniversalTime(), NpgsqlDbType.TimestampTz);
+                await writer.WriteAsync(et.CreatedDate.ToUniversalTime(), NpgsqlDbType.TimestampTz);
+                await writer.WriteAsync(et.IsPrivate, NpgsqlDbType.Boolean);
+                await writer.WriteAsync(et.IsPaid, NpgsqlDbType.Boolean);
+                await writer.WriteAsync(et.HostId, NpgsqlDbType.Varchar);
+                await writer.WriteAsync(et.EventCode, NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<int>.WriteNullableAsync(writer, et.MaxNumberOfAttendees, NpgsqlDbType.Integer);
+                await BinaryWriterHelper<DateTimeOffset>.WriteNullableAsync(writer, et.LastUpdateDate.ToUniversalTime(),
+                    NpgsqlDbType.TimestampTz);
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Url, NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Description, NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Location.HouseNumber,
+                    NpgsqlDbType.Varchar);
+                await BinaryWriterHelper<float>.WriteNullableAsync(writer, et.Location.GeoLocation.Lat,
+                    NpgsqlDbType.Numeric);
+                await BinaryWriterHelper<float>.WriteNullableAsync(writer, et.Location.GeoLocation.Lng,
+                    NpgsqlDbType.Numeric);
+                await writer.CompleteAsync();
+            }
+        }
+    }
+
+    private static async Task InsertImportedImagesTemp
+    (
+        NpgsqlConnection connection,
+        IReadOnlyCollection<Event> events
+    )
+    {
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        {
+            foreach (var et in events)
+            {
+                foreach (var image in et.Images)
+                {
+                    await writer.StartRowAsync();
+                    await BinaryWriterHelper<string>.WriteNullableAsync(writer, image,
+                        NpgsqlDbType.Varchar);
+                    await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Url,
+                        NpgsqlDbType.Numeric);
+                    await writer.CompleteAsync();
+                }
+            }
+        }
+    }
+
+    private static async Task InsertImportedEventKeywordsTemp
+    (
+        NpgsqlConnection connection,
+        IReadOnlyCollection<Event> events
+    )
+    {
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        {
+            foreach (var et in events)
+            {
+                foreach (var keyword in et.Keywords)
+                {
+                    await writer.StartRowAsync();
+                    await BinaryWriterHelper<int>.WriteNullableAsync(writer, (int)keyword,
+                        NpgsqlDbType.Integer);
+                    await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Url,
+                        NpgsqlDbType.Numeric);
+                    await writer.CompleteAsync();
+                }
+            }
+        }
     }
 }
