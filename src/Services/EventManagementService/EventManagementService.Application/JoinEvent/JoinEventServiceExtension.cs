@@ -8,6 +8,7 @@ public static class JoinEventServiceExtension
     public static IServiceCollection AddJoinEvent(this IServiceCollection collection)
     {
         collection.AddScoped<IEventRepository, EventRepository>();
+        collection.AddScoped<IUserRepository, UserRepository>();
         return collection;
     }
 }

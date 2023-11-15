@@ -16,22 +16,32 @@ public interface IEventRepository
 public class EventRepository : IEventRepository
 {
     private readonly IConnectionStringFactory _connectionStringFactory;
-    
+
     public EventRepository(IConnectionStringFactory connectionStringFactory)
     {
         _connectionStringFactory = connectionStringFactory;
     }
-    
-    public Task<Event> GetByIdAsync(int id)
+
+    public async Task<Event> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        await using var connection = new NpgsqlConnection(_connectionStringFactory.GetConnectionString());
+        await connection.OpenAsync();
+        var queryParams = new { @eventId = id };
+        var existingEvent= await connection.QueryAsync<Event>(SqlQueries.GetEventById, queryParams);
+        return existingEvent;
     }
 
     public async Task<bool> AddAttendeeToEventAsync(string userId, int eventId)
     {
         await using var connection = new NpgsqlConnection(_connectionStringFactory.GetConnectionString());
         await connection.OpenAsync();
-        var rowsAffected = await connection.ExecuteAsync(SqlQueries.AddAttendeeToEvent, new { @userId = userId, @eventId = eventId });
+        var queryParams = new
+        {
+            @userId = userId,
+            @eventId = eventId,
+        };
+        var rowsAffected = await connection.ExecuteAsync(SqlQueries.AddAttendeeToEvent, queryParams);
+         
         return rowsAffected > 0;
     }
 
@@ -39,7 +49,11 @@ public class EventRepository : IEventRepository
     {
         await using var connection = new NpgsqlConnection(_connectionStringFactory.GetConnectionString());
         await connection.OpenAsync();
-        var attendees = await connection.QueryAsync<string>(SqlQueries.GetAttendeesOfEvent, new { @eventId = eventId });
+        var queryParams = new
+        {
+            @eventId = eventId
+        };
+        var attendees = await connection.QueryAsync<string>(SqlQueries.GetAttendeesOfEvent, queryParams);
         return attendees != null ? attendees.ToList() : new List<string>();
     }
 }
