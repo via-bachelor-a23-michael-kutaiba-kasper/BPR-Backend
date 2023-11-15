@@ -1,4 +1,3 @@
-using EventManagementService.Application.FetchAllPublicEvents;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.CreateEvents;
 using EventManagementService.Application.FetchAllEvents;

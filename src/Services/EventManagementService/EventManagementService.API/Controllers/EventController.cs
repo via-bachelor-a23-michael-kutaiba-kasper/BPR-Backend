@@ -1,4 +1,8 @@
-using EventManagementService.Application.FetchAllPublicEvents;
+using System.Net;
+using EventManagementService.API.Dtos;
+using EventManagementService.Application.FetchAllEvents;
+using EventManagementService.Application.JoinEvent;
+using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Domain.Models.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
