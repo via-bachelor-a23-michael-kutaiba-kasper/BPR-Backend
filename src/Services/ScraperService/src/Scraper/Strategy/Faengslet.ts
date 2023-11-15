@@ -2,13 +2,14 @@ import { Event } from "../../Models/Event";
 import { IScraperStrategy } from "./IScraperStrategy";
 import { chromium as pwChromium } from "playwright";
 import chromium from "@sparticuz/chromium";
+import { ConfigOptions } from "src/Configuration/ScraperConfig";
 
 export class FaengsletScraperStrategy implements IScraperStrategy {
     private eventsUrl = "https://www.faengslet.dk/det-sker";
 
     constructor() {}
 
-    async scrape(): Promise<Event[]> {
+    async scrape(config: ConfigOptions): Promise<Event[]> {
         const browser = await pwChromium.launch({
             args: chromium.args,
             executablePath: await chromium.executablePath(),
@@ -58,6 +59,7 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
                 host: "Faengslet",
                 description,
                 url: page.url(),
+                hostId: config.hostId,
                 location: {
                     country: "Denmark",
                     city: "Horsens",

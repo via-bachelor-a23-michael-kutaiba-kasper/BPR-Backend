@@ -18,7 +18,9 @@ export function loadConfig(configPath?: string): ScraperConfig {
             throw new Error(`Config located at ${configPath} is empty`);
         }
 
-        return JSON.parse(fileContents) as ScraperConfig;
+        return new Map(
+            Object.entries(JSON.parse(fileContents))
+        ) as ScraperConfig;
     } catch (e) {
         console.error("Failed to load configuration", e);
         throw e;

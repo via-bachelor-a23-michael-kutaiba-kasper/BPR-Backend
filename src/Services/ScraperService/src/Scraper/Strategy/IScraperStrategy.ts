@@ -1,4 +1,5 @@
+import { ConfigOptions } from "src/Configuration/ScraperConfig";
 import { Event } from "../../Models/Event";
 export interface IScraperStrategy {
-    scrape(): Promise<Event[]>;
+    scrape(config: ConfigOptions): Promise<Event[]>;
 }
