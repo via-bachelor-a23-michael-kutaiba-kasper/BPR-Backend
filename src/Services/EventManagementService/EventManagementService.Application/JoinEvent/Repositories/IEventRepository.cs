@@ -27,7 +27,7 @@ public class EventRepository : IEventRepository
         await using var connection = new NpgsqlConnection(_connectionStringFactory.GetConnectionString());
         await connection.OpenAsync();
         var queryParams = new { @eventId = id };
-        var existingEvent= await connection.QueryAsync<Event>(SqlQueries.GetEventById, queryParams);
+        var existingEvent= await connection.QueryFirstAsync<Event>(SqlQueries.GetEventById, queryParams);
         return existingEvent;
     }
 
