@@ -1,0 +1,1 @@
+ALTER TABLE keyword_category RENAME TO event_keyword;

@@ -18,9 +18,9 @@
     <ProjectReference Include="..\EventManagementService.Infrastructure\EventManagementService.Infrastructure.csproj" />
   </ItemGroup>
 
-
-
-
-
+  <ItemGroup>
+    <Folder Include="CreateEvent\" />
+    <Folder Include="FetchAllEvents\Exceptions\" />
+  </ItemGroup>
 
 </Project>

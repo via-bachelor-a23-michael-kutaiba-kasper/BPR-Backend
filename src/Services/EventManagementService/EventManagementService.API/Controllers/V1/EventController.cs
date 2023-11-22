@@ -1,15 +1,13 @@
 using System.Net;
-using EventManagementService.API.Dtos;
-using EventManagementService.Application.FetchAllPublicEvents;
+using EventManagementService.API.Controllers.V1.Dtos;
+using EventManagementService.Application.FetchAllEvents;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
-using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
-using Google.Cloud.PubSub.V1;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventManagementService.API.Controllers;
+namespace EventManagementService.API.Controllers.V1;
 
 [ApiController]
 [Route("api/v1/events")]
@@ -28,14 +26,16 @@ public class EventController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("allPublicEvents")]
-    public async Task<ActionResult<List<Event>>> GetPublicEvents()
+    [HttpGet("allEvents")]
+    public async Task<ActionResult<List<Event>>> GetAllEvents()
     {
         // TODO: get these from appsetiing.json
+        /*
         TopicName topicName = new TopicName("bachelorshenanigans", "vibeverse_events_scraped");
         SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "eventmanagement");
+        */
 
-        var events = await _mediator.Send(new AllPublicEventsRequest(topicName, subscriptionName));
+        var events = await _mediator.Send(new AllEventsRequest());
         
         return Ok(events);
     }

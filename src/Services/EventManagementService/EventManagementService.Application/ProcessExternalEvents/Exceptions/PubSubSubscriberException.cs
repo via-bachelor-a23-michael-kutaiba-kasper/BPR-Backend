@@ -1,4 +1,4 @@
-namespace EventManagementService.Application.FetchAllPublicEvents.Exceptions;
+namespace EventManagementService.Application.ProcessExternalEvents.Exceptions;
 
 public class PubSubSubscriberException : Exception
 {

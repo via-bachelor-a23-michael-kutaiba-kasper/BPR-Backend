@@ -2,9 +2,8 @@ using System.Text.Json;
 using EventManagementService.Domain.Models.Google;
 using EventManagementService.Infrastructure.Exceptions;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
 
-namespace EventManagementService.Application.FetchAllPublicEvents.Repository;
+namespace EventManagementService.Application.ProcessExternalEvents.Repository;
 
 public interface IGeoCoding
 {

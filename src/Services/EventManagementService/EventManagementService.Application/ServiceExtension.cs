@@ -1,5 +1,6 @@
-﻿using EventManagementService.Application.FetchAllPublicEvents;
 using EventManagementService.Application.JoinEvent;
+using EventManagementService.Application.FetchAllEvents;
+using EventManagementService.Application.ProcessExternalEvents;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventManagementService.Application;
@@ -7,7 +8,8 @@ public static class ServiceExtension
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScraperEvents();
+        services.AddFetchAllEvents();
+        services.AddCreateEvents();
         services.AddJoinEvent();
         return services;
     }
