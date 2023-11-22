@@ -53,7 +53,7 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
             const imageElement = page.locator("picture > img").first();
             const imageUrl = (await imageElement.getAttribute("src")) ?? "";
 
-            const event = {
+            const event: Event = {
                 title,
                 price,
                 host: "Faengslet",
@@ -68,6 +68,11 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
                     streetNumber: "8",
                 },
                 images: [imageUrl],
+                adultsOnly: false,
+                isPaid: price != null || price != undefined,
+                isPrivate: false,
+                keywords: [],
+                attendees: [],
             };
             scrapedEvents.push(event);
         }
