@@ -68,7 +68,7 @@ public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
                     HouseNumber = e.Location.HouseNumber,
                     PostalCode = e.Location.PostalCode,
                     City = e.Location.City,
-                    Floor = e.Location.Floor,
+                    SubPremise= e.Location.SubPremise,
                     GeoLocation = await FetchGeoLocation(e.Location)
                 },
                 Description = e.Description,
@@ -114,7 +114,7 @@ public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
                     HouseNumber = e.Location.HouseNumber,
                     PostalCode = e.Location.PostalCode,
                     City = e.Location.City,
-                    Floor = e.Location.Floor,
+                    SubPremise= e.Location.SubPremise,
                     GeoLocation = await FetchGeoLocation(e.Location)
                 },
                 Description = e.Description,
