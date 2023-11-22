@@ -9,9 +9,8 @@ namespace EventManagementService.API.Controllers.V1;
 
 [ApiController]
 [Route("api/v1/attendees")]
-public class AttendeesController: ControllerBase
+public class AttendeesController : ControllerBase
 {
-    
     private readonly IMediator _mediator;
     private readonly ILogger<AttendeesController> _logger;
 
@@ -24,7 +23,7 @@ public class AttendeesController: ControllerBase
         _mediator = mediator;
         _logger = logger;
     }
-    
+
     [HttpPost]
     public async Task<ActionResult> JoinEvent([FromBody] JoinEventDto joinEventDto)
     {
