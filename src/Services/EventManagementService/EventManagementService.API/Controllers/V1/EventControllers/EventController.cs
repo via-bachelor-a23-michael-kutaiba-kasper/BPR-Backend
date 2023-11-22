@@ -17,16 +17,10 @@ namespace EventManagementService.API.Controllers.V1.EventControllers;
 public class EventController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<EventController> _logger;
 
-    public EventController
-    (
-        IMediator mediator,
-        ILogger<EventController> logger
-    )
+    public EventController(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     [HttpGet("allEvents")]
