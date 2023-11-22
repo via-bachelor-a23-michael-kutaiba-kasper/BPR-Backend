@@ -1,53 +1,73 @@
 namespace EventManagementService.Application.JoinEvent.Data;
 
-public class SqlQueries
+public static class SqlQueries
 {
-    public static string GetAttendeesOfEvent =>
+    public static string QueryEventAttendees =>
         "SELECT user_id FROM public.event_attendee ea WHERE ea.event_id = @eventId";
 
     public static string AddAttendeeToEvent =>
         "INSERT INTO public.event_attendee(user_id, event_id) VALUES (@userId, @eventId)";
 
-    public static string GetEventsByUser =>
-        """
-        SELECT
-            e.*,
-            l.*
-        FROM
-            postgres.public.event e
-        JOIN
-                location l ON e.location_id = l.id
-        LEFT JOIN
-                public.event_attendee ea on e.id = ea.event_id
-        LEFT JOIN
-                event_category ec ON e.id = ec.event_id
-        LEFT JOIN
-                category c ON ec.category_id = c.id
-        LEFT JOIN
-                keyword_category kc ON e.id = kc.event_id
-        LEFT JOIN
-                keyword k ON kc.keyword = k.id
-        WHERE e.host_id = @hostId
-        """;
-    public static string GetEventById=>
-        """
-        SELECT
-            e.*,
-            l.*
-        FROM
-            postgres.public.event e
-        JOIN
-                location l ON e.location_id = l.id
-        LEFT JOIN
-                public.event_attendee ea on e.id = ea.event_id
-        LEFT JOIN
-                event_category ec ON e.id = ec.event_id
-        LEFT JOIN
-                category c ON ec.category_id = c.id
-        LEFT JOIN
-                keyword_category kc ON e.id = kc.event_id
-        LEFT JOIN
-                keyword k ON kc.keyword = k.id
-        WHERE e.id = @eventId
-        """;
+    public static string QueryAllFromEventTableByEventId => """
+                                                            SELECT e.id,
+                                                            title,
+                                                            start_date,
+                                                            end_date,
+                                                            created_date,
+                                                            is_private,
+                                                            adult_only,
+                                                            is_paid,
+                                                            host_id,
+                                                            max_number_of_attendees,
+                                                            last_update_date,
+                                                            url,
+                                                            description,
+                                                            location_id,
+                                                            access_code,
+                                                            category_id,
+                                                            street_name,
+                                                            street_number,
+                                                            sub_premise,
+                                                            city,
+                                                            postal_code,
+                                                            country,
+                                                            geolocation_lat,
+                                                            geolocation_lng
+                                                            FROM event e join location l on e.location_id = l.id
+                                                            WHERE e.id = @eventId;
+                                                            """;
+
+    public static string QueryEventKeywords => """
+                                               SELECT
+                                               keyword
+                                               FROM event_keyword
+                                               WHERE event_id = @eventId
+                                               """;
+
+    public static string QueryEventImages => """
+                                                SELECT URI
+                                                FROM image
+                                                WHERE event_id = @eventId
+                                             """;
+
+    public static string QueryAllFromEventTableByHostId => """
+                                                           SELECT id,
+                                                           title,
+                                                           start_date,
+                                                           end_date,
+                                                           created_date,
+                                                           is_private,
+                                                           adult_only,
+                                                           is_paid,
+                                                           host_id,
+                                                           max_number_of_attendees,
+                                                           last_update_date,
+                                                           url,
+                                                           description,
+                                                           location_id,
+                                                           access_code,
+                                                           category_id
+                                                           FROM event e
+                                                           WHERE host_id = @host_id;
+                                                           """;
 }

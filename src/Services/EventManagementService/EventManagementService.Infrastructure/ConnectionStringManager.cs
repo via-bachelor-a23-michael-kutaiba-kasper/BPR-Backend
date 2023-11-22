@@ -2,7 +2,12 @@ using System.Collections.Concurrent;
 
 namespace EventManagementService.Infrastructure;
 
-public class ConnectionStringManager
+public interface IConnectionStringManager
+{
+    public string GetConnectionString();
+}
+
+public class ConnectionStringManager: IConnectionStringManager
 {
     /// <summary>
     /// Indicates whether we are running in CI environment.
@@ -27,7 +32,8 @@ public class ConnectionStringManager
     {
         _ci = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
         // Values should be "LOCAL", "PRODUCTION", "CI" or "LOCAL_CONTAINER"
-        _deploymentEnvironment = Environment.GetEnvironmentVariable("DEPLOYMENT_EVIRONMENT") ?? "LOCAL";
+        _deploymentEnvironment = Environment.GetEnvironmentVariable("DEPLOYMENT_ENVIRONMENT") ?? "LOCAL";
+        Console.WriteLine($"Deployment Environment: {_deploymentEnvironment}");
         
         // NOTE: This is only here due to it being a school project. Otherwise we would use a vault or pass by environment variable.
         _connectionStrings.Add("PRODUCTION", "Server=34.159.177.93;Port=5432;Database=postgres;User Id=postgres;Password=postgres");

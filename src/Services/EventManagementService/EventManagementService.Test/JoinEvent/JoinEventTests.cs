@@ -36,7 +36,7 @@ public class JoinEventTests
         // Arrange
         var dataBuilder = new DataBuilder(_connectionStringManager);
         var nonExistingUserId = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
-        var existingEvent = dataBuilder.CreateTestEvent();
+        var existingEvent = dataBuilder.NewTestEvent();
 
         var invitationRepositoryMock = new Mock<IInvitationRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
@@ -81,7 +81,7 @@ public class JoinEventTests
         // Arrange
         var databuilder = new DataBuilder(_connectionStringManager);
         var existingUserId = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
-        var existingEvent = databuilder.CreateTestEvent(e => e.Attendees = new List<string> { existingUserId });
+        var existingEvent = databuilder.NewTestEvent(e => e.Attendees = new List<string> { existingUserId });
 
         var invitationRepositoryMock = new Mock<IInvitationRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();

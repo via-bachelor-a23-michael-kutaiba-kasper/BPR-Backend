@@ -27,6 +27,7 @@ module "api_gateway" {
     "QUERY_EVENTS_HOST"          = module.eventmanagement_service.service_url
     "QUERY_EVENT_HOST"           = module.eventmanagement_service.service_url
     "QUERY_ALLPUBLICEVENTS_HOST" = module.eventmanagement_service.service_url
+    "QUERY_JOINEVENT_HOST"       = module.eventmanagement_service.service_url
   }
   cloud_sql_instance = google_sql_database_instance.main.connection_name
 }
