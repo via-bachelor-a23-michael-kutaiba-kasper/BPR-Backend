@@ -1,3 +1,4 @@
+using EventManagementService.Application.CreateEvent;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.FetchAllEvents;
 using EventManagementService.Application.FetchCategories;
@@ -15,6 +16,7 @@ public static class ServiceExtension
         services.AddJoinEvent();
         services.AddFetchCategories();
         services.AddFetchKeywords();
+        services.AddCreateEvent();
         return services;
     }
 }
