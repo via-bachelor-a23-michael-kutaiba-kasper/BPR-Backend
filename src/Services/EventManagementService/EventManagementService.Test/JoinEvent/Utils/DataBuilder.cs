@@ -53,7 +53,6 @@ public class DataBuilder
         using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
         {
             connection.Open();    
-            
         }
         
         return newEvent;

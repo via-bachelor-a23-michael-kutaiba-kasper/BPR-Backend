@@ -20,4 +20,9 @@
       <EmbeddedResource Include="Migrations\0002_Add_access_code_to_event.sql" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <ProjectReference Include="..\EventManagementService.Infrastructure\EventManagementService.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

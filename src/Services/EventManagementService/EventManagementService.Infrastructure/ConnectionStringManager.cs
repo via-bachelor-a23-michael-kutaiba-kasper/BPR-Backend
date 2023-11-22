@@ -32,7 +32,7 @@ public class ConnectionStringManager
         // NOTE: This is only here due to it being a school project. Otherwise we would use a vault or pass by environment variable.
         _connectionStrings.Add("PRODUCTION", "Server=34.159.177.93;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
         _connectionStrings.Add("CI", "Server=34.107.115.110;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
-        _connectionStrings.Add("LOCAL", "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
+        _connectionStrings.Add("LOCAL", "Server=flora.db.elephantsql.com;Port=5432;Database=ttcmhspc;User Id=ttcmhspc;Password=mjxZzxedP_elMOCw9HlIg1xstH4wgUkN");
         _connectionStrings.Add("LOCAL_CONTAINER", "Server=eventmanagement_postgres;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
     }
 
