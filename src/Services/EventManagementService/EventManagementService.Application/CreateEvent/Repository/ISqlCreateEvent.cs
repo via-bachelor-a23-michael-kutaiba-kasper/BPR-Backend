@@ -82,9 +82,9 @@ public class SqlCreateEvent : ISqlCreateEvent
             new
             {
                 title = eEvent.Title,
-                startDate = eEvent.StartDate,
-                endDate = eEvent.EndDate,
-                createdDate = eEvent.CreatedDate,
+                startDate = eEvent.StartDate.ToUniversalTime(),
+                endDate = eEvent.EndDate.ToUniversalTime(),
+                createdDate = eEvent.CreatedDate.ToUniversalTime(),
                 isPrivate = eEvent.IsPrivate,
                 adultOnly = eEvent.AdultsOnly,
                 isPaid = eEvent.IsPaid,

@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EventManagementService.Application.ProcessExternalEvents;
 
-public record ProcessExternalEventsRequest() : IRequest;
+public record ProcessExternalEventsRequest() : IRequest<IReadOnlyCollection<Event>>;
 
-public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEventsRequest>
+public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEventsRequest, IReadOnlyCollection<Event>>
 {
     private readonly IGeoCoding _geoCoding;
     private readonly IPubSubExternalEvents _pubSubExternalEvents;
@@ -30,7 +30,7 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
         _logger = logger;
     }
 
-    public async Task Handle
+    public async Task<IReadOnlyCollection<Event>> Handle
     (
         ProcessExternalEventsRequest request,
         CancellationToken cancellationToken
@@ -41,6 +41,7 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
             _logger.LogInformation($"Creating new events ar: {DateTimeOffset.UtcNow}");
             var pubSubEvents = await PubSubEvents(request, cancellationToken);
             await _sqlExternalEvents.BulkUpsertEvents(pubSubEvents);
+            return pubSubEvents;
             _logger.LogInformation(
                 $"{pubSubEvents.Count} events have been successfully created at: {DateTimeOffset.UtcNow}");
         }
@@ -73,7 +74,7 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                     HouseNumber = e.Location.HouseNumber,
                     PostalCode = e.Location.PostalCode,
                     City = e.Location.City,
-                    Floor = e.Location.Floor,
+                    SubPremise = e.Location.SubPremise,
                     GeoLocation = await FetchGeoLocation(e.Location)
                 },
                 Description = e.Description,

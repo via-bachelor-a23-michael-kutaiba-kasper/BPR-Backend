@@ -8,7 +8,7 @@ public class Location
     public string StreetName{ get; set; }
     public string StreetNumber{ get; set; }
     public string? HouseNumber{ get; set; }
-    public string? Floor{ get; set; }
+    public string? SubPremise{ get; set; }
     public GeoLocation GeoLocation { get; set; }
 }
 

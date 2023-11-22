@@ -113,7 +113,7 @@ public class SqlExternalEvents : ISqlExternalEvents
         IReadOnlyCollection<Event> events
     )
     {
-        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportEventBinaryCopy))
         {
             foreach (var et in events)
             {
@@ -152,7 +152,7 @@ public class SqlExternalEvents : ISqlExternalEvents
         IReadOnlyCollection<Event> events
     )
     {
-        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportImageBinaryCopy))
         {
             foreach (var et in events)
             {
@@ -175,7 +175,7 @@ public class SqlExternalEvents : ISqlExternalEvents
         IReadOnlyCollection<Event> events
     )
     {
-        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportKeywordBinaryCopy))
         {
             foreach (var et in events)
             {
