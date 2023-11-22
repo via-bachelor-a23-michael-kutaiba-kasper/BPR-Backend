@@ -14,14 +14,16 @@ public interface IPubSubExternalEvents
 {
     Task PublishEvents(TopicName topicName, IReadOnlyCollection<Event> events);
 
-    Task<IReadOnlyCollection<Event>> FetchEvents(TopicName topicName, SubscriptionName subscriptionName,
-        CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<Event>> FetchEvents(CancellationToken cancellationToken);
 }
 
 public class PubSubExternalEvents : IPubSubExternalEvents
 {
     private readonly ILogger<PubSubExternalEvents> _logger;
+    private readonly IOptions<PubSub> _options;
     private readonly string? _serviceAccountKeyJson;
+    private readonly SubscriptionName? _subscriptionName;
+    private readonly TopicName? _topicName;
 
     public PubSubExternalEvents
     (
@@ -30,7 +32,18 @@ public class PubSubExternalEvents : IPubSubExternalEvents
     )
     {
         _logger = logger;
+        _options = options;
         _serviceAccountKeyJson = Environment.GetEnvironmentVariable("SERVICE_ACCOUNT_KEY_JSON") ?? null;
+        _subscriptionName = new SubscriptionName
+        (
+            _options.Value.Topics.First().ProjectId,
+            _options.Value.SubscriptionName
+        );
+        _topicName = new TopicName
+        (
+            _options.Value.Topics.First().ProjectId,
+            _options.Value.Topics.First().TopicId
+        );
     }
 
     public async Task PublishEvents
@@ -67,12 +80,7 @@ public class PubSubExternalEvents : IPubSubExternalEvents
         }
     }
 
-    public async Task<IReadOnlyCollection<Event>> FetchEvents
-    (
-        TopicName topicName,
-        SubscriptionName subscriptionName,
-        CancellationToken cancellationToken
-    )
+    public async Task<IReadOnlyCollection<Event>> FetchEvents(CancellationToken cancellationToken)
     {
         var events = new List<Event>();
 
@@ -97,7 +105,7 @@ public class PubSubExternalEvents : IPubSubExternalEvents
 
         try
         {
-            await subscriber.CreateSubscriptionAsync(subscriptionName, topicName, pushConfig: null,
+            await subscriber.CreateSubscriptionAsync(_subscriptionName, _topicName, pushConfig: null,
                 ackDeadlineSeconds: 60);
         }
         catch (Exception e)
@@ -108,7 +116,7 @@ public class PubSubExternalEvents : IPubSubExternalEvents
         //subscriptionName, maxMessages: 10, returnImmediately: true
         var response = await subscriber.PullAsync(new PullRequest
         {
-            SubscriptionAsSubscriptionName = subscriptionName,
+            SubscriptionAsSubscriptionName = _subscriptionName,
             MaxMessages = 10
         });
         foreach (var received in response.ReceivedMessages)
@@ -125,7 +133,7 @@ public class PubSubExternalEvents : IPubSubExternalEvents
 
         if (response.ReceivedMessages.Count > 0)
         {
-            await subscriber.AcknowledgeAsync(subscriptionName, response.ReceivedMessages.Select(m => m.AckId));
+            await subscriber.AcknowledgeAsync(_subscriptionName, response.ReceivedMessages.Select(m => m.AckId));
         }
 
         // NOTE: Use same subscription every time, since there is no guarantees that 

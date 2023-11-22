@@ -8,21 +8,20 @@ using Microsoft.Extensions.Logging;
 
 namespace EventManagementService.Application.ProcessExternalEvents;
 
-public record CreateEventsRequest
-(
-    TopicName TopicName,
-    SubscriptionName SubscriptionName,
-    IReadOnlyCollection<Event> Events
-) : IRequest;
+public record ProcessExternalEventsRequest() : IRequest;
 
-public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
+public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEventsRequest>
 {
     private readonly IGeoCoding _geoCoding;
     private readonly IPubSubExternalEvents _pubSubExternalEvents;
     private readonly ISqlExternalEvents _sqlExternalEvents;
-    private readonly ILogger<CreateEventsHandler> _logger;
+    private readonly ILogger<ProcessExternalEventsHandler> _logger;
 
-    public async Task Handle(CreateEventsRequest request, CancellationToken cancellationToken)
+    public async Task Handle
+    (
+        ProcessExternalEventsRequest request,
+        CancellationToken cancellationToken
+    )
     {
         var newEvents = new List<Event>();
 
@@ -30,7 +29,7 @@ public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
         {
             _logger.LogInformation($"Creating new events ar: {DateTimeOffset.UtcNow}");
             var psEvents = await PubSubEvents(request, cancellationToken);
-            var requestEvents = await ProcessRequestEvents(request);
+            var requestEvents = await ProcessRequestEvents(psEvents);
             if (psEvents != null || psEvents.Any())
             {
                 newEvents.AddRange(psEvents);
@@ -52,10 +51,10 @@ public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
         }
     }
 
-    private async Task<IReadOnlyCollection<Event>> ProcessRequestEvents(CreateEventsRequest request)
+    private async Task<IReadOnlyCollection<Event>> ProcessRequestEvents(IReadOnlyCollection<Event> events)
     {
         var evs = new List<Event>();
-        foreach (var e in request.Events)
+        foreach (var e in events)
         {
             evs.Add(new Event
             {
@@ -94,13 +93,13 @@ public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
 
     private async Task<IReadOnlyCollection<Event>> PubSubEvents
     (
-        CreateEventsRequest request,
+        ProcessExternalEventsRequest request,
         CancellationToken cancellationToken
     )
     {
         var evs = new List<Event>();
         var psEvents =
-            await _pubSubExternalEvents.FetchEvents(request.TopicName, request.SubscriptionName, cancellationToken);
+            await _pubSubExternalEvents.FetchEvents(cancellationToken);
         foreach (var e in psEvents)
         {
             evs.Add(new Event

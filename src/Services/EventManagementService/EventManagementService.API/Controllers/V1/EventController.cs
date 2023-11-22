@@ -3,6 +3,7 @@ using EventManagementService.API.Controllers.V1.Dtos;
 using EventManagementService.Application.FetchAllEvents;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
+using EventManagementService.Application.ProcessExternalEvents;
 using EventManagementService.Domain.Models.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -59,6 +60,21 @@ public class EventController : ControllerBase
         catch (Exception e)
         {
             return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet("externalEvents")]
+    public async Task<ActionResult> GetExternalEvents()
+    {
+        try
+        {
+            await _mediator.Send(new ProcessExternalEventsRequest());
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
 }

@@ -4,7 +4,6 @@ ALTER TABLE event
     ADD CONSTRAINT unique_access_code 
         UNIQUE (access_code);
 ALTER TABLE event
-    ADD COLUMN host_id     VARCHAR,
     ADD COLUMN category_id INT;
 
 ALTER TABLE event

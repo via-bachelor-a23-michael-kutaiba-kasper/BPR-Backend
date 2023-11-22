@@ -9,4 +9,5 @@ public class Topic
 public class PubSub
 {
     public Topic[] Topics { get; set; }
+    public string SubscriptionName { get; set; }
 }
