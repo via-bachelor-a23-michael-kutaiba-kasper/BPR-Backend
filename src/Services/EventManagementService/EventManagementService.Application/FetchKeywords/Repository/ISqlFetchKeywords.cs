@@ -1,5 +1,6 @@
 using Dapper;
 using EventManagementService.Application.FetchKeywords.Exceptions;
+using EventManagementService.Infrastructure;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,21 +16,21 @@ public interface ISqlFetchKeywords
 public class SqlFetchKeywords : ISqlFetchKeywords
 {
     private readonly ILogger<SqlFetchKeywords> _logger;
-    private readonly IOptions<ConnectionStrings> _options;
+    private readonly IConnectionStringManager _connectionStringManager;
 
     public SqlFetchKeywords
     (
         ILogger<SqlFetchKeywords> logger,
-        IOptions<ConnectionStrings> options
+        IConnectionStringManager connectionStringManager
     )
     {
         _logger = logger;
-        _options = options;
+        _connectionStringManager = connectionStringManager;
     }
 
     public async Task<IReadOnlyCollection<string>> FetchKeywords()
     {
-        await using var connection = new NpgsqlConnection(_options.Value.Postgres);
+        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         try
         {
             await connection.OpenAsync();

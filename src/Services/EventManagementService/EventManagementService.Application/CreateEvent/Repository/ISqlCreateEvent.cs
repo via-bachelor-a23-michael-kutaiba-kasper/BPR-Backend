@@ -2,9 +2,8 @@ using System.Transactions;
 using Dapper;
 using EventManagementService.Application.CreateEvent.Exceptions;
 using EventManagementService.Domain.Models.Events;
-using EventManagementService.Infrastructure.AppSettings;
+using EventManagementService.Infrastructure;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Npgsql;
 
 namespace EventManagementService.Application.CreateEvent.Repository;
@@ -16,22 +15,22 @@ public interface ISqlCreateEvent
 
 public class SqlCreateEvent : ISqlCreateEvent
 {
-    private readonly IOptions<ConnectionStrings> _options;
+    private readonly IConnectionStringManager _connectionStringManager;
     private readonly ILogger<SqlCreateEvent> _logger;
 
     public SqlCreateEvent
     (
-        IOptions<ConnectionStrings> options,
+        IConnectionStringManager connectionStringManager,
         ILogger<SqlCreateEvent> logger
     )
     {
-        _options = options;
+        _connectionStringManager = connectionStringManager;
         _logger = logger;
     }
 
     public async Task InsertEvent(Event eEvent)
     {
-        await using var connection = new NpgsqlConnection(_options.Value.Postgres);
+        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
         try
         {

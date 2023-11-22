@@ -1,6 +1,7 @@
 using Dapper;
 using EventManagementService.Application.FetchCategories.Exceptions;
 using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,21 +17,21 @@ public interface ISqlFetchCategories
 public class SqlFetchCategories : ISqlFetchCategories
 {
     private readonly ILogger<SqlFetchCategories> _logger;
-    private readonly IOptions<ConnectionStrings> _options;
+    private readonly IConnectionStringManager _connectionStringManager;
 
     public SqlFetchCategories
     (
         ILogger<SqlFetchCategories> logger,
-        IOptions<ConnectionStrings> options
+        IConnectionStringManager connectionStringManager
     )
     {
         _logger = logger;
-        _options = options;
+        _connectionStringManager = connectionStringManager;
     }
 
     public async Task<IReadOnlyCollection<string>> GetCategories()
     {
-        await using var connection = new NpgsqlConnection(_options.Value.Postgres);
+        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         try
         {
             await connection.OpenAsync();
