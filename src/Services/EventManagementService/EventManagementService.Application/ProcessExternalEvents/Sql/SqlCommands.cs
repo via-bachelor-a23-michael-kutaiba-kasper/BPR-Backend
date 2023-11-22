@@ -1,4 +1,4 @@
-namespace EventManagementService.Application.CreateEvents.Sql;
+namespace EventManagementService.Application.ProcessExternalEvents.Sql;
 
 internal static class SqlCommands
 {

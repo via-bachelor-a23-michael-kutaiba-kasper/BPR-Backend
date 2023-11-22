@@ -1,4 +1,4 @@
-namespace EventManagementService.Application.CreateEvents.Exceptions;
+namespace EventManagementService.Application.ProcessExternalEvents.Exceptions;
 
 public class PubSubPublisherException : Exception
 {

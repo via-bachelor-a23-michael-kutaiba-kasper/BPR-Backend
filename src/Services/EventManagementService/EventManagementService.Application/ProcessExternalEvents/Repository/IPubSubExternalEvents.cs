@@ -1,5 +1,5 @@
 using System.Text.Json;
-using EventManagementService.Application.CreateEvents.Exceptions;
+using EventManagementService.Application.ProcessExternalEvents.Exceptions;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Google.Api.Gax;
@@ -8,9 +8,9 @@ using Google.Cloud.PubSub.V1;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace EventManagementService.Application.CreateEvents.Repository;
+namespace EventManagementService.Application.ProcessExternalEvents.Repository;
 
-public interface IPubSubPublicEvents
+public interface IPubSubExternalEvents
 {
     Task PublishEvents(TopicName topicName, IReadOnlyCollection<Event> events);
 
@@ -18,14 +18,14 @@ public interface IPubSubPublicEvents
         CancellationToken cancellationToken);
 }
 
-public class PubSubPublicEvents : IPubSubPublicEvents
+public class PubSubExternalEvents : IPubSubExternalEvents
 {
-    private readonly ILogger<PubSubPublicEvents> _logger;
+    private readonly ILogger<PubSubExternalEvents> _logger;
     private readonly string? _serviceAccountKeyJson;
 
-    public PubSubPublicEvents
+    public PubSubExternalEvents
     (
-        ILogger<PubSubPublicEvents> logger,
+        ILogger<PubSubExternalEvents> logger,
         IOptions<PubSub> options
     )
     {

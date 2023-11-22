@@ -1,12 +1,12 @@
-using EventManagementService.Application.CreateEvents.Exceptions;
-using EventManagementService.Application.CreateEvents.Repository;
-using EventManagementService.Application.CreateEvents.Util;
+using EventManagementService.Application.ProcessExternalEvents.Exceptions;
+using EventManagementService.Application.ProcessExternalEvents.Repository;
+using EventManagementService.Application.ProcessExternalEvents.Util;
 using EventManagementService.Domain.Models.Events;
 using Google.Cloud.PubSub.V1;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace EventManagementService.Application.CreateEvents;
+namespace EventManagementService.Application.ProcessExternalEvents;
 
 public record CreateEventsRequest
 (
@@ -18,8 +18,8 @@ public record CreateEventsRequest
 public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
 {
     private readonly IGeoCoding _geoCoding;
-    private readonly IPubSubPublicEvents _pubSubPublicEvents;
-    private readonly ISqlCreateEvents _sqlCreateEvents;
+    private readonly IPubSubExternalEvents _pubSubExternalEvents;
+    private readonly ISqlExternalEvents _sqlExternalEvents;
     private readonly ILogger<CreateEventsHandler> _logger;
 
     public async Task Handle(CreateEventsRequest request, CancellationToken cancellationToken)
@@ -41,7 +41,7 @@ public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
                 newEvents.AddRange(requestEvents);
             }
 
-            await _sqlCreateEvents.BulkUpsertEvents(newEvents);
+            await _sqlExternalEvents.BulkUpsertEvents(newEvents);
             _logger.LogInformation(
                 $"{newEvents.Count} events have been successfully created at: {DateTimeOffset.UtcNow}");
         }
@@ -100,7 +100,7 @@ public class CreateEventsHandler : IRequestHandler<CreateEventsRequest>
     {
         var evs = new List<Event>();
         var psEvents =
-            await _pubSubPublicEvents.FetchEvents(request.TopicName, request.SubscriptionName, cancellationToken);
+            await _pubSubExternalEvents.FetchEvents(request.TopicName, request.SubscriptionName, cancellationToken);
         foreach (var e in psEvents)
         {
             evs.Add(new Event

@@ -1,6 +1,6 @@
 using EventManagementService.Application.JoinEvent;
-using EventManagementService.Application.CreateEvents;
 using EventManagementService.Application.FetchAllEvents;
+using EventManagementService.Application.ProcessExternalEvents;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventManagementService.Application;

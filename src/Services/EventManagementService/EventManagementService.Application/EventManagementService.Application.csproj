@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="CreateEvent\" />
     <Folder Include="FetchAllEvents\Exceptions\" />
   </ItemGroup>
 

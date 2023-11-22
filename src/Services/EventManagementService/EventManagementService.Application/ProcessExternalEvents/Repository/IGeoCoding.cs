@@ -3,7 +3,7 @@ using EventManagementService.Domain.Models.Google;
 using EventManagementService.Infrastructure.Exceptions;
 using Microsoft.Extensions.Logging;
 
-namespace EventManagementService.Application.CreateEvents.Repository;
+namespace EventManagementService.Application.ProcessExternalEvents.Repository;
 
 public interface IGeoCoding
 {

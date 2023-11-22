@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EventManagementService.Application.CreateEvents.Util;
+namespace EventManagementService.Application.ProcessExternalEvents.Util;
 
 internal static class UniqueEventAccessCodeGenerator
 {

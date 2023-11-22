@@ -1,8 +1,8 @@
 using System.Transactions;
 using Dapper;
-using EventManagementService.Application.CreateEvents.Exceptions;
-using EventManagementService.Application.CreateEvents.Sql;
-using EventManagementService.Application.CreateEvents.Util;
+using EventManagementService.Application.ProcessExternalEvents.Exceptions;
+using EventManagementService.Application.ProcessExternalEvents.Sql;
+using EventManagementService.Application.ProcessExternalEvents.Util;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
@@ -10,19 +10,19 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using NpgsqlTypes;
 
-namespace EventManagementService.Application.CreateEvents.Repository;
+namespace EventManagementService.Application.ProcessExternalEvents.Repository;
 
-public interface ISqlCreateEvents
+public interface ISqlExternalEvents
 {
     Task BulkUpsertEvents(IReadOnlyCollection<Event> events);
 }
 
-public class SqlCreateEvents : ISqlCreateEvents
+public class SqlExternalEvents : ISqlExternalEvents
 {
     private readonly IOptions<ConnectionStrings> _options;
-    private readonly ILogger<SqlCreateEvents> _logger;
+    private readonly ILogger<SqlExternalEvents> _logger;
 
-    public SqlCreateEvents(ILogger<SqlCreateEvents> logger, IOptions<ConnectionStrings> options)
+    public SqlExternalEvents(ILogger<SqlExternalEvents> logger, IOptions<ConnectionStrings> options)
     {
         _logger = logger;
         _options = options;
