@@ -9,7 +9,7 @@ public static class ServiceExtension
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddFetchAllEvents();
-        services.AddCreateEvents();
+        services.AddProcessExternalEvents();
         services.AddJoinEvent();
         return services;
     }
