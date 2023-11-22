@@ -24,10 +24,11 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest>
         try
         {
             await _sqlCreateEvent.InsertEvent(request.Event);
+            _logger.LogInformation($"Event has been successfully created at: {DateTimeOffset.UtcNow}");
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogCritical($"Cannot create new event at: {DateTimeOffset.UtcNow}");
             throw new CreateEventException(
                 $"Something went wrong while creating a new event at: {DateTimeOffset.UtcNow}", e);
         }
