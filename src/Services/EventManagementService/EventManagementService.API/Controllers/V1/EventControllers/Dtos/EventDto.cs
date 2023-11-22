@@ -1,6 +1,4 @@
-using EventManagementService.Domain.Models.Events;
-
-namespace EventManagementService.API.Controllers.V1.Dtos;
+namespace EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 
 public class EventDto
 {

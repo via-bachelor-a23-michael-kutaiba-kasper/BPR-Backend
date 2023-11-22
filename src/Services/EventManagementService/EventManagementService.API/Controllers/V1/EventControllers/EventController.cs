@@ -1,7 +1,6 @@
 using System.Net;
-using EventManagementService.API.Controllers.V1.Dtos;
+using EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 using EventManagementService.Application.CreateEvent;
-using EventManagementService.Application.CreateEvent.Exceptions;
 using EventManagementService.Application.FetchAllEvents;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
@@ -11,7 +10,7 @@ using EventManagementService.Infrastructure.Util;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventManagementService.API.Controllers.V1;
+namespace EventManagementService.API.Controllers.V1.EventControllers;
 
 [ApiController]
 [Route("api/v1/events")]

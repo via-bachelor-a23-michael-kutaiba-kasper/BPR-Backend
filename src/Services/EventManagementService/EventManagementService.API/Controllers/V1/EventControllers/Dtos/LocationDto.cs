@@ -1,4 +1,4 @@
-namespace EventManagementService.API.Controllers.V1.Dtos;
+namespace EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 
 public class LocationDto
 {
