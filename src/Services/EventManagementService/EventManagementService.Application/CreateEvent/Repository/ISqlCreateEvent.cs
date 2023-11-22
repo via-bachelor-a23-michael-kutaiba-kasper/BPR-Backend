@@ -12,7 +12,6 @@ namespace EventManagementService.Application.CreateEvent.Repository;
 public interface ISqlCreateEvent
 {
     Task InsertEvent(Event eEvent);
-    Task InsertEventImages(IReadOnlyCollection<string> images, int evtId);
 }
 
 public class SqlCreateEvent : ISqlCreateEvent
@@ -39,40 +38,6 @@ public class SqlCreateEvent : ISqlCreateEvent
             var locId = await InsertLocation(eEvent, connection);
             var evtId = await InsertNewEvent(eEvent, connection, locId);
             await InsertEventKeywords(eEvent, connection, evtId);
-            await transaction.CommitAsync();
-        }
-        catch (Exception e)
-        {
-            try
-            {
-                await transaction.RollbackAsync();
-                _logger.LogInformation(e, "Inserting event transaction successfully rolled back");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogCritical(ex, "Something went wrong while rolling back insert event transaction");
-                throw new TransactionException("Cannot role back insert event transaction");
-            }
-
-            throw new InsertEventException("Cannot insert event", e);
-        }
-    }
-
-    public async Task InsertEventImages(IReadOnlyCollection<string> images, int evtId)
-    {
-        await using var connection = new NpgsqlConnection(_options.Value.Postgres);
-        await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
-        try
-        {
-            foreach (var im in images)
-            {
-                await connection.ExecuteAsync(InsertEventKeywordsSql, new
-                {
-                    eventId = evtId,
-                    uri = im
-                });
-            }
-
             await transaction.CommitAsync();
         }
         catch (Exception e)
@@ -210,11 +175,6 @@ public class SqlCreateEvent : ISqlCreateEvent
                                   @categoryId
                                 ) ON CONFLICT (access_code) DO NOTHING
                                 RETURNING id;
-        """;
-
-    private const string InsertEventImagesSql =
-        """
-        INSERT INTO image(uri, event_id) VALUES (@uri, @eventId) ON CONFLICT (uri) DO NOTHING;
         """;
 
     private const string InsertEventKeywordsSql =
