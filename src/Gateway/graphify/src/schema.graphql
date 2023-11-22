@@ -16,9 +16,23 @@ type Location {
 type Event {
     id: String
     title: String
-    location: Location
+    startDate: String
+    endDate: String
+    createdDate: String
+    lastUpdateDate: String
+    isPrivate: Boolean
+    adultsOnly: Boolean
+    isPaid: Boolean
+    hostId: String
+    maxNumberOfAttendees: Int
     url: String
     description: String
+    location: Location
+    accessCode: String
+    category: String
+    keywords: [String]
+    images: [String]
+    attendees: [String]
 }
 
 type Post {
@@ -38,4 +52,5 @@ type Query {
 
 type Mutation {
     createPost(userId: Int!, title: String!, body: String!): Post
+    joinEvent(eventId: Int!, UserId: String!): Event
 }
