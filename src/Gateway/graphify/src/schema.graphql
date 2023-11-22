@@ -52,5 +52,5 @@ type Query {
 
 type Mutation {
     createPost(userId: Int!, title: String!, body: String!): Post
-    joinEvent(eventId: Int!, UserId: String!): Event
+    joinEvent(eventId: Int!, userId: String!): Event
 }
