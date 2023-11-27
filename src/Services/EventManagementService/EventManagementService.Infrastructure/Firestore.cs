@@ -7,7 +7,7 @@ namespace EventManagementService.Infrastructure;
 
 public class Firestore
 {
-    private const string ServiceAccountKeyEnvironmentKey = "SERVICE_ACCOUNT_KEY_JSON_FIREBASE";
+    private const string ServiceAccountKeyEnvironmentKey = "SERVICE_ACCOUNT_KEY_FIREBASE_JSON";
     /// <summary>
     /// 
     /// </summary>
