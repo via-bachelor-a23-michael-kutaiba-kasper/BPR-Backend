@@ -3,9 +3,12 @@ using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.JoinEvent.Repositories;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
+using EventManagementService.Infrastructure.AppSettings;
+using EventManagementService.Infrastructure.EventBus;
 using EventManagementService.Test.JoinEvent.Utils;
 using EventManagementService.Test.Shared;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace EventManagementService.Test.JoinEvent;
@@ -41,13 +44,31 @@ public class JoinEventTests
         var invitationRepositoryMock = new Mock<IInvitationRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
         var eventRepositoryMock = new Mock<IEventRepository>();
+        var eventBusMock = new Mock<IEventBus>();
+        var pubsubConfig = new PubSub
+        {
+            Topics = new[]
+            {
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                }
+            },
+            SubscriptionName = "test"
+        };
         var loggerMock = new Mock<ILogger<JoinEventHandler>>();
 
         userRepositoryMock.Setup(x => x.UserExistsAsync(nonExistingUserId)).ReturnsAsync(false);
         eventRepositoryMock.Setup(x => x.GetByIdAsync(existingEvent.Id)).ReturnsAsync(existingEvent);
 
         var handler = new JoinEventHandler(loggerMock.Object, eventRepositoryMock.Object,
-            invitationRepositoryMock.Object, userRepositoryMock.Object);
+            invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object, Options.Create(pubsubConfig));
         var request = new JoinEventRequest(nonExistingUserId, existingEvent.Id);
 
         Assert.ThrowsAsync<UserNotFoundException>(() => handler.Handle(request, new CancellationToken()));
@@ -64,12 +85,30 @@ public class JoinEventTests
         var userRepositoryMock = new Mock<IUserRepository>();
         var eventRepositoryMock = new Mock<IEventRepository>();
         var loggerMock = new Mock<ILogger<JoinEventHandler>>();
+        var eventBusMock = new Mock<IEventBus>();
+        var pubsubConfig = new PubSub
+        {
+            Topics = new[]
+            {
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                }
+            },
+            SubscriptionName = "test"
+        };
 
         userRepositoryMock.Setup(x => x.UserExistsAsync(existingUserId)).ReturnsAsync(true);
         eventRepositoryMock.Setup(x => x.GetByIdAsync(nonExistingEventId)).ReturnsAsync((Event?)null);
 
         var handler = new JoinEventHandler(loggerMock.Object, eventRepositoryMock.Object,
-            invitationRepositoryMock.Object, userRepositoryMock.Object);
+            invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object, Options.Create(pubsubConfig));
         var request = new JoinEventRequest(existingUserId, nonExistingEventId);
 
         Assert.ThrowsAsync<EventNotFoundException>(() => handler.Handle(request, new CancellationToken()));
@@ -87,12 +126,30 @@ public class JoinEventTests
         var userRepositoryMock = new Mock<IUserRepository>();
         var eventRepositoryMock = new Mock<IEventRepository>();
         var loggerMock = new Mock<ILogger<JoinEventHandler>>();
+        var eventBusMock = new Mock<IEventBus>();
+        var pubsubConfig = new PubSub
+        {
+            Topics = new[]
+            {
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                }
+            },
+            SubscriptionName = "test"
+        };
 
         userRepositoryMock.Setup(x => x.UserExistsAsync(existingUserId)).ReturnsAsync(true);
         eventRepositoryMock.Setup(x => x.GetByIdAsync(existingEvent.Id)).ReturnsAsync(existingEvent);
 
         var handler = new JoinEventHandler(loggerMock.Object, eventRepositoryMock.Object,
-            invitationRepositoryMock.Object, userRepositoryMock.Object);
+            invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object, Options.Create(pubsubConfig));
         var request = new JoinEventRequest(existingUserId, existingEvent.Id);
 
         Assert.ThrowsAsync<AlreadyJoinedException>(() => handler.Handle(request, new CancellationToken()));
