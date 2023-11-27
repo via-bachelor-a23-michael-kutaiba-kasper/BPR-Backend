@@ -18,6 +18,15 @@
     <ItemGroup>
       <EmbeddedResource Include="Migrations\0001_Initial_event_schema.sql" />
       <EmbeddedResource Include="Migrations\0002_Add_access_code_to_event.sql" />
+      <EmbeddedResource Include="Migrations\0003_Fix_keyword_event_name.sql" />
+      <EmbeddedResource Include="Migrations\0004_Populate_Enum_tables.sql" />
+      <EmbeddedResource Include="Migrations\0005_Update_event_table.sql" />
+      <EmbeddedResource Include="Migrations\0006_AddUniqueConstraintsToLocationAndEventKeyword.sql" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\EventManagementService.Infrastructure\EventManagementService.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

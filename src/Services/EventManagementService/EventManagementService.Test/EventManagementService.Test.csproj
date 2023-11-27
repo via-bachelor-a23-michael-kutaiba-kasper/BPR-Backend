@@ -23,4 +23,6 @@
       <ProjectReference Include="..\EventManagementService.Application\EventManagementService.Application.csproj" />
     </ItemGroup>
 
+
+
 </Project>

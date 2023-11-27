@@ -4,12 +4,12 @@ COPY . .
 RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Release -o /publish
+RUN mv /src/Scripts/entrypoint.sh /publish/entrypoint.sh
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 as runtime
 WORKDIR /app
-COPY --from=build-env /publish .
-
+COPY --from=build-env /publish /app/publish
+WORKDIR /app/publish
 EXPOSE 80
 
-#ENTRYPOINT ["dotnet"]
-CMD ["dotnet", "EventManagementService.DbUp.dll", "&&", "dotnet", "EventManagementService.API.dll"]
+CMD [ "sh", "entrypoint.sh" ]

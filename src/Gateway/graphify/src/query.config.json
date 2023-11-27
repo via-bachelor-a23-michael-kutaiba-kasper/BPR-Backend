@@ -98,6 +98,30 @@
                 },
                 "method": "POST"
             }
+        },
+        {
+            "name": "joinEvent",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String!",
+                    "for": "body"
+                },
+                {
+                    "name": "eventId",
+                    "type": "Int!",
+                    "for": "body"
+                }
+            ],
+            "resolver": {
+                "host": "https://jsonplaceholder.typicode.com",
+                "endpoint": "/api/v1/attendees",
+                "port": 80,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "method": "POST"
+            }
         }
     ]
 }

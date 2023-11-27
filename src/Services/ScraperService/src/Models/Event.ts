@@ -1,14 +1,22 @@
 export interface Event {
     title: string;
     host: string;
-    url: string;
-    location: Location;
-    dateDisplay?: string;
     startDate?: Date;
     endDate?: Date;
+    createdDate?: Date;
+    lastUpdatedDate?: Date;
+    isPrivate: boolean;
+    adultsOnly: boolean;
+    isPaid: boolean;
+    hostId: string;
+    maxNumberOfAttendees?: number;
+    url: string;
     description?: string;
+    location: Location;
+    keywords: any[];
+    attendees: string[];
+    dateDisplay?: string;
     images?: string[];
-    numberOfAtendees?: number;
     price?: string;
 }
 

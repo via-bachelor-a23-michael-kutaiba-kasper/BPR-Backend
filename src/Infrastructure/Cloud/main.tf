@@ -10,6 +10,12 @@ variable "GCP_SERVICE_ACCOUNT_KEY_JSON" {
   description = "Contents of the service_account_key.json file to be passed to container images"
 }
 
+variable "GCP_SERVICE_ACCOUNT_KEY_FIREBASE_JSON" {
+  type        = string
+  sensitive   = true
+  description = "Contents of the service_account_key_firebase.json file to be passed to container images"
+}
+
 variable "GOOGLE_API_KEY" {
   type        = string
   sensitive   = true
@@ -27,6 +33,7 @@ module "api_gateway" {
     "QUERY_EVENTS_HOST"          = module.eventmanagement_service.service_url
     "QUERY_EVENT_HOST"           = module.eventmanagement_service.service_url
     "QUERY_ALLPUBLICEVENTS_HOST" = module.eventmanagement_service.service_url
+    "QUERY_JOINEVENT_HOST"       = module.eventmanagement_service.service_url
   }
   cloud_sql_instance = google_sql_database_instance.main.connection_name
 }
@@ -41,7 +48,9 @@ module "eventmanagement_service" {
   cloud_sql_instance           = google_sql_database_instance.main.connection_name
 
   container_envs = {
-    "GOOGLE_API_KEY" = var.GOOGLE_API_KEY
+    "GOOGLE_API_KEY"                    = var.GOOGLE_API_KEY
+    "SERVICE_ACCOUNT_KEY_FIREBASE_JSON" = var.GCP_SERVICE_ACCOUNT_KEY_FIREBASE_JSON
+    "DEPLOYMENT_ENVIRONMENT" = "PRODUCTION"
   }
 }
 

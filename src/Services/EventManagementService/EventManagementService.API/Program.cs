@@ -1,5 +1,6 @@
 using EventManagementService.API.Settings;
 using EventManagementService.Application;
+using EventManagementService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSettingsConfigurations(builder.Configuration);
 
 // Add services to the container.
-
+builder.Services.AddScoped<IConnectionStringManager, ConnectionStringManager>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -17,6 +18,7 @@ builder.Services.AddMediatR(config =>
         AppDomain.CurrentDomain.Load("EventManagementService.Application")));
 
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 
 // Register HTTP client here: 
 builder.Services.AddHttpClient("HTTP_CLIENT")
@@ -36,10 +38,6 @@ app.UseSwaggerUI();
 //}
 
 app.UseCors(options => { options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
-
-// poc pubsub 
-var env = System.Environment.GetEnvironmentVariable("PUBSUB_EMULATOR_HOST");
-Console.WriteLine(env);
 
 
 // app.UseHttpsRedirection();

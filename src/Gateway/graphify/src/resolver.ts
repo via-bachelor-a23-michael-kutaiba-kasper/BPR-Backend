@@ -55,15 +55,24 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
         );
         try {
             const res = await fetch(url, requestOptions);
-            const resBody = await res.json();
-            console.log(
-                `Received response: ${JSON.stringify(res.status, undefined, 4)}`
-            );
-            console.log(
-                `Response body: ${JSON.stringify(resBody, undefined, 4)}\n`
-            );
+            try {
+                const resBody = await res.json();
+                console.log(
+                    `Received response: ${JSON.stringify(
+                        res.status,
+                        undefined,
+                        4
+                    )}`
+                );
+                console.log(
+                    `Response body: ${JSON.stringify(resBody, undefined, 4)}\n`
+                );
 
-            return resBody;
+                return resBody;
+            } catch (err) {
+                console.error(err);
+            }
+            return {};
         } catch (err) {
             console.error(err);
             throw err;
