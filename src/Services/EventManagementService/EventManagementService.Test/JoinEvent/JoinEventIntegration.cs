@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using EventManagementService.Application.JoinEvent;
+using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.JoinEvent.Repositories;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
@@ -61,5 +62,37 @@ public class JoinEventIntegration
         Assert.IsNotNull(updatedEvent);
         Assert.That(updatedEvent.Attendees.Count(), Is.EqualTo(1));
         Assert.That(updatedEvent.Attendees.First(), Is.EqualTo(existingUserId));
+    }
+    
+    [Test]
+    public async Task JoinEvent_UserDoesNotExist_DoesNotAddNewAttendee()
+    {
+        var dataBuilder = new DataBuilder(_connectionStringManager);
+        var loggerMock = new Mock<ILogger<JoinEventHandler>>();
+        var invitationRepositoryMock = new Mock<IInvitationRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+        var eventRepository = new EventRepository(_connectionStringManager);
+
+        var existingEvent = dataBuilder.NewTestEvent((e) => e.Attendees = new List<string>());
+        dataBuilder
+            .CreateLocations(new List<Location>() { existingEvent.Location });
+        existingEvent.Location = dataBuilder.LocationsSet[0];
+        dataBuilder.CreateEvents(new List<Event>() { existingEvent });
+        existingEvent = dataBuilder.EventSet[0];
+        
+        var nonExistingUser = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
+        
+        userRepositoryMock.Setup(x => x.UserExistsAsync(nonExistingUser)).ReturnsAsync(false);
+        invitationRepositoryMock.Setup(x => x.GetInvitationsAsync(existingEvent.Id))
+            .ReturnsAsync(new List<Invitation>());
+            
+        var joinEventRequest = new JoinEventRequest(nonExistingUser, existingEvent.Id);
+        var handler = new JoinEventHandler(loggerMock.Object, eventRepository, invitationRepositoryMock.Object, userRepositoryMock.Object);
+
+        Assert.ThrowsAsync<UserNotFoundException>(() => handler.Handle(joinEventRequest, new CancellationToken()));
+
+        var updatedEvent = await eventRepository.GetByIdAsync(existingEvent.Id);
+        Assert.IsNotNull(updatedEvent);
+        Assert.That(updatedEvent!.Attendees.Count(), Is.EqualTo(0));
     }
 }
