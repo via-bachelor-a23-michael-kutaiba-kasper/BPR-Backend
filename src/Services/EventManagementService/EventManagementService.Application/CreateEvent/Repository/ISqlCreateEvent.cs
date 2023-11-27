@@ -31,6 +31,7 @@ public class SqlCreateEvent : ISqlCreateEvent
     public async Task InsertEvent(Event eEvent)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
+        await connection.OpenAsync();
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
         try
         {
