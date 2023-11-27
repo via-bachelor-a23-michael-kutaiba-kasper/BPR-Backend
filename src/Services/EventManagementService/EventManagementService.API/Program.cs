@@ -18,6 +18,7 @@ builder.Services.AddMediatR(config =>
         AppDomain.CurrentDomain.Load("EventManagementService.Application")));
 
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 
 // Register HTTP client here: 
 builder.Services.AddHttpClient("HTTP_CLIENT")

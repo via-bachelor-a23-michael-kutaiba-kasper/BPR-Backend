@@ -1,6 +1,7 @@
 using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.JoinEvent.Repositories;
 using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure.EventBus;
 using Google.Apis.Logging;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -14,15 +15,18 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
     private readonly IEventRepository _eventRepository;
     private readonly IInvitationRepository _invitationRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IEventBus _eventBus;
     private readonly ILogger<JoinEventHandler> _logger;
+    private const string TopicName = "vibeverse_events_new_attendee";
 
     public JoinEventHandler(ILogger<JoinEventHandler> logger, IEventRepository eventRepository,
-        IInvitationRepository invitationRepository, IUserRepository userRepository)
+        IInvitationRepository invitationRepository, IUserRepository userRepository, IEventBus eventBus)
     {
         _logger = logger;
         _eventRepository = eventRepository;
         _invitationRepository = invitationRepository;
         _userRepository = userRepository;
+        _eventBus = eventBus;
     }
 
     /// <summary>
@@ -57,6 +61,7 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         await AcceptInvitationIfInvited(request.UserId, request.EventId);
 
         await _eventRepository.AddAttendeeToEventAsync(request.UserId, request.EventId);
+        await _eventBus.PublishAsync(TopicName, request);
     }
 
     private async Task AcceptInvitationIfInvited(string userId, int eventId)

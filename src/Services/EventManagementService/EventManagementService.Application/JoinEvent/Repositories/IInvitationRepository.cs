@@ -8,3 +8,16 @@ public interface IInvitationRepository
     public Task<IReadOnlyCollection<Invitation>> GetInvitationsAsync(int eventId);
     public Task AcceptInvitationAsync (Invitation invitation);
 }
+
+public class InvitationRepository : IInvitationRepository
+{
+    public async Task<IReadOnlyCollection<Invitation>> GetInvitationsAsync(int eventId)
+    {
+        return new List<Invitation>();
+    }
+
+    public async Task AcceptInvitationAsync(Invitation invitation)
+    {
+        // Do nothing for now.
+    }
+}
