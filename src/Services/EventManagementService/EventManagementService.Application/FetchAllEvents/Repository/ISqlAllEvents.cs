@@ -1,5 +1,6 @@
 using Dapper;
 using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -14,16 +15,16 @@ public interface ISqlAllEvents
 
 public class SqlAllEvents : ISqlAllEvents
 {
-    private readonly IOptions<ConnectionStrings> _options;
+    private readonly IConnectionStringManager _connectionStringManager;
     private readonly ILogger<SqlAllEvents> _logger;
 
     public SqlAllEvents
     (
-        IOptions<ConnectionStrings> options,
+        IConnectionStringManager connectionStringManager,
         ILogger<SqlAllEvents> logger
     )
     {
-        _options = options;
+        _connectionStringManager = connectionStringManager;
         _logger = logger;
     }
 
@@ -31,7 +32,7 @@ public class SqlAllEvents : ISqlAllEvents
     {
         _logger.LogInformation("Fetching all public events from database");
         var events = new List<Event>();
-        using (var connection = new NpgsqlConnection(_options.Value.Postgres))
+        using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
         {
             await connection.OpenAsync();
             var result = await connection.QueryAsync(GetEventsSql());

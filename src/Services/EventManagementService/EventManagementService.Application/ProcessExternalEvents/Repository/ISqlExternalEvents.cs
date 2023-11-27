@@ -4,6 +4,7 @@ using EventManagementService.Application.ProcessExternalEvents.Exceptions;
 using EventManagementService.Application.ProcessExternalEvents.Sql;
 using EventManagementService.Application.ProcessExternalEvents.Util;
 using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure;
 using EventManagementService.Infrastructure.AppSettings;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -19,18 +20,22 @@ public interface ISqlExternalEvents
 
 public class SqlExternalEvents : ISqlExternalEvents
 {
-    private readonly IOptions<ConnectionStrings> _options;
+    private readonly IConnectionStringManager _connectionStringManager;
     private readonly ILogger<SqlExternalEvents> _logger;
 
-    public SqlExternalEvents(ILogger<SqlExternalEvents> logger, IOptions<ConnectionStrings> options)
+    public SqlExternalEvents
+    (
+        ILogger<SqlExternalEvents> logger,
+        IConnectionStringManager connectionStringManager
+    )
     {
         _logger = logger;
-        _options = options;
+        _connectionStringManager = connectionStringManager;
     }
 
     public async Task BulkUpsertEvents(IReadOnlyCollection<Event> events)
     {
-        await using var connection = new NpgsqlConnection(_options.Value.Postgres);
+        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
         try
         {
@@ -113,7 +118,7 @@ public class SqlExternalEvents : ISqlExternalEvents
         IReadOnlyCollection<Event> events
     )
     {
-        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportEventBinaryCopy))
         {
             foreach (var et in events)
             {
@@ -152,7 +157,7 @@ public class SqlExternalEvents : ISqlExternalEvents
         IReadOnlyCollection<Event> events
     )
     {
-        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportImageBinaryCopy))
         {
             foreach (var et in events)
             {
@@ -175,7 +180,7 @@ public class SqlExternalEvents : ISqlExternalEvents
         IReadOnlyCollection<Event> events
     )
     {
-        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportLocationBinaryCopy))
+        using (var writer = await connection.BeginBinaryImportAsync(SqlCommands.ImportKeywordBinaryCopy))
         {
             foreach (var et in events)
             {

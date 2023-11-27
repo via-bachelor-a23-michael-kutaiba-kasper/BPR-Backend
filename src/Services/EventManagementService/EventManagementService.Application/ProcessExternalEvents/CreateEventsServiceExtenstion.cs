@@ -5,7 +5,7 @@ namespace EventManagementService.Application.ProcessExternalEvents;
 
 public static class CreateEventsServiceExtenstion
 {
-    public static IServiceCollection AddCreateEvents(this IServiceCollection services)
+    public static IServiceCollection AddProcessExternalEvents(this IServiceCollection services)
     {
         services.AddScoped<IGeoCoding, GeoCoding>();
         services.AddScoped<IPubSubExternalEvents, PubSubExternalEvents>();

@@ -39,10 +39,6 @@ app.UseSwaggerUI();
 
 app.UseCors(options => { options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
 
-// poc pubsub 
-var env = System.Environment.GetEnvironmentVariable("PUBSUB_EMULATOR_HOST");
-Console.WriteLine(env);
-
 
 // app.UseHttpsRedirection();
 
