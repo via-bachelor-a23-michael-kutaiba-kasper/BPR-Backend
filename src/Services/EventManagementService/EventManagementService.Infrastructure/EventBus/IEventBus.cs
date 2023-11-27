@@ -54,7 +54,8 @@ public class PubSubEventBus : IEventBus
 
         var dataAsJson = JsonSerializer.Serialize(data, new JsonSerializerOptions()
         {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         });
         
         PubsubMessage message = new()
