@@ -42,6 +42,8 @@ public class AttendeesController : ControllerBase
         }
         catch (Exception e)
         {
+            _logger.LogError(e.Message, e);
+            _logger.LogError(e.StackTrace);
             return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }

@@ -9,19 +9,19 @@ namespace EventManagementService.Infrastructure.EventBus;
 
 public interface IEventBus
 {
-    Task PublishAsync<T>(string topicName, T data);
+    Task PublishAsync<T>(string topicName,string projectName, T data);
 }
 
 public class PubSubEventBus : IEventBus
 {
-    private ILogger<PubSubEventBus> _logger;
+    private readonly ILogger<PubSubEventBus> _logger;
 
     public PubSubEventBus(ILogger<PubSubEventBus> logger)
     {
         _logger = logger;
     }
 
-    public async Task PublishAsync<T>(string topicName, T data)
+    public async Task PublishAsync<T>(string topicName, string projectName, T data)
     {
         PublisherServiceApiClient publisherService;
         var serviceAccountKeyJson = Environment.GetEnvironmentVariable("SERVICE_ACCOUNT_KEY_JSON") ?? null;
@@ -61,7 +61,8 @@ public class PubSubEventBus : IEventBus
         {
             Data = ByteString.CopyFromUtf8(dataAsJson)
         };
-
-        await publisherService.PublishAsync(topicName, new[] { message });
+        
+        TopicName topic = new TopicName(projectName, topicName);
+        await publisherService.PublishAsync(topic, new[] { message });
     }
 }
