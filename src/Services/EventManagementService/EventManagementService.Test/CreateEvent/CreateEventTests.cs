@@ -1,5 +1,6 @@
 using EventManagementService.Application.CreateEvent;
 using EventManagementService.Application.CreateEvent.Repository;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using EventManagementService.Test.Shared;
@@ -69,17 +70,17 @@ public class CreateEventTests
             StartDate = DateTimeOffset.UtcNow.AddDays(1),
             EndDate = DateTimeOffset.UtcNow.AddDays(1).AddHours(2),
             AccessCode = "321km3lkmdkslajdkas321",
-            HostId = "Oq8tmHrYV6SeEpWf1olCJNJ1JW93",
+            Host = new User { UserId = "Oq8tmHrYV6SeEpWf1olCJNJ1JW93" },
             IsPaid = true,
             IsPrivate = false,
             MaxNumberOfAttendees = 200,
             LastUpdateDate = DateTimeOffset.UtcNow,
         });
-        
+
         // Act
         var act = handler.Handle(request, new CancellationToken());
-        
+
         // Assert 
-        Assert.DoesNotThrowAsync(()=> act);
+        Assert.DoesNotThrowAsync(() => act);
     }
 }

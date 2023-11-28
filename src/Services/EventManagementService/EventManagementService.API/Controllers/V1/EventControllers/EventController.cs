@@ -5,6 +5,7 @@ using EventManagementService.Application.FetchAllEvents;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.ProcessExternalEvents;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.Util;
 using MediatR;
@@ -50,7 +51,15 @@ public class EventController : ControllerBase
                     LastUpdateDate = ev.LastUpdateDate,
                     EndDate = ev.EndDate,
                     CreatedDate = ev.CreatedDate,
-                    HostId = ev.HostId,
+                    Host = new UserDto
+                    {
+                        UserId = ev.Host.UserId,
+                        DateOfBirth = ev.Host.DateOfBirth,
+                        DisplayName = ev.Host.DisplayName,
+                        PhotoUrl = ev.Host.PhotoUrl,
+                        LastSeenOnline = ev.Host.LastSeenOnline,
+                        CreationDate = ev.Host.CreationDate
+                    },
                     IsPaid = ev.IsPaid,
                     Description = ev.Description,
                     Category = ev.Category.GetDescription(),
@@ -93,7 +102,14 @@ public class EventController : ControllerBase
                 LastUpdateDate = eventDto.LastUpdateDate,
                 EndDate = eventDto.EndDate,
                 CreatedDate = eventDto.CreatedDate,
-                HostId = eventDto.HostId,
+                Host = new User
+                {
+                    LastSeenOnline = eventDto.Host.LastSeenOnline,
+                    DisplayName = eventDto.Host.DisplayName,
+                    PhotoUrl = eventDto.Host.PhotoUrl,
+                    UserId = eventDto.Host.UserId,
+                    DateOfBirth = eventDto.Host.DateOfBirth
+                },
                 IsPaid = eventDto.IsPaid,
                 Description = eventDto.Description,
                 Category = EnumExtensions.GetEnumValueFromDescription<Category>(eventDto.Category),

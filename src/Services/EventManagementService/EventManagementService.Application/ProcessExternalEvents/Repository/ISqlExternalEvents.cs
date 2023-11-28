@@ -129,7 +129,7 @@ public class SqlExternalEvents : ISqlExternalEvents
                 await writer.WriteAsync(et.CreatedDate.ToUniversalTime(), NpgsqlDbType.TimestampTz);
                 await writer.WriteAsync(et.IsPrivate, NpgsqlDbType.Boolean);
                 await writer.WriteAsync(et.IsPaid, NpgsqlDbType.Boolean);
-                await writer.WriteAsync(et.HostId, NpgsqlDbType.Varchar);
+                await writer.WriteAsync(et.Host, NpgsqlDbType.Varchar);
                 await writer.WriteAsync(et.AccessCode, NpgsqlDbType.Varchar);
                 await BinaryWriterHelper<int>.WriteNullableAsync(writer, et.MaxNumberOfAttendees, NpgsqlDbType.Integer);
                 await BinaryWriterHelper<DateTimeOffset>.WriteNullableAsync(writer, et.LastUpdateDate.ToUniversalTime(),
