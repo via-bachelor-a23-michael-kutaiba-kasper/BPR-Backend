@@ -59,7 +59,7 @@ public class EventRepository : IEventRepository
             Url = existingEventQueryResult.url,
             Attendees = attendees,
             Id = existingEventQueryResult.id,
-            Location = new Location()
+            /*Location = new Location()
             {
                 Id = existingEventQueryResult.location_id,
                 City = existingEventQueryResult.city,
@@ -73,7 +73,7 @@ public class EventRepository : IEventRepository
                 PostalCode = existingEventQueryResult.postal_code,
                 StreetName = existingEventQueryResult.street_name,
                 StreetNumber = existingEventQueryResult.street_number
-            }
+            }*/
         };
         return existingEvent;
     }

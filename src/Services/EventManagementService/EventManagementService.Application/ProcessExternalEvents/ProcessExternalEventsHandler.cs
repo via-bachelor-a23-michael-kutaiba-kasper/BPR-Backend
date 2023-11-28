@@ -41,9 +41,9 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
             _logger.LogInformation($"Creating new events ar: {DateTimeOffset.UtcNow}");
             var pubSubEvents = await PubSubEvents(request, cancellationToken);
             await _sqlExternalEvents.BulkUpsertEvents(pubSubEvents);
-            return pubSubEvents;
             _logger.LogInformation(
                 $"{pubSubEvents.Count} events have been successfully created at: {DateTimeOffset.UtcNow}");
+            return pubSubEvents;
         }
         catch (Exception e)
         {
@@ -66,17 +66,7 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
             evs.Add(new Event
             {
                 Title = e.Title,
-                Location = new Location
-                {
-                    Country = e.Location.Country,
-                    StreetName = e.Location.StreetName,
-                    StreetNumber = e.Location.StreetNumber,
-                    HouseNumber = e.Location.HouseNumber,
-                    PostalCode = e.Location.PostalCode,
-                    City = e.Location.City,
-                    SubPremise = e.Location.SubPremise,
-                    GeoLocation = await FetchGeoLocation(e.Location)
-                },
+                Location = e.Location,
                 Description = e.Description,
                 Category = e.Category,
                 Url = e.Url,
@@ -91,18 +81,18 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                 StartDate = e.StartDate,
                 LastUpdateDate = e.LastUpdateDate,
                 MaxNumberOfAttendees = e.MaxNumberOfAttendees,
-                AccessCode = UniqueEventAccessCodeGenerator.GenerateUniqueString(e.Title, e.CreatedDate)
+                AccessCode = UniqueEventAccessCodeGenerator.GenerateUniqueString(e.Title, e.CreatedDate),
+                City = e.City,
+                GeoLocation = await FetchGeoLocation(e.Location)
             });
         }
 
         return evs;
     }
 
-    private async Task<GeoLocation> FetchGeoLocation(Location location)
+    private async Task<GeoLocation> FetchGeoLocation(string location)
     {
-        var address =
-            $"{location.StreetName} {location.StreetNumber} {location.HouseNumber ?? ""} {location.PostalCode} {location.City} {location.Country}";
-        var geo = await _geoCoding.FetchGeoLocationForAddress(address);
+        var geo = await _geoCoding.FetchGeoLocationForAddress(location);
 
         var latLong = new GeoLocation
         {

@@ -80,18 +80,13 @@ public class EventController : ControllerBase
                     AdultsOnly = ev.AdultsOnly,
                     IsPrivate = ev.IsPrivate,
                     MaxNumberOfAttendees = ev.MaxNumberOfAttendees,
-                    Location = new LocationDto
+                    Location = ev.Location,
+                    GeoLocation = new GeoLocationDto
                     {
-                        Country = ev.Location.Country,
-                        StreetName = ev.Location.StreetName,
-                        StreetNumber = ev.Location.StreetNumber,
-                        HouseNumber = ev.Location.HouseNumber,
-                        PostalCode = ev.Location.PostalCode,
-                        City = ev.Location.City,
-                        SubPremise = ev.Location.SubPremise,
-                        Lat = ev.Location.GeoLocation.Lat,
-                        Lng = ev.Location.GeoLocation.Lng
-                    }
+                        Lat = ev.GeoLocation.Lat,
+                        Lng = ev.GeoLocation.Lng
+                    },
+                    City = ev.City
                 })
                 .ToList();
 
@@ -123,21 +118,13 @@ public class EventController : ControllerBase
                 AdultsOnly = eventDto.AdultsOnly,
                 IsPrivate = eventDto.IsPrivate,
                 MaxNumberOfAttendees = eventDto.MaxNumberOfAttendees,
-                Location = new Location
+                Location = eventDto.Location,
+                GeoLocation = new GeoLocation
                 {
-                    Country = eventDto.Location.Country,
-                    StreetName = eventDto.Location.StreetName,
-                    StreetNumber = eventDto.Location.StreetNumber,
-                    HouseNumber = eventDto.Location.HouseNumber,
-                    PostalCode = eventDto.Location.PostalCode,
-                    City = eventDto.Location.City,
-                    SubPremise = eventDto.Location.SubPremise,
-                    GeoLocation = new GeoLocation
-                    {
-                        Lat = eventDto.Location.Lat,
-                        Lng = eventDto.Location.Lng
-                    }
-                }
+                    Lng = eventDto.GeoLocation.Lng,
+                    Lat = eventDto.GeoLocation.Lat
+                },
+                City = eventDto.City
             }));
             return Ok();
         }

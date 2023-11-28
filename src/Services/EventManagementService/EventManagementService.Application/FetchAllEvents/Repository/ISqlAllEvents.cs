@@ -41,7 +41,7 @@ public class SqlAllEvents : ISqlAllEvents
             {
                 Title = e.title,
                 Description = e.description,
-                Url = e.url,
+                Url = e.url/*,
                 Location = new Location
                 {
                     Country = e.country,
@@ -51,7 +51,7 @@ public class SqlAllEvents : ISqlAllEvents
                     PostalCode = e.postal_code,
                     City = e.city,
                     GeoLocation = new GeoLocation { Lat = e.geolocation_lat, Lng = e.geolocation_lng }
-                }
+                }*/
             }));
 
             _logger.LogInformation($"{result.Count()} retrieved from database");

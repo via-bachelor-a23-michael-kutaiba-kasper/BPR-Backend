@@ -7,7 +7,7 @@ namespace EventManagementService.Test.JoinEvent.Utils;
 
 public class DataBuilder
 {
-    private readonly ConnectionStringManager _connectionStringManager;
+    /*private readonly ConnectionStringManager _connectionStringManager;
     public IList<Location> LocationsSet { get; set; } = new List<Location>();
     public IList<Event> EventSet { get; set; } = new List<Event>();
 
@@ -95,5 +95,5 @@ public class DataBuilder
         }
 
         return newEvent;
-    }
+    }*/
 }
