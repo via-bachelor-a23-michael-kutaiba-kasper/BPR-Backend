@@ -101,7 +101,7 @@ public class SqlExternalEvents : ISqlExternalEvents
                 await writer.WriteAsync(et.IsPrivate, NpgsqlDbType.Boolean);
                 await writer.WriteAsync(et.AdultsOnly, NpgsqlDbType.Boolean);
                 await writer.WriteAsync(et.IsPaid, NpgsqlDbType.Boolean);
-                await writer.WriteAsync(et.HostId, NpgsqlDbType.Varchar);
+                await writer.WriteAsync(et.Host.UserId, NpgsqlDbType.Varchar);
                 await BinaryWriterHelper<int>.WriteNullableAsync(
                     writer,
                     et.MaxNumberOfAttendees,

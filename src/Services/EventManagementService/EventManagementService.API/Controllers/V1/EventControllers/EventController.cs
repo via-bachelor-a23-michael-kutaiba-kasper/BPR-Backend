@@ -52,7 +52,6 @@ public class EventController : ControllerBase
                     Host = new UserDto
                     {
                         UserId = ev.Host.UserId,
-                        DateOfBirth = ev.Host.DateOfBirth,
                         DisplayName = ev.Host.DisplayName,
                         PhotoUrl = ev.Host.PhotoUrl,
                         LastSeenOnline = ev.Host.LastSeenOnline,
@@ -101,7 +100,6 @@ public class EventController : ControllerBase
                     DisplayName = eventDto.Host.DisplayName,
                     PhotoUrl = eventDto.Host.PhotoUrl,
                     UserId = eventDto.Host.UserId,
-                    DateOfBirth = eventDto.Host.DateOfBirth
                 },
                 IsPaid = eventDto.IsPaid,
                 Description = eventDto.Description,
@@ -147,7 +145,6 @@ public class EventController : ControllerBase
                     DisplayName = existingEvent.Host.DisplayName,
                     PhotoUrl = existingEvent.Host.PhotoUrl,
                     CreationDate = existingEvent.Host.CreationDate,
-                    DateOfBirth = existingEvent.Host.DateOfBirth
                 },
                 IsPaid = existingEvent.IsPaid,
                 Description = existingEvent.Description,

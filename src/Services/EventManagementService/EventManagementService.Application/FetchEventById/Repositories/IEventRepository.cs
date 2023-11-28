@@ -1,5 +1,6 @@
 using Dapper;
 using EventManagementService.Application.FetchEventById.Data;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using Microsoft.Extensions.Logging;
@@ -16,31 +17,35 @@ public class EventRepository : IEventRepository
 {
     private readonly ILogger<EventRepository> _logger;
     private readonly IConnectionStringManager _connectionStringManager;
-    
+
     public EventRepository(ILogger<EventRepository> logger, IConnectionStringManager connectionStringManager)
     {
         _logger = logger;
         _connectionStringManager = connectionStringManager;
     }
-    
+
     public async Task<Event?> GetEventByIdAsync(int id)
     {
         using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
         {
             await connection.OpenAsync();
             var queryParams = new { @eventId = id };
-            
-            var eventEntity = await connection.QueryFirstOrDefaultAsync<EventEntity>(SqlQueries.QueryAllFromEventTableByEventId, queryParams);
-            
+
+            var eventEntity =
+                await connection.QueryFirstOrDefaultAsync<EventEntity>(SqlQueries.QueryAllFromEventTableByEventId,
+                    queryParams);
+
             if (eventEntity is null)
             {
                 return null;
             }
-            
+
             var attendees = await connection.QueryAsync<string>(SqlQueries.QueryEventAttendees, queryParams);
-            var keywords = (await connection.QueryAsync<int>(SqlQueries.QueryEventKeywords, queryParams)).Select(kw => (Keyword) kw);
+            var keywords =
+                (await connection.QueryAsync<int>(SqlQueries.QueryEventKeywords, queryParams))
+                .Select(kw => (Keyword)kw);
             var images = await connection.QueryAsync<string>(SqlQueries.QueryEventImages, queryParams);
-            
+
             Event existingEvent = new()
             {
                 Description = eventEntity.description,
@@ -54,7 +59,7 @@ public class EventRepository : IEventRepository
                 StartDate = eventEntity.start_date,
                 LastUpdateDate = eventEntity.last_update_date,
                 MaxNumberOfAttendees = eventEntity.max_number_of_attendees,
-                HostId = eventEntity.host_id,
+                Host = new User{ UserId = eventEntity.host_id },
                 IsPaid = eventEntity.is_paid,
                 Images = images,
                 Title = eventEntity.title,
@@ -65,7 +70,7 @@ public class EventRepository : IEventRepository
                 GeoLocation = new GeoLocation
                 {
                     Lat = eventEntity.geolocation_lat,
-                    Lng= eventEntity.geolocation_lng
+                    Lng = eventEntity.geolocation_lng
                 },
                 City = eventEntity.city
             };

@@ -59,12 +59,10 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
                 host: {
                     userId: config.hostId,
                     creationDate: new Date(),
-                    dateOfBirth: new Date(),
                     displayName: "Faengslet",
                 },
                 description,
                 url: page.url(),
-                hostId: config.hostId,
                 location: "Fussingvej 8, 8700 Horsens, Denmark",
                 city: "Horsens",
                 lat: 55.87406,
