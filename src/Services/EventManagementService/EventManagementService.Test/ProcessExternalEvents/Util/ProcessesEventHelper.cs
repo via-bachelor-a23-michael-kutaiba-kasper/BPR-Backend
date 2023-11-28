@@ -117,15 +117,17 @@ public class ProcessesEventHelper
                 Images = e.Images,
                 Keywords = e.Keywords,
                 AdultsOnly = e.AdultsOnly,
-                EndDate = e.EndDate,
-                CreatedDate = e.CreatedDate,
+                EndDate = e.EndDate.ToUniversalTime(),
+                CreatedDate = e.CreatedDate.ToUniversalTime(),
                 HostId = e.HostId,
                 IsPaid = e.IsPaid,
                 IsPrivate = e.IsPrivate,
-                StartDate = e.StartDate,
-                LastUpdateDate = e.LastUpdateDate,
+                StartDate = e.StartDate.ToUniversalTime(),
+                LastUpdateDate = e.LastUpdateDate.ToUniversalTime(),
                 MaxNumberOfAttendees = e.MaxNumberOfAttendees,
-                AccessCode = GenerateUniqueString(e.Title, e.CreatedDate)
+                AccessCode = GenerateUniqueString(e.Title, e.CreatedDate),
+                GeoLocation = await FetchGeoLocation(geoCoding, e.Location),
+                City = e.City
             });
         }
 
