@@ -4,11 +4,17 @@
     "Title":"Familieaktivitet: Det Skjulte Stempel",
     "StartDate":"2023-11-28T12:00:00+00:00",
     "EndDate":"2023-12-28T12:00:00+00:00",
-    "CreatedDate":"2023-11-28T10:34:44.4687633+00:00",
+    "CreatedDate":"2023-11-28T13:02:46.2953553+00:00",
+    "LastUpdateDate":"0001-01-01T00:00:00+00:00",
     "IsPrivate":false,
     "AdultsOnly":false,
     "IsPaid":true,
-    "HostId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+    "Host":{
+      "UserId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "DisplayName":"Faengslet",
+      "DateOfBirth":"0001-01-01T00:00:00+00:00",
+      "CreationDate":"2023-11-28T12:59:28.073+00:00"
+    },
     "MaxNumberOfAttendees":0,
     "Url":"https://www.faengslet.dk/det-sker/familieaktivitet-det-skjulte-stempel/",
     "Description":"Pr\u00F8v f\u00E6ngselsmuseets familieaktivitet med l\u00E6rerige, sjove og udfordrende opgaver.",
@@ -32,11 +38,17 @@
     "Title":"B\u00F8rneaktivitet: Fuglen er fl\u00F8jet",
     "StartDate":"2023-11-28T12:01:00+00:00",
     "EndDate":"2023-12-28T12:01:00+00:00",
-    "CreatedDate":"2023-11-28T10:34:44.6899359+00:00",
+    "CreatedDate":"2023-11-28T13:02:46.5521161+00:00",
+    "LastUpdateDate":"0001-01-01T00:00:00+00:00",
     "IsPrivate":false,
     "AdultsOnly":false,
     "IsPaid":true,
-    "HostId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+    "Host":{
+      "UserId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "DisplayName":"Faengslet",
+      "DateOfBirth":"0001-01-01T00:00:00+00:00",
+      "CreationDate":"2023-11-28T12:59:28.532+00:00"
+    },
     "MaxNumberOfAttendees":0,
     "Url":"https://www.faengslet.dk/det-sker/boerneaktivitet-fuglen-er-floejet/",
     "Description":"Pr\u00F8v F\u00E6ngselsmuseets b\u00F8rneaktivitet \u0027Fuglen er fl\u00F8jet\u0027 og se om I kan finde fuglene p\u00E5 F\u00E6ngselsmuseet.",
@@ -60,11 +72,17 @@
     "Title":"Betjentrundvisning",
     "StartDate":"2023-11-28T12:02:00+00:00",
     "EndDate":"2023-12-28T12:02:00+00:00",
-    "CreatedDate":"2023-11-28T10:34:44.7496034+00:00",
+    "CreatedDate":"2023-11-28T13:02:46.6061193+00:00",
+    "LastUpdateDate":"0001-01-01T00:00:00+00:00",
     "IsPrivate":false,
     "AdultsOnly":false,
     "IsPaid":true,
-    "HostId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+    "Host":{
+      "UserId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "DisplayName":"Faengslet",
+      "DateOfBirth":"0001-01-01T00:00:00+00:00",
+      "CreationDate":"2023-11-28T12:59:28.923+00:00"
+    },
     "MaxNumberOfAttendees":0,
     "Url":"https://www.faengslet.dk/det-sker/betjentrundvisning/",
     "Description":"Kom med en f\u00E6ngselsbetjent p\u00E5 rundvisning og f\u00E5 en oplevelse udover det s\u00E6dvanlige.",
@@ -88,14 +106,20 @@
     "Title":"Guidet rundvisning",
     "StartDate":"2023-11-28T12:03:00+00:00",
     "EndDate":"2023-12-28T12:03:00+00:00",
-    "CreatedDate":"2023-11-28T10:34:44.8027608+00:00",
+    "CreatedDate":"2023-11-28T13:02:46.6547357+00:00",
+    "LastUpdateDate":"0001-01-01T00:00:00+00:00",
     "IsPrivate":false,
     "AdultsOnly":false,
     "IsPaid":true,
-    "HostId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+    "Host":{
+      "UserId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "DisplayName":"Faengslet",
+      "DateOfBirth":"0001-01-01T00:00:00+00:00",
+      "CreationDate":"2023-11-28T12:59:29.335+00:00"
+    },
     "MaxNumberOfAttendees":0,
     "Url":"https://www.faengslet.dk/det-sker/guidet-rundvisning/",
-    "Description":"Kom med p\u00E5 en sp\u00E6ndende rundvisning og f\u00E5 et unikt indblik i f\u00E6ngselslivet gennem 153 \u00E5r.",
+    "Description":"Kom med p\u00E5 en sp\u00E6ndende rundvisning og f\u00E5 et unikt indblik i f\u00E6ngselslivet.",
     "Location":"Fussingvej 8, 8700 Horsens, Denmark",
     "City":"Horsens",
     "GeoLocation":{
@@ -103,90 +127,6 @@
       "Lng":9.836241
     },
     "AccessCode":"66c138af925119627eca38ab6d51c8dfc5e9622d03fdff144e71b171bf7a9927",
-    "Category":0,
-    "Keywords":[
-
-    ],
-    "Images":[
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ]
-  },
-  {
-    "Id":0,
-    "Title":"Locked Escape Room",
-    "StartDate":"2023-11-28T12:04:00+00:00",
-    "EndDate":"2023-12-28T12:04:00+00:00",
-    "CreatedDate":"2023-11-28T10:34:44.8505571+00:00",
-    "IsPrivate":false,
-    "AdultsOnly":false,
-    "IsPaid":true,
-    "HostId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "MaxNumberOfAttendees":0,
-    "Url":"https://www.faengslet.dk/det-sker/escape-room/",
-    "Description":"LOCKED og F\u00C6NGSLET byder velkommen til en 60 minutters h\u00F8jintensiv sp\u00E6ndings-oplevelse! Du og din gruppe har 60 minutter til at finde ledetr\u00E5de og l\u00F8se g\u00E5der for til sidst at kunne l\u00F8se missionen.",
-    "Location":"Fussingvej 8, 8700 Horsens, Denmark",
-    "City":"Horsens",
-    "GeoLocation":{
-      "Lat":55.874073,
-      "Lng":9.836241
-    },
-    "AccessCode":"d198563e915d8ee1c23088a9f838b74fbdebfb96f98f6aff03035056811667ab",
-    "Category":0,
-    "Keywords":[
-
-    ],
-    "Images":[
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ]
-  },
-  {
-    "Id":0,
-    "Title":"Verdens vildeste flugt i VR",
-    "StartDate":"2023-11-28T12:05:00+00:00",
-    "EndDate":"2023-12-28T12:05:00+00:00",
-    "CreatedDate":"2023-11-28T10:34:44.8977932+00:00",
-    "IsPrivate":false,
-    "AdultsOnly":false,
-    "IsPaid":true,
-    "HostId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "MaxNumberOfAttendees":0,
-    "Url":"https://www.faengslet.dk/det-sker/verdens-vildeste-flugt-i-vr/",
-    "Description":"Tr\u00E6d ind i en helt ny verden p\u00E5 F\u00E6ngselsmuseet \u2013 flygt fra f\u00E6ngslet gennem en 18 meter lang tunnel i Virtual Reality.",
-    "Location":"Fussingvej 8, 8700 Horsens, Denmark",
-    "City":"Horsens",
-    "GeoLocation":{
-      "Lat":55.874073,
-      "Lng":9.836241
-    },
-    "AccessCode":"1370f56020a226d74fdfafe0be0a0532aabb7e440a420e58b82b4a0402dd4132",
-    "Category":0,
-    "Keywords":[
-
-    ],
-    "Images":[
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ]
-  },
-  {
-    "Id":0,
-    "Title":"Fangek\u00E6lderen",
-    "StartDate":"2023-11-28T12:06:00+00:00",
-    "EndDate":"2023-12-28T12:06:00+00:00",
-    "CreatedDate":"2023-11-28T10:34:44.9429162+00:00",
-    "IsPrivate":false,
-    "AdultsOnly":false,
-    "IsPaid":true,
-    "HostId":"uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "MaxNumberOfAttendees":0,
-    "Url":"https://www.faengslet.dk/det-sker/fangekaelderen/",
-    "Description":"Tag med en guide og h\u00F8r de sp\u00E6ndende og grusomme historier om fangek\u00E6lderen under hovedbygningen.",
-    "Location":"Fussingvej 8, 8700 Horsens, Denmark",
-    "City":"Horsens",
-    "GeoLocation":{
-      "Lat":55.874073,
-      "Lng":9.836241
-    },
-    "AccessCode":"5b14bbbeb9a0e1f55d4478307acc59670f76a18b41b88a7063f88689670c4c7a",
     "Category":0,
     "Keywords":[
 

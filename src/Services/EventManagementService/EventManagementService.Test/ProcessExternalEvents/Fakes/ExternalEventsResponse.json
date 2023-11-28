@@ -2,10 +2,13 @@
   {
     "title": "Familieaktivitet: Det Skjulte Stempel",
     "price": "Gratis, når entréen er betalt",
-    "host": "Faengslet",
+    "host": {
+      "userId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "creationDate": "2023-11-28T12:59:28.073Z",
+      "displayName": "Faengslet"
+    },
     "description": "Prøv fængselsmuseets familieaktivitet med lærerige, sjove og udfordrende opgaver.",
     "url": "https://www.faengslet.dk/det-sker/familieaktivitet-det-skjulte-stempel/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
     "location": "Fussingvej 8, 8700 Horsens, Denmark",
     "city": "Horsens",
     "lat": 55.87406,
@@ -22,10 +25,13 @@
   {
     "title": "Børneaktivitet: Fuglen er fløjet",
     "price": "Gratis, når entréen er betalt",
-    "host": "Faengslet",
+    "host": {
+      "userId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "creationDate": "2023-11-28T12:59:28.532Z",
+      "displayName": "Faengslet"
+    },
     "description": "Prøv Fængselsmuseets børneaktivitet 'Fuglen er fløjet' og se om I kan finde fuglene på Fængselsmuseet.",
     "url": "https://www.faengslet.dk/det-sker/boerneaktivitet-fuglen-er-floejet/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
     "location": "Fussingvej 8, 8700 Horsens, Denmark",
     "city": "Horsens",
     "lat": 55.87406,
@@ -42,10 +48,13 @@
   {
     "title": "Betjentrundvisning",
     "price": "Voksne og børn: 35 kr. + entré",
-    "host": "Faengslet",
+    "host": {
+      "userId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "creationDate": "2023-11-28T12:59:28.923Z",
+      "displayName": "Faengslet"
+    },
     "description": "Kom med en fængselsbetjent på rundvisning og få en oplevelse udover det sædvanlige.",
     "url": "https://www.faengslet.dk/det-sker/betjentrundvisning/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
     "location": "Fussingvej 8, 8700 Horsens, Denmark",
     "city": "Horsens",
     "lat": 55.87406,
@@ -62,70 +71,13 @@
   {
     "title": "Guidet rundvisning",
     "price": "Voksne og børn: 35 kr. + entré",
-    "host": "Faengslet",
-    "description": "Kom med på en spændende rundvisning og få et unikt indblik i fængselslivet gennem 153 år.",
+    "host": {
+      "userId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "creationDate": "2023-11-28T12:59:29.335Z",
+      "displayName": "Faengslet"
+    },
+    "description": "Kom med på en spændende rundvisning og få et unikt indblik i fængselslivet.",
     "url": "https://www.faengslet.dk/det-sker/guidet-rundvisning/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": "Fussingvej 8, 8700 Horsens, Denmark",
-    "city": "Horsens",
-    "lat": 55.87406,
-    "lng": 9.8363,
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Locked Escape Room",
-    "price": "",
-    "host": "Faengslet",
-    "description": "LOCKED og FÆNGSLET byder velkommen til en 60 minutters højintensiv spændings-oplevelse! Du og din gruppe har 60 minutter til at finde ledetråde og løse gåder for til sidst at kunne løse missionen.",
-    "url": "https://www.faengslet.dk/det-sker/escape-room/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": "Fussingvej 8, 8700 Horsens, Denmark",
-    "city": "Horsens",
-    "lat": 55.87406,
-    "lng": 9.8363,
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Verdens vildeste flugt i VR",
-    "price": "Gratis, når entréen er betalt",
-    "host": "Faengslet",
-    "description": "Træd ind i en helt ny verden på Fængselsmuseet – flygt fra fængslet gennem en 18 meter lang tunnel i Virtual Reality.",
-    "url": "https://www.faengslet.dk/det-sker/verdens-vildeste-flugt-i-vr/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": "Fussingvej 8, 8700 Horsens, Denmark",
-    "city": "Horsens",
-    "lat": 55.87406,
-    "lng": 9.8363,
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Fangekælderen",
-    "price": "Voksne og børn: 35 kr. + entré",
-    "host": "Faengslet",
-    "description": "Tag med en guide og hør de spændende og grusomme historier om fangekælderen under hovedbygningen.",
-    "url": "https://www.faengslet.dk/det-sker/fangekaelderen/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
     "location": "Fussingvej 8, 8700 Horsens, Denmark",
     "city": "Horsens",
     "lat": 55.87406,
