@@ -1,6 +1,6 @@
 namespace EventManagementService.Application.FetchEventById.Data;
 
-public class SqlQueries
+public static class SqlQueries
 {
     public static string QueryEventAttendees =>
         "SELECT user_id FROM public.event_attendee ea WHERE ea.event_id = @eventId";

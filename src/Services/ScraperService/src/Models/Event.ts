@@ -12,20 +12,13 @@ export interface Event {
     maxNumberOfAttendees?: number;
     url: string;
     description?: string;
-    location: Location;
+    location: string;
+    city: string;
+    lat: number;
+    lng: number;
     keywords: any[];
     attendees: string[];
     dateDisplay?: string;
     images?: string[];
     price?: string;
-}
-
-export interface Location {
-    country: string;
-    city: string;
-    postalCode: string;
-    streetName: string;
-    streetNumber: string;
-    housenumber?: string;
-    floor?: string;
 }
