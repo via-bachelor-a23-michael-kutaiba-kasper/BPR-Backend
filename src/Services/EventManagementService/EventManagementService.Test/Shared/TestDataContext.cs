@@ -11,7 +11,7 @@ public class TestDataContext
     public async Task Clean()
     {
         var dropStatement = """
-                            TRUNCATE event, event_attendee, image,  location RESTART IDENTITY CASCADE;
+                            TRUNCATE event, event_attendee, image RESTART IDENTITY CASCADE;
                             """;
 
 

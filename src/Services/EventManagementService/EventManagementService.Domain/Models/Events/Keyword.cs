@@ -4,6 +4,8 @@ namespace EventManagementService.Domain.Models.Events;
 
 public enum Keyword
 {
+    [Description("Un Assigned")] UnAssigned = 0,
+    
     [Description("Live Music")] LiveMusic = 1,
 
     [Description("Dance")] Dance = 2,

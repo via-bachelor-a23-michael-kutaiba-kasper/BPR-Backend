@@ -6,7 +6,7 @@ namespace EventManagementService.Test.JoinEvent.Utils;
 // Don't need to prevent SQL Injections, since this is only for tests.
 public class SqlStatements
 {
-    internal static string InsertEvent(Event e) => $"""
+    /*internal static string InsertEvent(Event e) => $"""
                                                     INSERT INTO event (
                                                              title,
                                                              start_date,
@@ -317,5 +317,5 @@ public class SqlStatements
              access_code
          )
          FROM STDIN (FORMAT BINARY);
-         """;   
+         """;   */
 }

@@ -7,7 +7,7 @@ internal static class BinaryWriterHelper<T>
 {
     internal static async Task WriteNullableAsync(NpgsqlBinaryImporter writer, T? value, NpgsqlDbType type)
     {
-        if (value != null) await writer.WriteAsync(value);
+        if (value != null) await writer.WriteAsync(value, type);
         else await writer.WriteNullAsync();
     }
 }
