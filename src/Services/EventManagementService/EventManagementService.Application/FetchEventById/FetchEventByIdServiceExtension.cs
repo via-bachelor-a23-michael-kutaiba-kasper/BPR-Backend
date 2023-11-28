@@ -8,7 +8,8 @@ public static class FetchEventByIdServiceExtension
     public static IServiceCollection AddFetchEventById(this IServiceCollection collection)
     {
         collection.AddScoped<IEventRepository, EventRepository>();
-        
+        collection.AddScoped<IUserRepository, UserRepository>();
+
         return collection;
     }
 }

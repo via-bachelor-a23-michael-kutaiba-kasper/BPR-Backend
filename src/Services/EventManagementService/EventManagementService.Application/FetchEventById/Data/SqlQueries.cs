@@ -22,18 +22,13 @@ public static class SqlQueries
                                                             last_update_date,
                                                             url,
                                                             description,
-                                                            location_id,
+                                                            location,
                                                             access_code,
                                                             category_id,
-                                                            street_name,
-                                                            street_number,
-                                                            sub_premise,
                                                             city,
-                                                            postal_code,
-                                                            country,
                                                             geolocation_lat,
                                                             geolocation_lng
-                                                            FROM event e join location l on e.location_id = l.id
+                                                            FROM event e 
                                                             WHERE e.id = @eventId;
                                                             """;
 

@@ -69,7 +69,7 @@ public class SqlCreateEvent : ISqlCreateEvent
                 isPrivate = eEvent.IsPrivate,
                 adultOnly = eEvent.AdultsOnly,
                 isPaid = eEvent.IsPaid,
-                hostId = eEvent.Host,
+                hostId = eEvent.Host.UserId,
                 maxNumberOfAttendees = eEvent.MaxNumberOfAttendees,
                 lastUpdateDate = eEvent.LastUpdateDate,
                 url = eEvent.Url,

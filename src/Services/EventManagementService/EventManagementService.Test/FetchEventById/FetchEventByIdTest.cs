@@ -36,12 +36,13 @@ public class FetchEventByIdTest
         // Arrange
         var nonExistingEventId = 1;
         var eventRepositoryMock = new Mock<IEventRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
         var loggerMock = new Mock<ILogger<FetchEventByIdHandler>>();
 
         eventRepositoryMock.Setup(x => x.GetEventByIdAsync(nonExistingEventId)).ReturnsAsync((Event?)null);
 
         var testRequest = new FetchEventByIdRequest(nonExistingEventId);
-        var handler = new FetchEventByIdHandler(loggerMock.Object, eventRepositoryMock.Object);
+        var handler = new FetchEventByIdHandler(loggerMock.Object, eventRepositoryMock.Object, userRepositoryMock.Object);
 
         // Act & Assert
         Assert.ThrowsAsync<EventNotFoundException>(() => handler.Handle(testRequest, new CancellationToken()));

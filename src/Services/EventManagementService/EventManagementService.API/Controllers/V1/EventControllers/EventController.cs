@@ -28,10 +28,10 @@ public class EventController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("allEvents")]
-    public async Task<ActionResult<List<Event>>> GetAllEvents()
+    [HttpGet]
+    public async Task<ActionResult<List<Event>>> GetAllEvents([FromQuery] DateTimeOffset? from=null, [FromQuery] DateTimeOffset? to=null)
     {
-        var events = await _mediator.Send(new AllEventsRequest());
+        var events = await _mediator.Send(new FetchAllEventsRequest(from, to));
 
         return Ok(events);
     }
