@@ -1,6 +1,7 @@
 using EventManagementService.Application.ProcessExternalEvents.Exceptions;
 using EventManagementService.Application.ProcessExternalEvents.Repository;
 using EventManagementService.Application.ProcessExternalEvents.Util;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -70,7 +71,15 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                 AdultsOnly = e.AdultsOnly,
                 EndDate = new DateTimeOffset(),
                 CreatedDate = DateTimeOffset.UtcNow,
-                HostId = e.HostId,
+                Host = new User
+                {
+                    UserId = e.Host.UserId,
+                    CreationDate = e.Host.CreationDate,
+                    DisplayName = e.Host.DisplayName,
+                    PhotoUrl = e.Host.PhotoUrl,
+                    DateOfBirth = e.Host.DateOfBirth,
+                    LastSeenOnline = e.Host.LastSeenOnline
+                },
                 IsPaid = e.IsPaid,
                 IsPrivate = e.IsPrivate,
                 StartDate = new DateTimeOffset(),

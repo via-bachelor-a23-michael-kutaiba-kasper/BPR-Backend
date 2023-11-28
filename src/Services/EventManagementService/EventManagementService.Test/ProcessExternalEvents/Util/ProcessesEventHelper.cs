@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EventManagementService.Application.ProcessExternalEvents.Repository;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using EventManagementService.Test.Shared;
@@ -120,7 +121,15 @@ public class ProcessesEventHelper
                 AdultsOnly = psEvents[i].AdultsOnly,
                 EndDate = new DateTimeOffset(2023, 12, 28, 12, i, 0, TimeSpan.Zero),
                 CreatedDate = DateTimeOffset.UtcNow,
-                HostId = psEvents[i].HostId,
+                Host = new User
+                {
+                    UserId = psEvents[i].Host.UserId,
+                    CreationDate = psEvents[i].Host.CreationDate,
+                    DisplayName = psEvents[i].Host.DisplayName,
+                    PhotoUrl = psEvents[i].Host.PhotoUrl,
+                    DateOfBirth = psEvents[i].Host.DateOfBirth,
+                    LastSeenOnline = psEvents[i].Host.LastSeenOnline
+                },
                 IsPaid = psEvents[i].IsPaid,
                 IsPrivate = psEvents[i].IsPrivate,
                 StartDate = new DateTimeOffset(2023, 11, 28, 12, i, 0, TimeSpan.Zero),
