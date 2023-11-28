@@ -61,21 +61,13 @@ public class EventRepository : IEventRepository
                 Url = eventEntity.url,
                 Attendees = attendees,
                 Id = eventEntity.id,
-                Location = new Location()
+                Location = eventEntity.location,
+                GeoLocation = new GeoLocation
                 {
-                    Id = eventEntity.location_id,
-                    City = eventEntity.city,
-                    Country = eventEntity.country,
-                    SubPremise = eventEntity.sub_premise,
-                    GeoLocation = new GeoLocation()
-                    {
-                        Lat = eventEntity.geolocation_lat,
-                        Lng = eventEntity.geolocation_lng
-                    },
-                    PostalCode = eventEntity.postal_code,
-                    StreetName = eventEntity.street_name,
-                    StreetNumber = eventEntity.street_number
-                }
+                    Lat = eventEntity.geolocation_lat,
+                    Lng= eventEntity.geolocation_lng
+                },
+                City = eventEntity.city
             };
             await connection.CloseAsync();
             return existingEvent;

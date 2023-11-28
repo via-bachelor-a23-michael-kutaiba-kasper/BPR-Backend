@@ -22,18 +22,13 @@ public static class SqlQueries
                                                             last_update_date,
                                                             url,
                                                             description,
-                                                            location_id,
+                                                            location,
                                                             access_code,
                                                             category_id,
-                                                            street_name,
-                                                            street_number,
-                                                            sub_premise,
                                                             city,
-                                                            postal_code,
-                                                            country,
                                                             geolocation_lat,
                                                             geolocation_lng
-                                                            FROM event e join location l on e.location_id = l.id
+                                                            FROM event e
                                                             WHERE e.id = @eventId;
                                                             """;
 
@@ -49,25 +44,4 @@ public static class SqlQueries
                                                 FROM image
                                                 WHERE event_id = @eventId
                                              """;
-
-    public static string QueryAllFromEventTableByHostId => """
-                                                           SELECT id,
-                                                           title,
-                                                           start_date,
-                                                           end_date,
-                                                           created_date,
-                                                           is_private,
-                                                           adult_only,
-                                                           is_paid,
-                                                           host_id,
-                                                           max_number_of_attendees,
-                                                           last_update_date,
-                                                           url,
-                                                           description,
-                                                           location_id,
-                                                           access_code,
-                                                           category_id
-                                                           FROM event e
-                                                           WHERE host_id = @host_id;
-                                                           """;
 }
