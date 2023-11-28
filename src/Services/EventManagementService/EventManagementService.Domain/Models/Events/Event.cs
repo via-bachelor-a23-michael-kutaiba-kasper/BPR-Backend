@@ -11,7 +11,7 @@ public class Event
     public bool IsPrivate { get; set; }
     public bool AdultsOnly { get; set; }
     public bool IsPaid { get; set; }
-    public string HostId { get; set; }
+    public User Host { get; set; }
     public int MaxNumberOfAttendees { get; set; }
     public string Url { get; set; }
     public string? Description { get; set; }

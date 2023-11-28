@@ -75,7 +75,7 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                 AdultsOnly = e.AdultsOnly,
                 EndDate = e.EndDate,
                 CreatedDate = e.CreatedDate,
-                HostId = e.HostId,
+                Host = e.Host,
                 IsPaid = e.IsPaid,
                 IsPrivate = e.IsPrivate,
                 StartDate = e.StartDate,

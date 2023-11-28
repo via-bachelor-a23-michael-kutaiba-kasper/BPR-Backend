@@ -10,12 +10,12 @@ public class EventDto
     public bool IsPrivate { get; set; }
     public bool AdultsOnly { get; set; }
     public bool IsPaid { get; set; }
-    public string HostId { get; set; } = default!;
+    public UserDto Host { get; set; }
     public int MaxNumberOfAttendees { get; set; }
     public string? Description { get; set; }
     public string Location { get; set; }
     public string City { get; set; }
     public GeoLocationDto GeoLocation { get; set; }= default!;
     public string Category { get; set; } = default!;
-    public IEnumerable<string> Keywords { get; set; }= default!;
+    public IEnumerable<string> Keywords { get; set; } = default!;
 }

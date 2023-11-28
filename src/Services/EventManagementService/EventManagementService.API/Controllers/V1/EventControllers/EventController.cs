@@ -6,6 +6,7 @@ using EventManagementService.Application.FetchEventById;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.ProcessExternalEvents;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.Util;
 using MediatR;
@@ -30,12 +31,6 @@ public class EventController : ControllerBase
     [HttpGet("allEvents")]
     public async Task<ActionResult<List<Event>>> GetAllEvents()
     {
-        // TODO: get these from appsetiing.json
-        /*
-        TopicName topicName = new TopicName("bachelorshenanigans", "vibeverse_events_scraped");
-        SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "eventmanagement");
-        */
-
         var events = await _mediator.Send(new AllEventsRequest());
 
         return Ok(events);
@@ -54,7 +49,15 @@ public class EventController : ControllerBase
                     LastUpdateDate = ev.LastUpdateDate,
                     EndDate = ev.EndDate,
                     CreatedDate = ev.CreatedDate,
-                    HostId = ev.HostId,
+                    Host = new UserDto
+                    {
+                        UserId = ev.Host.UserId,
+                        DateOfBirth = ev.Host.DateOfBirth,
+                        DisplayName = ev.Host.DisplayName,
+                        PhotoUrl = ev.Host.PhotoUrl,
+                        LastSeenOnline = ev.Host.LastSeenOnline,
+                        CreationDate = ev.Host.CreationDate
+                    },
                     IsPaid = ev.IsPaid,
                     Description = ev.Description,
                     Category = ev.Category.GetDescription(),
@@ -92,7 +95,14 @@ public class EventController : ControllerBase
                 LastUpdateDate = eventDto.LastUpdateDate,
                 EndDate = eventDto.EndDate,
                 CreatedDate = eventDto.CreatedDate,
-                HostId = eventDto.HostId,
+                Host = new User
+                {
+                    LastSeenOnline = eventDto.Host.LastSeenOnline,
+                    DisplayName = eventDto.Host.DisplayName,
+                    PhotoUrl = eventDto.Host.PhotoUrl,
+                    UserId = eventDto.Host.UserId,
+                    DateOfBirth = eventDto.Host.DateOfBirth
+                },
                 IsPaid = eventDto.IsPaid,
                 Description = eventDto.Description,
                 Category = EnumExtensions.GetEnumValueFromDescription<Category>(eventDto.Category),
@@ -130,7 +140,15 @@ public class EventController : ControllerBase
                 LastUpdateDate = existingEvent.LastUpdateDate,
                 EndDate = existingEvent.EndDate,
                 CreatedDate = existingEvent.CreatedDate,
-                HostId = existingEvent.HostId,
+                Host = new UserDto
+                {
+                    UserId = existingEvent.Host.UserId,
+                    LastSeenOnline = existingEvent.Host.LastSeenOnline,
+                    DisplayName = existingEvent.Host.DisplayName,
+                    PhotoUrl = existingEvent.Host.PhotoUrl,
+                    CreationDate = existingEvent.Host.CreationDate,
+                    DateOfBirth = existingEvent.Host.DateOfBirth
+                },
                 IsPaid = existingEvent.IsPaid,
                 Description = existingEvent.Description,
                 Category = existingEvent.Category.GetDescription(),
@@ -146,7 +164,6 @@ public class EventController : ControllerBase
                 },
                 City = existingEvent.City
             });
-
         }
         catch (Exception e) when (e is EventNotFoundException)
         {

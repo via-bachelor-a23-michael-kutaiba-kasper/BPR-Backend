@@ -34,7 +34,7 @@ public static class SqlStatements
                                                             {e.IsPrivate},
                                                             {e.AdultsOnly},
                                                             {e.IsPaid},
-                                                            '{e.HostId}',
+                                                            '{e.Host.UserId}',
                                                             {e.MaxNumberOfAttendees},
                                                             '{e.LastUpdateDate.ToFormattedUtcString()}',
                                                             '{e.Url}',

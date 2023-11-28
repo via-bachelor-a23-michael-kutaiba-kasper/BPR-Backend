@@ -1,5 +1,6 @@
 using Dapper;
 using EventManagementService.Application.JoinEvent.Data;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using Npgsql;
@@ -52,28 +53,20 @@ public class EventRepository : IEventRepository
             StartDate = existingEventQueryResult.start_date,
             LastUpdateDate = existingEventQueryResult.last_update_date,
             MaxNumberOfAttendees = existingEventQueryResult.max_number_of_attendees,
-            HostId = existingEventQueryResult.host_id,
+            Host = new User { UserId = existingEventQueryResult.host_id },
             IsPaid = existingEventQueryResult.is_paid,
             Images = images,
             Title = existingEventQueryResult.title,
             Url = existingEventQueryResult.url,
             Attendees = attendees,
             Id = existingEventQueryResult.id,
-            /*Location = new Location()
+            Location = "Vejlevej 14, 8700 Horsens, Denmark",
+            City = "Horsens",
+            GeoLocation = new GeoLocation()
             {
-                Id = existingEventQueryResult.location_id,
-                City = existingEventQueryResult.city,
-                Country = existingEventQueryResult.country,
-                SubPremise = existingEventQueryResult.sub_premise,
-                GeoLocation = new GeoLocation()
-                {
-                    Lat = existingEventQueryResult.geolocation_lat,
-                    Lng = existingEventQueryResult.geolocation_lng
-                },
-                PostalCode = existingEventQueryResult.postal_code,
-                StreetName = existingEventQueryResult.street_name,
-                StreetNumber = existingEventQueryResult.street_number
-            }*/
+                Lat = 0,
+                Lng = 0
+            }
         };
         return existingEvent;
     }

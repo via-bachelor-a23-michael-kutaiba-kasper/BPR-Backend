@@ -1,6 +1,8 @@
+import { User } from "./User";
+
 export interface Event {
     title: string;
-    host: string;
+    host: User;
     startDate?: Date;
     endDate?: Date;
     createdDate?: Date;
@@ -8,7 +10,6 @@ export interface Event {
     isPrivate: boolean;
     adultsOnly: boolean;
     isPaid: boolean;
-    hostId: string;
     maxNumberOfAttendees?: number;
     url: string;
     description?: string;
