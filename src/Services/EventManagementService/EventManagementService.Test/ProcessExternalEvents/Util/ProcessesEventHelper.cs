@@ -105,29 +105,30 @@ public class ProcessesEventHelper
         var evs = new List<Event>();
         var psEvents =
             events;
-        foreach (var e in psEvents)
+        
+        for (int i = 0; i < psEvents.Count; i++)
         {
             evs.Add(new Event
             {
-                Title = e.Title,
-                Location = e.Location,
-                Description = e.Description,
-                Category = e.Category,
-                Url = e.Url,
-                Images = e.Images,
-                Keywords = e.Keywords,
-                AdultsOnly = e.AdultsOnly,
-                EndDate = e.EndDate.ToUniversalTime(),
-                CreatedDate = e.CreatedDate.ToUniversalTime(),
-                HostId = e.HostId,
-                IsPaid = e.IsPaid,
-                IsPrivate = e.IsPrivate,
-                StartDate = e.StartDate.ToUniversalTime(),
-                LastUpdateDate = e.LastUpdateDate.ToUniversalTime(),
-                MaxNumberOfAttendees = e.MaxNumberOfAttendees,
-                AccessCode = GenerateUniqueString(e.Title, e.CreatedDate),
-                GeoLocation = await FetchGeoLocation(geoCoding, e.Location),
-                City = e.City
+                Title = psEvents[i].Title,
+                Location = psEvents[i].Location,
+                Description = psEvents[i].Description,
+                Category = psEvents[i].Category,
+                Url = psEvents[i].Url,
+                Images = psEvents[i].Images,
+                Keywords = psEvents[i].Keywords,
+                AdultsOnly = psEvents[i].AdultsOnly,
+                EndDate = new DateTimeOffset(2023, 12, 28, 12, i, 0, TimeSpan.Zero),
+                CreatedDate = DateTimeOffset.UtcNow,
+                HostId = psEvents[i].HostId,
+                IsPaid = psEvents[i].IsPaid,
+                IsPrivate = psEvents[i].IsPrivate,
+                StartDate = new DateTimeOffset(2023, 11, 28, 12, i, 0, TimeSpan.Zero),
+                LastUpdateDate = new DateTimeOffset(),
+                MaxNumberOfAttendees = psEvents[i].MaxNumberOfAttendees,
+                AccessCode = GenerateUniqueString(psEvents[i].Title, psEvents[i].CreatedDate),
+                GeoLocation = await FetchGeoLocation(geoCoding, psEvents[i].Location),
+                City = psEvents[i].City
             });
         }
 

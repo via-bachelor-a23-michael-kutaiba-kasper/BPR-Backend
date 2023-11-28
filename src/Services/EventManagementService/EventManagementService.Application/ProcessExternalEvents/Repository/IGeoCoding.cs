@@ -24,7 +24,8 @@ public class GeoCoding : IGeoCoding
     public async Task<GoogleGeoLocation> FetchGeoLocationForAddress(string address)
     {
         _logger.LogInformation("Fetching the GeoLocation for address{Address}", address);
-        var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+        //var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
+        var apiKey = "AIzaSyAgBxcAuyuNwrLaY9RejFabBNGM7jif6qA";
         var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={apiKey}";
         
         _logger.LogInformation($"API_KEY ->: {apiKey}");

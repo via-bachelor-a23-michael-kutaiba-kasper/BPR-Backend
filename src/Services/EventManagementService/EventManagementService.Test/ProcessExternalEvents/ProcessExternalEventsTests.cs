@@ -59,7 +59,7 @@ public class ProcessExternalEventsTests
     }
     
     [Test]
-    public async Task BulkInsert_ExternalEvents_InsertCorrectnumberofRows()
+    public async Task BulkInsert_ExternalEvents_InsertCorrectNumberOfRows()
     {
         // Arrange
         var loggerMock = new Mock<ILogger<SqlExternalEvents>>();
