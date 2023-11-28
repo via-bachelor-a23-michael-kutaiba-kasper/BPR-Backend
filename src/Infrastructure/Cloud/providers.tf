@@ -6,9 +6,6 @@ terraform {
     google = {
       source = "hashicorp/google"
     }
-    elephantsql = {
-      source = "elephantsql/elephantsql"
-    }
   }
 }
 
