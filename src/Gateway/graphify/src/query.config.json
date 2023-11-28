@@ -24,14 +24,14 @@
             "name": "event",
             "args": [
                 {
-                    "name": "id",
+                    "name": "eventId",
                     "type": "Int",
                     "for": "urlPath"
                 }
             ],
             "resolver": {
                 "host": "http://eventmanagementservice-service",
-                "endpoint": "/api/v1/events/{id}",
+                "endpoint": "/api/v1/events/{eventId}",
                 "port": 80,
                 "method": "GET"
             }

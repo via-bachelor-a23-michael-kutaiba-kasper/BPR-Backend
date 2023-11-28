@@ -133,6 +133,7 @@ public class EventController : ControllerBase
 
             return Ok(new EventDto
             {
+                Id = existingEvent.Id,
                 Title = existingEvent.Title,
                 StartDate = existingEvent.StartDate,
                 LastUpdateDate = existingEvent.LastUpdateDate,
