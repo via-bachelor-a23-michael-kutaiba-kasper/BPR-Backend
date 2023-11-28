@@ -1,9 +1,10 @@
 using Dapper;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
+using EventManagementService.Test.JoinEvent.Utils;
 using Npgsql;
 
-namespace EventManagementService.Test.JoinEvent.Utils;
+namespace EventManagementService.Test.Shared.Builders;
 
 public class DataBuilder
 {
@@ -16,7 +17,7 @@ public class DataBuilder
         _connectionStringManager = connectionStringManager;
     }
     
-    public DataBuilder CreateLocations(IReadOnlyCollection<Location> locations)
+    public DataBuilder InsertLocations(IReadOnlyCollection<Location> locations)
     {
         using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
         {
@@ -34,7 +35,7 @@ public class DataBuilder
         return this;
     }
 
-    public DataBuilder CreateEvents(IReadOnlyCollection<Event> events)
+    public DataBuilder InsertEvents(IReadOnlyCollection<Event> events)
     {
         using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
         {

@@ -8,6 +8,7 @@ using EventManagementService.Infrastructure.AppSettings;
 using EventManagementService.Infrastructure.EventBus;
 using EventManagementService.Test.JoinEvent.Utils;
 using EventManagementService.Test.Shared;
+using EventManagementService.Test.Shared.Builders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -64,9 +65,9 @@ public class JoinEventIntegration
 
         var existingEvent = dataBuilder.NewTestEvent((e) => e.Attendees = new List<string>());
         dataBuilder
-            .CreateLocations(new List<Location>() { existingEvent.Location });
+            .InsertLocations(new List<Location>() { existingEvent.Location });
         existingEvent.Location = dataBuilder.LocationsSet[0];
-        dataBuilder.CreateEvents(new List<Event>() { existingEvent });
+        dataBuilder.InsertEvents(new List<Event>() { existingEvent });
         existingEvent = dataBuilder.EventSet[0];
         
         var existingUserId = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
@@ -116,9 +117,9 @@ public class JoinEventIntegration
 
         var existingEvent = dataBuilder.NewTestEvent((e) => e.Attendees = new List<string>());
         dataBuilder
-            .CreateLocations(new List<Location>() { existingEvent.Location });
+            .InsertLocations(new List<Location>() { existingEvent.Location });
         existingEvent.Location = dataBuilder.LocationsSet[0];
-        dataBuilder.CreateEvents(new List<Event>() { existingEvent });
+        dataBuilder.InsertEvents(new List<Event>() { existingEvent });
         existingEvent = dataBuilder.EventSet[0];
         
         var nonExistingUser = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
