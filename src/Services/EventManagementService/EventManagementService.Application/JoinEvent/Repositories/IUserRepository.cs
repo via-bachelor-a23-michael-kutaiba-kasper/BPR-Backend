@@ -1,5 +1,6 @@
 using EventManagementService.Infrastructure;
 using FirebaseAdmin.Auth;
+using Microsoft.Extensions.Logging;
 
 namespace EventManagementService.Application.JoinEvent.Repositories;
 
@@ -10,6 +11,12 @@ public interface IUserRepository
 
 public class UserRepository: IUserRepository
 {
+    private readonly ILogger<UserRepository> _logger;
+
+    public UserRepository(ILogger<UserRepository> logger)
+    {
+        _logger = logger;
+    }
     public async Task<bool> UserExistsAsync(string userId)
     {
         var defaultInstance = FirebaseAuth.DefaultInstance;
@@ -25,6 +32,7 @@ public class UserRepository: IUserRepository
         }
         catch (FirebaseAuthException e)
         {
+            _logger.LogInformation(e.Message);
             return false;
         }
     }

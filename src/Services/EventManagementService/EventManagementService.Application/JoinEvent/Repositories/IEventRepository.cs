@@ -1,5 +1,6 @@
 using Dapper;
 using EventManagementService.Application.JoinEvent.Data;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using Npgsql;
@@ -52,7 +53,7 @@ public class EventRepository : IEventRepository
             StartDate = existingEventQueryResult.start_date,
             LastUpdateDate = existingEventQueryResult.last_update_date,
             MaxNumberOfAttendees = existingEventQueryResult.max_number_of_attendees,
-            HostId = existingEventQueryResult.host_id,
+            Host = new User { UserId = existingEventQueryResult.host_id },
             IsPaid = existingEventQueryResult.is_paid,
             Images = images,
             Title = existingEventQueryResult.title,

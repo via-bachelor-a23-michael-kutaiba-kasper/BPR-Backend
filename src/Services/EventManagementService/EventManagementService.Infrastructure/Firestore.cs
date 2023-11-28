@@ -7,7 +7,7 @@ namespace EventManagementService.Infrastructure;
 
 public class Firestore
 {
-    private const string ServiceAccountKeyEnvironmentKey = "GCP_SERVICE_ACCOUNT_KEY_JSON";
+    private const string ServiceAccountKeyEnvironmentKey = "SERVICE_ACCOUNT_KEY_FIREBASE_JSON";
     /// <summary>
     /// 
     /// </summary>
@@ -20,7 +20,6 @@ public class Firestore
         return new FirestoreDbBuilder
         {
             ProjectId = "bpr-app-a44a8",
-            EmulatorDetection = EmulatorDetection.EmulatorOrProduction,
             Credential = credentials
         }.Build();
     }
@@ -36,11 +35,12 @@ public class Firestore
     /// UserRecord firebaseUser = await FirebaseAuth.DefaultInstance.GetUserAsync(id);
     /// </code>
     /// </summary>
-    public static void CreateFirebaseApp()
+    public static FirebaseApp CreateFirebaseApp()
     {
-        FirebaseApp.Create(new AppOptions()
+        var app = FirebaseApp.Create(new AppOptions
         {
             Credential = GoogleCredential.FromJson(Environment.GetEnvironmentVariable(ServiceAccountKeyEnvironmentKey))
         });
+        return app;
     }
 }

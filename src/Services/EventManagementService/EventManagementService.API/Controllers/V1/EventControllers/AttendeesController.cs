@@ -1,11 +1,11 @@
 using System.Net;
-using EventManagementService.API.Controllers.V1.Dtos;
+using EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventManagementService.API.Controllers.V1;
+namespace EventManagementService.API.Controllers.V1.EventControllers;
 
 [ApiController]
 [Route("api/v1/attendees")]
@@ -42,6 +42,8 @@ public class AttendeesController : ControllerBase
         }
         catch (Exception e)
         {
+            _logger.LogError(e.Message, e);
+            _logger.LogError(e.StackTrace);
             return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }

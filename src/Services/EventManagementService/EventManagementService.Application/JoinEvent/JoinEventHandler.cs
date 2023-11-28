@@ -1,9 +1,11 @@
 using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.JoinEvent.Repositories;
 using EventManagementService.Domain.Models.Events;
-using Google.Apis.Logging;
+using EventManagementService.Infrastructure.AppSettings;
+using EventManagementService.Infrastructure.EventBus;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EventManagementService.Application.JoinEvent;
 
@@ -14,15 +16,19 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
     private readonly IEventRepository _eventRepository;
     private readonly IInvitationRepository _invitationRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IEventBus _eventBus;
     private readonly ILogger<JoinEventHandler> _logger;
+    private readonly IOptions<PubSub> _pubsubConfig;
 
     public JoinEventHandler(ILogger<JoinEventHandler> logger, IEventRepository eventRepository,
-        IInvitationRepository invitationRepository, IUserRepository userRepository)
+        IInvitationRepository invitationRepository, IUserRepository userRepository, IEventBus eventBus, IOptions<PubSub> pubsubConfig)
     {
         _logger = logger;
         _eventRepository = eventRepository;
         _invitationRepository = invitationRepository;
         _userRepository = userRepository;
+        _eventBus = eventBus;
+        _pubsubConfig = pubsubConfig;
     }
 
     /// <summary>
@@ -57,6 +63,8 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         await AcceptInvitationIfInvited(request.UserId, request.EventId);
 
         await _eventRepository.AddAttendeeToEventAsync(request.UserId, request.EventId);
+        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[1].TopicId,_pubsubConfig.Value.Topics[1].ProjectId, request);
+        _logger.LogInformation($"User {request.UserId} has been added as attendee to event {request.EventId}");
     }
 
     private async Task AcceptInvitationIfInvited(string userId, int eventId)

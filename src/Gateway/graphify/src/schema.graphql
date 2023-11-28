@@ -52,5 +52,9 @@ type Query {
 
 type Mutation {
     createPost(userId: Int!, title: String!, body: String!): Post
-    joinEvent(eventId: Int!, userId: String!): Event
+
+    """
+    Adds user as attendee to event. Does not return anything.
+    """
+    joinEvent(eventId: Int!, userId: String!): Post
 }
