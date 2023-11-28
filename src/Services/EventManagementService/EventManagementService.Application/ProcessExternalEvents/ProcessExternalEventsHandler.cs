@@ -39,7 +39,7 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
         try
         {
             _logger.LogInformation($"Creating new events ar: {DateTimeOffset.UtcNow}");
-            var pubSubEvents = await PubSubEvents(request, cancellationToken);
+            var pubSubEvents = await PubSubEvents(cancellationToken);
             await _sqlExternalEvents.BulkUpsertEvents(pubSubEvents);
             _logger.LogInformation(
                 $"{pubSubEvents.Count} events have been successfully created at: {DateTimeOffset.UtcNow}");
@@ -52,15 +52,10 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
         }
     }
 
-    private async Task<IReadOnlyCollection<Event>> PubSubEvents
-    (
-        ProcessExternalEventsRequest request,
-        CancellationToken cancellationToken
-    )
+    private async Task<IReadOnlyCollection<Event>> PubSubEvents(CancellationToken cancellationToken)
     {
         var evs = new List<Event>();
-        var psEvents =
-            await _pubSubExternalEvents.FetchEvents(cancellationToken);
+        var psEvents = await _pubSubExternalEvents.FetchEvents(cancellationToken);
         foreach (var e in psEvents)
         {
             evs.Add(new Event
