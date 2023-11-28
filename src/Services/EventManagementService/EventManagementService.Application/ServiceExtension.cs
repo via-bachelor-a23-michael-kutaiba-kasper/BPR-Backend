@@ -2,6 +2,7 @@ using EventManagementService.Application.CreateEvent;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.FetchAllEvents;
 using EventManagementService.Application.FetchCategories;
+using EventManagementService.Application.FetchEventById;
 using EventManagementService.Application.FetchKeywords;
 using EventManagementService.Application.ProcessExternalEvents;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,7 @@ public static class ServiceExtension
         services.AddFetchCategories();
         services.AddFetchKeywords();
         services.AddCreateEvent();
+        services.AddFetchEventById();
         return services;
     }
 }
