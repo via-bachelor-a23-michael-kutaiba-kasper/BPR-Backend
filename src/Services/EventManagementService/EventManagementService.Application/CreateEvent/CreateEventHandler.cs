@@ -44,6 +44,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest>
         }
         catch (Exception e)
         {
+            _logger.LogError(e.StackTrace);
             _logger.LogCritical($"Cannot create new event at: {DateTimeOffset.UtcNow}", e);
             throw new CreateEventException(
                 $"Something went wrong while creating a new event at: {DateTimeOffset.UtcNow}", e);
