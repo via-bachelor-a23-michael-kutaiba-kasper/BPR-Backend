@@ -67,7 +67,9 @@ type Post {
 }
 
 type Query {
-    events: [Event]
+    events: [Event],
+    categories: [String],
+    keywords: [String],
     allPublicEvents: [Event]
     event(eventId: Int): Event
     posts(userId: Int): [Post]
