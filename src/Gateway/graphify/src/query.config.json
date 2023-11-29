@@ -37,6 +37,26 @@
             }
         },
         {
+            "name": "categories",
+            "args": [],
+            "resolver" : {
+                "host": "http://eventmanagementservice-service",
+                "port": 80,
+                "endpoint": "api/v1/categories/allCategories",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "keywords",
+            "args": [],
+            "resolver" : {
+                "host": "http://eventmanagementservice-service",
+                "port": 80,
+                "endpoint": "api/v1/keywords/allKeywords",
+                "method": "GET"
+            }
+        },
+        {
             "name": "posts",
             "args": [
                 {
