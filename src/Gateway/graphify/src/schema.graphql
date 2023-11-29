@@ -27,6 +27,14 @@ type Location {
     geoLocation: GeoLocation
 }
 
+type User {
+    userId: String
+    displayName: String
+    photoUrl: String
+    lastSeenOnline: String
+    creationDate: String
+}
+
 type Event {
     id: String
     title: String
@@ -37,16 +45,18 @@ type Event {
     isPrivate: Boolean
     adultsOnly: Boolean
     isPaid: Boolean
-    hostId: String
+    host: User
     maxNumberOfAttendees: Int
     url: String
     description: String
-    location: Location
     accessCode: String
     category: String
     keywords: [String]
     images: [String]
     attendees: [String]
+    geoLocation: GeoLocation
+    city: String
+    location: String
 }
 
 type Post {
@@ -59,7 +69,7 @@ type Post {
 type Query {
     events: [Event]
     allPublicEvents: [Event]
-    event(id: Int): Event
+    event(eventId: Int): Event
     posts(userId: Int): [Post]
     post(id: Int!): Post
 }

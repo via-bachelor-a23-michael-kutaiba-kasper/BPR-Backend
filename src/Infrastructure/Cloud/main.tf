@@ -50,7 +50,7 @@ module "eventmanagement_service" {
   container_envs = {
     "GOOGLE_API_KEY"                    = var.GOOGLE_API_KEY
     "SERVICE_ACCOUNT_KEY_FIREBASE_JSON" = var.GCP_SERVICE_ACCOUNT_KEY_FIREBASE_JSON
-    "DEPLOYMENT_ENVIRONMENT" = "PRODUCTION"
+    "DEPLOYMENT_ENVIRONMENT"            = "PRODUCTION"
   }
 }
 

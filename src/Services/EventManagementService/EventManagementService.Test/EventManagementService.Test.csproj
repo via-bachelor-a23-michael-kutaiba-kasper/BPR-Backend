@@ -21,6 +21,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EventManagementService.Application\EventManagementService.Application.csproj" />
+
     </ItemGroup>
 
     <ItemGroup>
@@ -37,6 +38,7 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
+
 
 
 

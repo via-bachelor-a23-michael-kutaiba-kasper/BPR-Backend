@@ -2,6 +2,7 @@ using System.Net;
 using EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 using EventManagementService.Application.CreateEvent;
 using EventManagementService.Application.FetchAllEvents;
+using EventManagementService.Application.FetchEventById;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.ProcessExternalEvents;
@@ -10,6 +11,7 @@ using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.Util;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using EventNotFoundException = EventManagementService.Application.FetchEventById.Exceptions.EventNotFoundException;
 
 namespace EventManagementService.API.Controllers.V1.EventControllers;
 
@@ -18,22 +20,18 @@ namespace EventManagementService.API.Controllers.V1.EventControllers;
 public class EventController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly ILogger<EventController> _logger;
 
-    public EventController(IMediator mediator)
+    public EventController(IMediator mediator, ILogger<EventController> logger)
     {
         _mediator = mediator;
+        _logger = logger;
     }
 
-    [HttpGet("allEvents")]
-    public async Task<ActionResult<List<Event>>> GetAllEvents()
+    [HttpGet]
+    public async Task<ActionResult<List<Event>>> GetAllEvents([FromQuery] DateTimeOffset? from=null, [FromQuery] DateTimeOffset? to=null)
     {
-        // TODO: get these from appsetiing.json
-        /*
-        TopicName topicName = new TopicName("bachelorshenanigans", "vibeverse_events_scraped");
-        SubscriptionName subscriptionName = new SubscriptionName("bachelorshenanigans", "eventmanagement");
-        */
-
-        var events = await _mediator.Send(new AllEventsRequest());
+        var events = await _mediator.Send(new FetchAllEventsRequest(from, to));
 
         return Ok(events);
     }
@@ -101,7 +99,7 @@ public class EventController : ControllerBase
                     LastSeenOnline = eventDto.Host.LastSeenOnline,
                     DisplayName = eventDto.Host.DisplayName,
                     PhotoUrl = eventDto.Host.PhotoUrl,
-                    UserId = eventDto.Host.UserId
+                    UserId = eventDto.Host.UserId,
                 },
                 IsPaid = eventDto.IsPaid,
                 Description = eventDto.Description,
@@ -122,6 +120,57 @@ public class EventController : ControllerBase
         }
         catch (Exception e)
         {
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet("{eventId}")]
+    public async Task<ActionResult<EventDto>> GetEventById([FromRoute] int eventId)
+    {
+        try
+        {
+            var existingEvent = await _mediator.Send(new FetchEventByIdRequest(eventId));
+
+            return Ok(new EventDto
+            {
+                Id = existingEvent.Id,
+                Title = existingEvent.Title,
+                StartDate = existingEvent.StartDate,
+                LastUpdateDate = existingEvent.LastUpdateDate,
+                EndDate = existingEvent.EndDate,
+                CreatedDate = existingEvent.CreatedDate,
+                Host = new UserDto
+                {
+                    UserId = existingEvent.Host.UserId,
+                    LastSeenOnline = existingEvent.Host.LastSeenOnline,
+                    DisplayName = existingEvent.Host.DisplayName,
+                    PhotoUrl = existingEvent.Host.PhotoUrl,
+                    CreationDate = existingEvent.Host.CreationDate,
+                },
+                IsPaid = existingEvent.IsPaid,
+                Description = existingEvent.Description,
+                Category = existingEvent.Category.GetDescription(),
+                Keywords = existingEvent.Keywords.Select(kw => kw.GetDescription()),
+                AdultsOnly = existingEvent.AdultsOnly,
+                IsPrivate = existingEvent.IsPrivate,
+                MaxNumberOfAttendees = existingEvent.MaxNumberOfAttendees,
+                Location = existingEvent.Location,
+                GeoLocation = new GeoLocationDto
+                {
+                    Lat = existingEvent.GeoLocation.Lat,
+                    Lng = existingEvent.GeoLocation.Lng
+                },
+                City = existingEvent.City
+            });
+        }
+        catch (Exception e) when (e is EventNotFoundException)
+        {
+            return NotFound(e.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message, e);
+            _logger.LogError(e.StackTrace);
             return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }

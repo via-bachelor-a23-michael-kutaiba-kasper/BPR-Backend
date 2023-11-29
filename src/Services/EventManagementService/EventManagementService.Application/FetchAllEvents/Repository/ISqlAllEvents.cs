@@ -10,7 +10,7 @@ namespace EventManagementService.Application.FetchAllEvents.Repository;
 
 public interface ISqlAllEvents
 {
-    Task<IReadOnlyCollection<Event>> GetAllEvents();
+    Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null, DateTimeOffset? to = null);
 }
 
 public class SqlAllEvents : ISqlAllEvents
@@ -28,7 +28,7 @@ public class SqlAllEvents : ISqlAllEvents
         _logger = logger;
     }
 
-    public async Task<IReadOnlyCollection<Event>> GetAllEvents()
+    public async Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null, DateTimeOffset? to = null)
     {
         _logger.LogInformation("Fetching all public events from database");
         var events = new List<Event>();
@@ -41,7 +41,7 @@ public class SqlAllEvents : ISqlAllEvents
             {
                 Title = e.title,
                 Description = e.description,
-                Url = e.url/*,
+                Url = e.url /*,
                 Location = new Location
                 {
                     Country = e.country,
@@ -63,22 +63,22 @@ public class SqlAllEvents : ISqlAllEvents
     private static string GetEventsSql()
     {
         return """
-               SELECT 
+               SELECT
                    e.*,
-                   l.*  
-               FROM 
+                   l.*
+               FROM
                    postgres.public.event e
-               JOIN 
+               JOIN
                        location l ON e.location_id = l.id
-               LEFT JOIN 
+               LEFT JOIN
                        public.event_attendee ea on e.id = ea.event_id
-               LEFT JOIN 
+               LEFT JOIN
                        event_category ec ON e.id = ec.event_id
-               LEFT JOIN 
+               LEFT JOIN
                        category c ON ec.category_id = c.id
-               LEFT JOIN 
+               LEFT JOIN
                        keyword_category kc ON e.id = kc.event_id
-               LEFT JOIN 
+               LEFT JOIN
                        keyword k ON kc.keyword = k.id;
                """;
     }

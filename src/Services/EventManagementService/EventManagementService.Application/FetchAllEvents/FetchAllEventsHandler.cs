@@ -5,19 +5,21 @@ using Microsoft.Extensions.Logging;
 
 namespace EventManagementService.Application.FetchAllEvents;
 
-public record AllEventsRequest
+public record FetchAllEventsRequest
 (
+    DateTimeOffset? From = null,
+    DateTimeOffset? To = null
 ) : IRequest<IReadOnlyCollection<Event>>;
 
-public class AllPublicEventsHandler : IRequestHandler<AllEventsRequest, IReadOnlyCollection<Event>>
+public class FetchAllEventsHandler : IRequestHandler<FetchAllEventsRequest, IReadOnlyCollection<Event>>
 {
     private readonly ISqlAllEvents _sqlAllEvents;
-    private readonly ILogger<AllPublicEventsHandler> _logger;
+    private readonly ILogger<FetchAllEventsHandler> _logger;
 
-    public AllPublicEventsHandler
+    public FetchAllEventsHandler
     (
         ISqlAllEvents sqlAllEvents,
-        ILogger<AllPublicEventsHandler> logger
+        ILogger<FetchAllEventsHandler> logger
     )
     {
         _sqlAllEvents = sqlAllEvents;
@@ -26,7 +28,7 @@ public class AllPublicEventsHandler : IRequestHandler<AllEventsRequest, IReadOnl
 
     public async Task<IReadOnlyCollection<Event>> Handle
     (
-        AllEventsRequest request,
+        FetchAllEventsRequest request,
         CancellationToken cancellationToken
     )
     {
@@ -37,6 +39,4 @@ public class AllPublicEventsHandler : IRequestHandler<AllEventsRequest, IReadOnl
     {
         return await _sqlAllEvents.GetAllEvents();
     }
-
-    
 }

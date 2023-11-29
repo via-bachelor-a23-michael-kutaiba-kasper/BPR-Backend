@@ -60,21 +60,13 @@ public class EventRepository : IEventRepository
             Url = existingEventQueryResult.url,
             Attendees = attendees,
             Id = existingEventQueryResult.id,
-            /*Location = new Location()
+            Location = "Vejlevej 14, 8700 Horsens, Denmark",
+            City = "Horsens",
+            GeoLocation = new GeoLocation()
             {
-                Id = existingEventQueryResult.location_id,
-                City = existingEventQueryResult.city,
-                Country = existingEventQueryResult.country,
-                SubPremise = existingEventQueryResult.sub_premise,
-                GeoLocation = new GeoLocation()
-                {
-                    Lat = existingEventQueryResult.geolocation_lat,
-                    Lng = existingEventQueryResult.geolocation_lng
-                },
-                PostalCode = existingEventQueryResult.postal_code,
-                StreetName = existingEventQueryResult.street_name,
-                StreetNumber = existingEventQueryResult.street_number
-            }*/
+                Lat = 0,
+                Lng = 0
+            }
         };
         return existingEvent;
     }

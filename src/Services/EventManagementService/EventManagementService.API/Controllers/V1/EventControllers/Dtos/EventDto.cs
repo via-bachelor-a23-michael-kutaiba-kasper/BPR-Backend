@@ -2,6 +2,7 @@ namespace EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 
 public class EventDto
 {
+    public int Id{ get; set; }
     public string Title { get; set; } = default!;
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset EndDate { get; set; }
