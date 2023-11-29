@@ -7,6 +7,7 @@ using EventManagementService.Infrastructure.AppSettings;
 using EventManagementService.Infrastructure.EventBus;
 using EventManagementService.Test.JoinEvent.Utils;
 using EventManagementService.Test.Shared;
+using EventManagementService.Test.Shared.Builders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;

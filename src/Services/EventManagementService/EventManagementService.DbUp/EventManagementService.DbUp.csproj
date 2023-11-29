@@ -21,7 +21,8 @@
       <EmbeddedResource Include="Migrations\0003_Fix_keyword_event_name.sql" />
       <EmbeddedResource Include="Migrations\0004_Populate_Enum_tables.sql" />
       <EmbeddedResource Include="Migrations\0005_Update_event_table.sql" />
-      <EmbeddedResource Include="Migrations\0006_AddUniqueConstraintsToLocationAndEventKeyword.sql" />
+      <EmbeddedResource Include="Migrations\0006_Add_unique_constraints_to_location_and_event_keyword.sql" />
+      <EmbeddedResource Include="Migrations\0007_Delete_location_table_and_add_location_to_event_table.sql" />
     </ItemGroup>
 
 

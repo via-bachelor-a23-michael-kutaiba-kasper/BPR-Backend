@@ -35,8 +35,7 @@ public class SqlCreateEvent : ISqlCreateEvent
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
         try
         {
-            var locId = await InsertLocation(eEvent, connection);
-            var evtId = await InsertNewEvent(eEvent, connection, locId);
+            var evtId = await InsertNewEvent(eEvent, connection);
             await InsertEventKeywords(eEvent, connection, evtId);
             await transaction.CommitAsync();
         }
@@ -57,45 +56,30 @@ public class SqlCreateEvent : ISqlCreateEvent
         }
     }
 
-    private static async Task<int> InsertLocation(Event eEvent, NpgsqlConnection connection)
-    {
-        var locId = await connection.ExecuteScalarAsync<int>(
-            InsertLocationSql,
-            new
-            {
-                streetNumber = eEvent.Location.StreetNumber,
-                streetName = eEvent.Location.StreetName,
-                subPremise = eEvent.Location.HouseNumber,
-                city = eEvent.Location.City,
-                postalCode = eEvent.Location.PostalCode,
-                country = eEvent.Location.Country,
-                geolocationLat = eEvent.Location.GeoLocation.Lat,
-                geolocationLng = eEvent.Location.GeoLocation.Lng
-            });
-        return locId;
-    }
-
-    private static async Task<int> InsertNewEvent(Event eEvent, NpgsqlConnection connection, int locId)
+    private static async Task<int> InsertNewEvent(Event eEvent, NpgsqlConnection connection)
     {
         var evtId = await connection.ExecuteScalarAsync<int>(
             InsertNewEventSql,
             new
             {
                 title = eEvent.Title,
-                startDate = eEvent.StartDate.ToUniversalTime(),
-                endDate = eEvent.EndDate.ToUniversalTime(),
-                createdDate = eEvent.CreatedDate.ToUniversalTime(),
+                startDate = eEvent.StartDate,
+                endDate = eEvent.EndDate,
+                createdDate = eEvent.CreatedDate,
                 isPrivate = eEvent.IsPrivate,
                 adultOnly = eEvent.AdultsOnly,
                 isPaid = eEvent.IsPaid,
-                hostId = eEvent.Host,
+                hostId = eEvent.Host.UserId,
                 maxNumberOfAttendees = eEvent.MaxNumberOfAttendees,
                 lastUpdateDate = eEvent.LastUpdateDate,
                 url = eEvent.Url,
                 description = eEvent.Description,
-                locationId = locId,
                 accessCode = eEvent.AccessCode,
-                categoryId = (int)eEvent.Category
+                categoryId = eEvent.Category,
+                location = eEvent.Location,
+                city = eEvent.City,
+                geolocationLat = eEvent.GeoLocation.Lat,
+                geolocationLng = eEvent.GeoLocation.Lng
             });
         return evtId;
     }
@@ -111,33 +95,6 @@ public class SqlCreateEvent : ISqlCreateEvent
             });
         }
     }
-
-    private const string InsertLocationSql =
-        """
-            INSERT INTO location
-                (
-                 street_number,
-                 street_name,
-                 sub_premise,
-                 city,
-                 postal_code,
-                 country,
-                 geolocation_lat,
-                 geolocation_lng
-                ) VALUES (
-                          @streetNumber,
-                          @streetName,
-                          @subPremise,
-                          @city,
-                          @postalCode,
-                          @country,
-                          @geolocationLat,
-                          @geolocationLng
-                          )
-                   ON CONFLICT (geolocation_lng, geolocation_lat, sub_premise)
-                   DO UPDATE SET street_name =  EXCLUDED.street_name -- a hack to return id on conflict
-                   RETURNING id
-        """;
 
     private const string InsertNewEventSql =
         """
@@ -155,26 +112,33 @@ public class SqlCreateEvent : ISqlCreateEvent
              last_update_date,
              url,
              description,
-             location_id,
              access_code,
-             category_id) VALUES (
-                                  @title,
-                                  @startDate,
-                                  @endDate,
-                                  @createdDate,
-                                  @isPrivate,
-                                  @adultOnly,
-                                  @isPaid,
-                                  @hostId,
-                                  @maxNumberOfAttendees,
-                                  @lastUpdateDate,
-                                  @url,
-                                  @description,
-                                  @locationId,
-                                  @accessCode,
-                                  @categoryId
-                                ) ON CONFLICT (access_code) DO NOTHING
-                                RETURNING id;
+             category_id,
+             location,
+             city,
+             geolocation_lat,
+             geolocation_lng
+             ) VALUES (
+                    @title,
+                    @startDate,
+                    @endDate,
+                    @createdDate,
+                    @isPrivate,
+                    @adultOnly,
+                    @isPaid,
+                    @hostId,
+                    @maxNumberOfAttendees,
+                    @lastUpdateDate,
+                    @url,
+                    @description,
+                    @accessCode,
+                    @categoryId,
+                    @location,
+                    @city,
+                    @geolocationLat,
+                    @geolocationLng
+                ) ON CONFLICT (access_code) DO NOTHING
+                RETURNING id;
         """;
 
     private const string InsertEventKeywordsSql =

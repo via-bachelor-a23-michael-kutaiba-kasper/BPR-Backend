@@ -47,19 +47,7 @@ public class CreateEventTests
         var request = new CreateEventRequest(new Event
         {
             Id = 1,
-            Location = new Location
-            {
-                City = "Horsens",
-                Country = "Denmark",
-                PostalCode = "8700",
-                StreetName = "Vejlevej",
-                StreetNumber = "14",
-                GeoLocation = new GeoLocation
-                {
-                    Lat = 0,
-                    Lng = 0
-                }
-            },
+            Location = "Vejlevej 14, 8700 Horsens, Denmark",
             Category = Category.Music,
             Images = new List<string>(),
             Title = "Beethoven Concerto",
@@ -75,12 +63,19 @@ public class CreateEventTests
             IsPrivate = false,
             MaxNumberOfAttendees = 200,
             LastUpdateDate = DateTimeOffset.UtcNow,
+            GeoLocation = new GeoLocation
+            {
+                Lat = 0,
+                Lng = 0
+            },
+            City = "Horsens",
+            Description = "Test"
         });
-
+        
         // Act
-        var act = handler.Handle(request, new CancellationToken());
-
+        var act = async ()=> await handler.Handle(request, new CancellationToken());
+        
         // Assert 
-        Assert.DoesNotThrowAsync(() => act);
+        Assert.DoesNotThrowAsync(()=> act.Invoke());
     }
 }

@@ -1,90 +1,93 @@
-INSERT INTO category (name)
-VALUES ('Concerts')
-     , ('Festivals')
-     , ('Conferences')
-     , ('Workshops')
-     , ('Seminars')
-     , ('Arts and Culture')
-     , ('Food and Drink')
-     , ('Charity and Fundraising')
-     , ('Health and Wellness')
-     , ('Technology')
-     , ('Business and Entrepreneurship')
-     , ('Education')
-     , ('Family and Kids')
-     , ('Outdoor and Adventure')
-     , ('Comedy')
-     , ('Film and Cinema')
-     , ('Music')
-     , ('Performing Arts')
-     , ('Classic Literature')
-     , ('Comedy')
-     , ('Drinks')
-     , ('Fitness and Workouts')
-     , ('Foods')
-     , ('Games')
-     , ('Gardening')
-     , ('Healthy Living and Self Care')
-     , ('Home and Garden')
-     , ('Parties')
-     , ('Religions')
-     , ('Shopping')
-     , ('Social Issues')
-     , ('Sports')
-     , ('Theater');
+INSERT INTO category (id, name)
+VALUES
+    (0, 'Un Assigned'),
+    (1, 'Concerts'),
+    (2, 'Festivals'),
+    (3, 'Conferences'),
+    (4, 'Workshops'),
+    (5, 'Seminars'),
+    (6, 'Arts and Culture'),
+    (7, 'Food and Drink'),
+    (8, 'Charity and Fundraising'),
+    (9, 'Health and Wellness'),
+    (10, 'Technology'),
+    (11, 'Business and Entrepreneurship'),
+    (12, 'Education'),
+    (13, 'Family and Kids'),
+    (14, 'Outdoor and Adventure'),
+    (15, 'Comedy'),
+    (16, 'Film and Cinema'),
+    (17, 'Music'),
+    (18, 'Performing Arts'),
+    (19, 'Classic Literature'),
+    (20, 'Drinks'),
+    (21, 'Fitness and Workouts'),
+    (22, 'Foods'),
+    (23, 'Games'),
+    (24, 'Gardening'),
+    (25, 'Healthy Living and Self Care'),
+    (26, 'Home and Garden'),
+    (27, 'Parties'),
+    (28, 'Religions'),
+    (29, 'Shopping'),
+    (30, 'Social Issues'),
+    (31, 'Sports'),
+    (32, 'Theater');
 
-INSERT INTO keyword (name)
-VALUES ('Live Music')
-     , ('Dance')
-     , ('Art Exhibition')
-     , ('Science')
-     , ('Coding')
-     , ('Gaming')
-     , ('Yoga')
-     , ('Meditation')
-     , ('Fitness')
-     , ('Food Tasting')
-     , ('Networking')
-     , ('Fashion Show')
-     , ('Photography')
-     , ('Charity Auction')
-     , ('Marathon')
-     , ('Theater')
-     , ('Poetry')
-     , ('Wine Tasting')
-     , ('TEDx')
-     , ('Hackathon')
-     , ('Rock')
-     , ('Jazz')
-     , ('Hip-Hop')
-     , ('Electronic Music')
-     , ('Classical Performance')
-     , ('Country Music')
-     , ('Indie')
-     , ('Acoustic Jam Session')
-     , ('Blues')
-     , ('Reggae Night')
-     , ('Beer')
-     , ('Wine Tasting')
-     , ('Cocktail')
-     , ('Coffee Tasting')
-     , ('Whiskey Tasting')
-     , ('BBQ')
-     , ('Vegan')
-     , ('International Cuisine')
-     , ('Football')
-     , ('Basketball')
-     , ('Marathon')
-     , ('Yoga')
-     , ('Cycling')
-     , ('Golf')
-     , ('Tennis')
-     , ('Surfing')
-     , ('Street Art')
-     , ('Photography Exhibition')
-     , ('Fashion Show')
-     , ('Poetry Slam')
-     , ('Cultural Heritage')
-     , ('Dance Performance')
-     , ('Theater Play')
-     , ('Sculpture Expo');
+
+INSERT INTO keyword (id, name)
+VALUES
+    (0, 'Un Assigned'),
+    (1, 'Live Music'),
+    (2, 'Dance'),
+    (3, 'Art Exhibition'),
+    (4, 'Science'),
+    (5, 'Coding'),
+    (6, 'Gaming'),
+    (7, 'Yoga'),
+    (8, 'Meditation'),
+    (9, 'Fitness'),
+    (10, 'Food Tasting'),
+    (11, 'Networking'),
+    (12, 'Fashion Show'),
+    (13, 'Photography'),
+    (14, 'Charity Auction'),
+    (15, 'Marathon'),
+    (16, 'Theater'),
+    (17, 'Poetry'),
+    (18, 'Wine Tasting'),
+    (19, 'TEDx'),
+    (20, 'Hackathon'),
+    (21, 'Rock'),
+    (22, 'Jazz'),
+    (23, 'Hip-Hop'),
+    (24, 'Electronic Music'),
+    (25, 'Classical Performance'),
+    (26, 'Country Music'),
+    (27, 'Indie'),
+    (28, 'Acoustic Jam Session'),
+    (29, 'Blues'),
+    (30, 'Reggae Night'),
+    (31, 'Beer'),
+    (32, 'Wine Tasting'),
+    (33, 'Cocktail'),
+    (34, 'Coffee Tasting'),
+    (35, 'Whiskey Tasting'),
+    (36, 'BBQ'),
+    (37, 'Vegan'),
+    (38, 'Football'),
+    (39, 'Basketball'),
+    (40, 'Marathon'),
+    (41, 'Yoga'),
+    (42, 'Cycling'),
+    (43, 'Golf'),
+    (44, 'Tennis'),
+    (45, 'Surfing'),
+    (46, 'Street Art'),
+    (47, 'Photography Exhibition'),
+    (48, 'Fashion Show'),
+    (49, 'Poetry Slam'),
+    (50, 'Cultural Heritage'),
+    (51, 'Dance Performance'),
+    (52, 'Theater Play'),
+    (53, 'Sculpture Expo');

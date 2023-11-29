@@ -15,7 +15,7 @@ services:
        
   eventmanagement_postgres: 
     container_name: eventmanagement_postgres
-    image: postgres:14.1-alpine
+    image: postgres:15.4-alpine
     restart: always
     environment:
       - POSTGRES_USER=postgres

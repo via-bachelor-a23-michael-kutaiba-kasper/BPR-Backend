@@ -2,40 +2,22 @@ using Dapper;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
+using EventManagementService.Test.JoinEvent.Utils;
 using Npgsql;
 
-namespace EventManagementService.Test.JoinEvent.Utils;
+namespace EventManagementService.Test.Shared.Builders;
 
 public class DataBuilder
 {
     private readonly ConnectionStringManager _connectionStringManager;
-    public IList<Location> LocationsSet { get; set; } = new List<Location>();
     public IList<Event> EventSet { get; set; } = new List<Event>();
 
     public DataBuilder(ConnectionStringManager connectionStringManager)
     {
         _connectionStringManager = connectionStringManager;
     }
-    
-    public DataBuilder CreateLocations(IReadOnlyCollection<Location> locations)
-    {
-        using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
-        {
-            connection.Open();
-            foreach (var location in locations)
-            {
-                var statement = SqlStatements.InsertLocation(location);
-                var id = connection.ExecuteScalar<int>(statement);
-                location.Id = id;
-                LocationsSet.Add(location);
-            }
-            connection.Close();
-        }
 
-        return this;
-    }
-
-    public DataBuilder CreateEvents(IReadOnlyCollection<Event> events)
+    public DataBuilder InsertEvents(IReadOnlyCollection<Event> events)
     {
         using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
         {
@@ -47,30 +29,18 @@ public class DataBuilder
                 e.Id = id;
                 EventSet.Add(e);
             }
+
             connection.Close();
         }
 
         return this;
     }
-    
+
     public Event NewTestEvent(Action<Event>? configureEvent = null)
     {
         Event newEvent = new()
         {
             Id = 1,
-            Location = new Location
-            {
-                City = "Horsens",
-                Country = "Denmark",
-                PostalCode = "8700",
-                StreetName = "Vejlevej",
-                StreetNumber = "14",
-                GeoLocation = new GeoLocation
-                {
-                    Lat = 0,
-                    Lng = 0
-                }
-            },
             Category = Category.Music,
             Images = new List<string>(),
             Title = "Beethoven Concerto",
@@ -89,14 +59,17 @@ public class DataBuilder
             IsPrivate = false,
             MaxNumberOfAttendees = 200,
             LastUpdateDate = DateTimeOffset.UtcNow,
+            Location = "Vejlevej 14, 8700 Horsens, Denmark",
+            City = "Horsens",
+            GeoLocation = new GeoLocation
+            {
+                Lat = 0,
+                Lng = 0
+            },
+            Attendees = new List<string>()
         };
 
         configureEvent?.Invoke(newEvent);
-
-        using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
-        {
-            connection.Open();
-        }
 
         return newEvent;
     }

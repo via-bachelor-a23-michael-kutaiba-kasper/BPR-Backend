@@ -1,4 +1,4 @@
-namespace EventManagementService.Application.JoinEvent.Data;
+namespace EventManagementService.Application.FetchEventById.Data;
 
 public static class SqlQueries
 {
@@ -28,7 +28,7 @@ public static class SqlQueries
                                                             city,
                                                             geolocation_lat,
                                                             geolocation_lng
-                                                            FROM event e
+                                                            FROM event e 
                                                             WHERE e.id = @eventId;
                                                             """;
 
@@ -44,4 +44,25 @@ public static class SqlQueries
                                                 FROM image
                                                 WHERE event_id = @eventId
                                              """;
+
+    public static string QueryAllFromEventTableByHostId => """
+                                                           SELECT id,
+                                                           title,
+                                                           start_date,
+                                                           end_date,
+                                                           created_date,
+                                                           is_private,
+                                                           adult_only,
+                                                           is_paid,
+                                                           host_id,
+                                                           max_number_of_attendees,
+                                                           last_update_date,
+                                                           url,
+                                                           description,
+                                                           location_id,
+                                                           access_code,
+                                                           category_id
+                                                           FROM event e
+                                                           WHERE host_id = @host_id;
+                                                           """;
 }

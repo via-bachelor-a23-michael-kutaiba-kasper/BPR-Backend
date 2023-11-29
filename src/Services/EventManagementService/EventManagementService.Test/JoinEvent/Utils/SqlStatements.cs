@@ -4,7 +4,7 @@ using EventManagementService.Infrastructure.Util;
 namespace EventManagementService.Test.JoinEvent.Utils;
 
 // Don't need to prevent SQL Injections, since this is only for tests.
-public class SqlStatements
+public static class SqlStatements
 {
     internal static string InsertEvent(Event e) => $"""
                                                     INSERT INTO event (
@@ -20,9 +20,12 @@ public class SqlStatements
                                                              last_update_date,
                                                              url,
                                                              description,
-                                                             location_id,
+                                                             location,
                                                              category_id,
-                                                             access_code
+                                                             access_code,
+                                                             geolocation_lat,
+                                                             geolocation_lng,
+                                                             city
                                                              ) VALUES (
                                                             '{e.Title}',
                                                             '{e.StartDate.ToFormattedUtcString()}',
@@ -36,36 +39,15 @@ public class SqlStatements
                                                             '{e.LastUpdateDate.ToFormattedUtcString()}',
                                                             '{e.Url}',
                                                             '{e.Description}',
-                                                            {e.Location.Id},
+                                                            '{e.Location}',
                                                             {(int)e.Category},
-                                                            '{e.AccessCode}'
+                                                            '{e.AccessCode}',
+                                                            '{e.GeoLocation.Lat}',
+                                                            '{e.GeoLocation.Lng}',
+                                                            '{e.City}'
                                                                              )
                                                     RETURNING id
                                                     """;
-    internal static string InsertLocation(Location location) => $"""
-                                        INSERT INTO location (
-                                                  street_number,
-                                                  street_name,
-                                                  sub_premise,
-                                                  city,
-                                                  postal_code,
-                                                  country,
-                                                  geolocation_lat,
-                                                  geolocation_lng
-                                                  )
-                                        VALUES (
-                                                '{location.StreetNumber}',
-                                                '{location.StreetName}',
-                                                '{location.SubPremise}',
-                                                '{location.City}',
-                                                '{location.PostalCode}',
-                                                '{location.Country}',
-                                                {location.GeoLocation.Lat},
-                                                {location.GeoLocation.Lng}
-                                         )
-                                        RETURNING id
-                                        """;
-    
     
   internal const string CreateTempTables =
          """"

@@ -21,7 +21,20 @@
 
     <ItemGroup>
       <ProjectReference Include="..\EventManagementService.Application\EventManagementService.Application.csproj" />
+
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="ProcessExternalEvents\Fakes\ExternalEventsResponse.json" />
+      <Content Include="ProcessExternalEvents\Fakes\ExternalEventsResponse.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="ProcessExternalEvents\Fakes\ProcessedExternalEvents.json" />
+      <Content Include="ProcessExternalEvents\Fakes\ProcessedExternalEvents.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 
 
 

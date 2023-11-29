@@ -13,9 +13,6 @@ public class UserDto
     [JsonPropertyName("displayName")]
     public String DisplayName{ get; set; }
     
-    [JsonPropertyName("dateOfBirth")]
-    public DateTimeOffset DateOfBirth{ get; set; }
-    
     [JsonPropertyName("lastSeenOnline")]
     public DateTimeOffset? LastSeenOnline{ get; set; }
     

@@ -4,6 +4,8 @@ namespace EventManagementService.Domain.Models.Events;
 
 public enum Category
 {
+    [Description("Un Assigned")] UnAssigned = 0,
+    
     [Description("Concerts")] Concerts = 1,
 
     [Description("Festivals")] Festivals = 2,
