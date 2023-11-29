@@ -1,18 +1,18 @@
 [
   {
     "title": "Familieaktivitet: Det Skjulte Stempel",
-    "price": " Gratis, når entréen er betalt",
-    "host": "Faengslet",
+    "price": "Gratis, når entréen er betalt",
+    "host": {
+      "userId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "creationDate": "2023-11-28T12:59:28.073Z",
+      "displayName": "Faengslet"
+    },
     "description": "Prøv fængselsmuseets familieaktivitet med lærerige, sjove og udfordrende opgaver.",
     "url": "https://www.faengslet.dk/det-sker/familieaktivitet-det-skjulte-stempel/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
+    "location": "Fussingvej 8, 8700 Horsens, Denmark",
+    "city": "Horsens",
+    "lat": 55.87406,
+    "lng": 9.8363,
     "images": [
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     ],
@@ -25,17 +25,17 @@
   {
     "title": "Børneaktivitet: Fuglen er fløjet",
     "price": "Gratis, når entréen er betalt",
-    "host": "Faengslet",
-    "description": "Prøv Fængselsmuseets børneaktivitet Fuglen er fløjet og se om I kan finde fuglene på Fængselsmuseet. ",
-    "url": "https://www.faengslet.dk/det-sker/boerneaktivitet-fuglen-er-floejet/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
+    "host": {
+      "userId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "creationDate": "2023-11-28T12:59:28.532Z",
+      "displayName": "Faengslet"
     },
+    "description": "Prøv Fængselsmuseets børneaktivitet 'Fuglen er fløjet' og se om I kan finde fuglene på Fængselsmuseet.",
+    "url": "https://www.faengslet.dk/det-sker/boerneaktivitet-fuglen-er-floejet/",
+    "location": "Fussingvej 8, 8700 Horsens, Denmark",
+    "city": "Horsens",
+    "lat": 55.87406,
+    "lng": 9.8363,
     "images": [
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     ],
@@ -47,18 +47,18 @@
   },
   {
     "title": "Betjentrundvisning",
-    "price": "Voksne og børn: 35 kr.  entré",
-    "host": "Faengslet",
-    "description": "Kom med en fængselsbetjent på rundvisning og få en oplevelse udover det sædvanlige. ",
-    "url": "https://www.faengslet.dk/det-sker/betjentrundvisning/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
+    "price": "Voksne og børn: 35 kr. + entré",
+    "host": {
+      "userId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "creationDate": "2023-11-28T12:59:28.923Z",
+      "displayName": "Faengslet"
     },
+    "description": "Kom med en fængselsbetjent på rundvisning og få en oplevelse udover det sædvanlige.",
+    "url": "https://www.faengslet.dk/det-sker/betjentrundvisning/",
+    "location": "Fussingvej 8, 8700 Horsens, Denmark",
+    "city": "Horsens",
+    "lat": 55.87406,
+    "lng": 9.8363,
     "images": [
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     ],
@@ -70,202 +70,18 @@
   },
   {
     "title": "Guidet rundvisning",
-    "price": "Voksne og børn: 35 kr.  entré",
-    "host": "Faengslet",
-    "description": "Kom med på en spændende rundvisning og få et unikt indblik i fængselslivet gennem 153 år.",
+    "price": "Voksne og børn: 35 kr. + entré",
+    "host": {
+      "userId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
+      "creationDate": "2023-11-28T12:59:29.335Z",
+      "displayName": "Faengslet"
+    },
+    "description": "Kom med på en spændende rundvisning og få et unikt indblik i fængselslivet.",
     "url": "https://www.faengslet.dk/det-sker/guidet-rundvisning/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Locked Escape Room",
-    "price": "",
-    "host": "Faengslet",
-    "description": "LOCKED og FÆNGSLET byder velkommen til en 60 minutters højintensiv spændings-oplevelse! Du og din gruppe har 60 minutter til at finde ledetråde og løse gåder for til sidst at kunne løse missionen.",
-    "url": "https://www.faengslet.dk/det-sker/escape-room/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Verdens vildeste flugt i VR",
-    "price": "Gratis, når entréen er betalt",
-    "host": "Faengslet",
-    "description": "Træd ind i en helt ny verden på Fængselsmuseet – flygt fra fængslet gennem en 18 meter lang tunnel i Virtual Reality.",
-    "url": "https://www.faengslet.dk/det-sker/verdens-vildeste-flugt-i-vr/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Juleaktivitet for daginstitutioner og skoler i Fængselsmuseet",
-    "price":"",
-    "host": "Faengslet",
-    "description": "Juleaktivitet for daginstitutioner og skoler i Fængselsmuseet",
-    "url": "https://www.faengslet.dk/det-sker/juleaktivitet-for-daginstitutioner-og-skoler-i-faengselsmuseet/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "En krimiaften på FÆNGSLET med Jussi Adler-Olsen",
-    "price": "",
-    "host": "Faengslet",
-    "description": "Krimimessen inviterer til en kriminelt underholdende og spændende aften i selskab med Jussi Adler-Olsen den 28. november i Vestsalen på FÆNGSLET.",
-    "url": "https://www.faengslet.dk/det-sker/en-krimiaften-paa-faengslet-med-jussi-adler-olsen/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Julehygge i Fængselsmuseet",
-    "price":"",
-    "host": "Faengslet",
-    "description": "Besøg Fængselsmuseet i december og prøv de mange hyggelige juleaktiviteter.",
-    "url": "https://www.faengslet.dk/det-sker/julehygge-i-faengselsmuseet/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Wrestling: Hardcore X-Mas",
-    "price":"",
-    "host": "Faengslet",
-    "description": "Dansk Pro Wrestling vender tilbage til FÆNGSLET med hårdtslående juleshow.",
-    "url": "https://www.faengslet.dk/det-sker/wrestling-hardcore-x-mas/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Jailbreak",
-    "price":"",
-    "host": "Faengslet",
-    "description": "Vi er glade for og stolte over, at vi igen i 2024 kan åbne dørene op til fængselsgården og invitere jer indenfor til endnu en JAILBREAK festival!",
-    "url": "https://www.faengslet.dk/det-sker/jailbreak/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
-    "images": [
-      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-    ],
-    "adultsOnly": false,
-    "isPaid": true,
-    "isPrivate": false,
-    "keywords": [],
-    "attendees": []
-  },
-  {
-    "title": "Beers Behind Bars",
-    "price":"",
-    "host": "Faengslet",
-    "description": "FÆNGSLET, Horsens & Friends og Danske Ølentusiaster indbyder alle ølglade til en forrygende rundtur i øllets verden, når der for FEMTE gang arrangeres den store ølfestival Beers Behind Bars lørdag 5. oktober 2024.",
-    "url": "https://www.faengslet.dk/det-sker/beers-behind-bars/",
-    "hostId": "uDgXo2yIc9XwSd6VeDHoUIdTKJi2",
-    "location": {
-      "country": "Denmark",
-      "city": "Horsens",
-      "postalCode": "8700",
-      "streetName": "Fussingsvej",
-      "streetNumber": "8"
-    },
+    "location": "Fussingvej 8, 8700 Horsens, Denmark",
+    "city": "Horsens",
+    "lat": 55.87406,
+    "lng": 9.8363,
     "images": [
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
     ],
@@ -276,4 +92,3 @@
     "attendees": []
   }
 ]
-

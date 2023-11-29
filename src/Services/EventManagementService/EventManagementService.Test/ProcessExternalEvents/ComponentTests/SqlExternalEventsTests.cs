@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Npgsql;
 
-namespace EventManagementService.Test.ProcessExternalEvents;
+namespace EventManagementService.Test.ProcessExternalEvents.ComponentTests;
 
 [TestFixture]
-public class ProcessExternalEventsTests
+public class SqlExternalEventsTests
 {
     private readonly TestDataContext _context = new();
     private readonly ConnectionStringManager _connectionStringManager = new();
@@ -43,23 +43,23 @@ public class ProcessExternalEventsTests
             "Fakes",
             "ProcessedExternalEvents.json"
         );
-        
+
         var file = await File.ReadAllTextAsync(path);
         var events = JsonSerializer.Deserialize<List<Event>>(file, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
-        
+
         // Act
         var act = async () => await repo.BulkUpsertEvents(events!);
 
         // Assert
-        Assert.DoesNotThrowAsync(()=> act.Invoke());
+        Assert.DoesNotThrowAsync(() => act.Invoke());
     }
-    
+
     [Test]
-    public async Task BulkInsert_ExternalEvents_InsertCorrectnumberofRows()
+    public async Task BulkInsert_ExternalEvents_InsertCorrectNumberOfRows()
     {
         // Arrange
         var loggerMock = new Mock<ILogger<SqlExternalEvents>>();
@@ -70,14 +70,14 @@ public class ProcessExternalEventsTests
             "Fakes",
             "ProcessedExternalEvents.json"
         );
-        
+
         var file = await File.ReadAllTextAsync(path);
         var events = JsonSerializer.Deserialize<List<Event>>(file, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         });
-        
+
         // Act
         await repo.BulkUpsertEvents(events!);
         var numberOfRowsInDb = GetNumberOfEvents();

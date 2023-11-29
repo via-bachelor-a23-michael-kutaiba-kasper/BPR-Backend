@@ -128,15 +128,16 @@ internal static class SqlCommands
             adult_only,
             is_paid,
             host_id,
-            access_code,
             max_number_of_attendees,
             last_update_date,
             url,
             description,
-            sub_premise,
+            access_code,
+            category_id,
+            location,
+            city,
             geolocation_lat,
-            geolocation_lng,
-            category_id
+            geolocation_lng
             )
             FROM STDIN (FORMAT BINARY );
         """;

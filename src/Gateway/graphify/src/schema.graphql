@@ -1,3 +1,17 @@
+input userInput {
+    userId: String!,
+    photoUrl: String,
+    displayName: String!,
+    dateOfBirth: String!,
+    LastSeenOnline: String,
+    CreationDate: String!
+}
+
+input geoLocationInput {
+            lat: Float!,
+            lng: Float!
+        }
+
 type GeoLocation {
     lat: String
     lng: String
@@ -66,5 +80,28 @@ type Mutation {
     """
     Adds user as attendee to event. Does not return anything.
     """
-    joinEvent(eventId: Int!, userId: String!): Post
+    joinEvent(eventId: Int!, userId: String!): Event
+    
+    """
+    Create new event. Does not return anything.
+    """
+    createEvent(
+        title: String!,
+        startDate: String!,
+        endDate: String!,
+        createdDate: String!,
+        lastUpdateDate: String,
+        isPrivate: Boolean!,
+        adultsOnly: Boolean!,
+        isPaid: Boolean!,
+        host: userInput!,
+        maxNumberOfAttendees: Int!,
+        url: String,
+        description: String,
+        location: String!,
+        city: String!,
+        geoLocation: geoLocationInput!,
+        category: String!,
+        keywords: [String!]
+    ): Event
 }

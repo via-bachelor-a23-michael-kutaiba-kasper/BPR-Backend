@@ -10,4 +10,9 @@ internal static class BinaryWriterHelper<T>
         if (value != null) await writer.WriteAsync(value, type);
         else await writer.WriteNullAsync();
     }
+    internal static async Task WriteNullableDatesAsync(NpgsqlBinaryImporter writer, DateTimeOffset? value)
+    {
+        if (value != null && value.HasValue && DateTimeOffset.MinValue != value) await writer.WriteAsync(value.Value, NpgsqlDbType.TimestampTz);
+        else await writer.WriteNullAsync();
+    }
 }

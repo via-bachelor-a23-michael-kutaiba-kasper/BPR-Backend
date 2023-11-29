@@ -24,7 +24,8 @@ public class HttpClientMockBuilder
         };
 
 
-        _responseMap[endpoint] = mockedResponse;
+        Console.WriteLine(endpoint);
+        _responseMap[new Uri(endpoint).AbsoluteUri] = mockedResponse;
 
         _messageHandlerMock
             .Protected()
@@ -32,6 +33,7 @@ public class HttpClientMockBuilder
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync((HttpRequestMessage request, CancellationToken token) =>
             {
+                Console.WriteLine(request.RequestUri.AbsoluteUri);
                 if (_responseMap.TryGetValue(request.RequestUri.AbsoluteUri, out HttpResponseMessage response))
                 {
                     return response;
