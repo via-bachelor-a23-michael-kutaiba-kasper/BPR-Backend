@@ -66,7 +66,7 @@ public class DataBuilder
                 Lat = 0,
                 Lng = 0
             },
-            Attendees = new List<string>()
+            Attendees = new List<User>()
         };
 
         configureEvent?.Invoke(newEvent);

@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.JoinEvent.Repositories;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using EventManagementService.Infrastructure.AppSettings;
@@ -63,7 +64,7 @@ public class JoinEventIntegration
         
         var eventRepository = new EventRepository(_connectionStringManager);
 
-        var existingEvent = dataBuilder.NewTestEvent((e) => e.Attendees = new List<string>());
+        var existingEvent = dataBuilder.NewTestEvent((e) => e.Attendees = new List<User>());
         dataBuilder.InsertEvents(new List<Event>() { existingEvent });
         existingEvent = dataBuilder.EventSet[0];
         
@@ -81,7 +82,7 @@ public class JoinEventIntegration
         var updatedEvent = await eventRepository.GetByIdAsync(existingEvent.Id);
         Assert.IsNotNull(updatedEvent);
         Assert.That(updatedEvent.Attendees.Count(), Is.EqualTo(1));
-        Assert.That(updatedEvent.Attendees.First(), Is.EqualTo(existingUserId));
+        Assert.That(updatedEvent.Attendees.First().UserId, Is.EqualTo(existingUserId));
     }
     
     [Test]
@@ -112,7 +113,7 @@ public class JoinEventIntegration
         };
         var eventRepository = new EventRepository(_connectionStringManager);
 
-        var existingEvent = dataBuilder.NewTestEvent((e) => e.Attendees = new List<string>());
+        var existingEvent = dataBuilder.NewTestEvent((e) => e.Attendees = new List<User>());
         dataBuilder.InsertEvents(new List<Event>() { existingEvent });
         existingEvent = dataBuilder.EventSet[0];
         

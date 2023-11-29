@@ -38,7 +38,7 @@ public class EventRepository : IEventRepository
 
         var images = await connection.QueryAsync<string>(SqlQueries.QueryEventImages, queryParams);
 
-        var attendees = await connection.QueryAsync<string>(SqlQueries.QueryEventAttendees, queryParams);
+        var attendeeIds = await connection.QueryAsync<string>(SqlQueries.QueryEventAttendees, queryParams);
 
         Event existingEvent = new()
         {
@@ -58,7 +58,7 @@ public class EventRepository : IEventRepository
             Images = images,
             Title = existingEventQueryResult.title,
             Url = existingEventQueryResult.url,
-            Attendees = attendees,
+            Attendees = attendeeIds.Select(attendeeId=> new User{UserId = attendeeId}),
             Id = existingEventQueryResult.id,
             Location = "Vejlevej 14, 8700 Horsens, Denmark",
             City = "Horsens",

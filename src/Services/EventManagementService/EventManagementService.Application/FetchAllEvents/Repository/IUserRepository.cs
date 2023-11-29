@@ -1,45 +1,18 @@
 using EventManagementService.Domain.Models;
 using EventManagementService.Infrastructure;
 using FirebaseAdmin.Auth;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using UserIdentifier = FirebaseAdmin.Auth.UserIdentifier;
 
-namespace EventManagementService.Application.FetchEventById.Repositories;
+namespace EventManagementService.Application.FetchAllEvents.Repository;
 
 public interface IUserRepository
 {
-    public Task<User?> GetUserById(string userId);
     public Task<IReadOnlyCollection<User>> GetUsersAsync(IReadOnlyCollection<string> userIds);
 }
 
 public class UserRepository : IUserRepository
 {
-    public async Task<User?> GetUserById(string userId)
-    {
-        var auth = FirebaseAuth.DefaultInstance;
-        if (auth is null)
-        {
-            Firestore.CreateFirebaseApp();
-            auth = FirebaseAuth.DefaultInstance;
-        }
-
-        try
-        {
-            var userRecord = await auth!.GetUserAsync(userId);
-            
-            return new User
-            {
-                UserId = userRecord.Uid,
-                DisplayName = userRecord.DisplayName,
-                PhotoUrl = userRecord.PhotoUrl,
-                CreationDate = userRecord.UserMetaData.CreationTimestamp!.Value,
-                LastSeenOnline = userRecord.UserMetaData.LastSignInTimestamp
-            };
-        }
-        catch (FirebaseAuthException)
-        {
-            return null;
-        }
-    }
-    
     public async Task<IReadOnlyCollection<User>> GetUsersAsync(IReadOnlyCollection<string> userIds)
     {
         var auth = FirebaseAuth.DefaultInstance;

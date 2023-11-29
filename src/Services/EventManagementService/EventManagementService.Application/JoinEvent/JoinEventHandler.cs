@@ -54,7 +54,7 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
             throw new UserNotFoundException(request.UserId);
         }
 
-        var userAlreadyJoined = existingEvent.Attendees.Any(attendee => attendee == request.UserId);
+        var userAlreadyJoined = existingEvent.Attendees.Any(attendee => attendee.UserId == request.UserId);
         if (userAlreadyJoined)
         {
             throw new AlreadyJoinedException(request.UserId, request.EventId);
