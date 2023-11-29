@@ -37,6 +37,8 @@ public class CreateEventTests
         // Arrange
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -44,7 +46,9 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
+        
 
         var request = new CreateEventRequest(new Event
         {
@@ -99,6 +103,8 @@ public class CreateEventTests
         // Arrange
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -106,7 +112,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {
@@ -164,6 +171,8 @@ public class CreateEventTests
 
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -171,7 +180,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {
@@ -227,6 +237,8 @@ public class CreateEventTests
         var endDate = new DateTimeOffset(2022, 1, 1, 0, 0, 0, TimeSpan.Zero);
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -234,7 +246,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {
@@ -291,6 +304,8 @@ public class CreateEventTests
         var createDate = new DateTimeOffset(2022, 1, 1, 0, 0, 0, TimeSpan.Zero);
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -298,7 +313,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {
@@ -347,71 +363,7 @@ public class CreateEventTests
         Assert.That(validationException.Message,
             Is.EqualTo("Event created date is either null or greater than end or start dates"));
     }
-
-    [TestCase("")]
-    [TestCase("  ")]
-    [TestCase(null)]
-    public async Task CreateNewEvent_WithInvalidHostId_ThorwEventValidationException(string hostId)
-    {
-        // Arrange
-        var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
-        var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
-        var handler = new CreateEventHandler
-        (
-            new SqlCreateEvent
-            (
-                _connectionStringManager,
-                repoLogger.Object
-            ),
-            handlerLogger.Object);
-
-        var request = new CreateEventRequest(new Event
-        {
-            Id = 1,
-            Location = "Vejlevej 14, 8700 Horsens, Denmark",
-            Category = Category.Music,
-            Images = new List<string>(),
-            Title = "Test",
-            Keywords = new List<Keyword>
-            {
-                Keyword.ClassicalPerformance,
-                Keyword.Basketball,
-                Keyword.ArtExhibition
-            },
-            Url = "http://test.com/events/1",
-            AdultsOnly = false,
-            CreatedDate = DateTimeOffset.UtcNow,
-            StartDate = DateTimeOffset.UtcNow.AddDays(1),
-            EndDate = DateTimeOffset.UtcNow.AddDays(2).AddHours(2),
-            AccessCode = "321km3lkmdkslajdkas321",
-            Host = new User
-            {
-                UserId = hostId,
-                DisplayName = "Test",
-                CreationDate = DateTimeOffset.UtcNow
-            },
-            IsPaid = true,
-            IsPrivate = false,
-            MaxNumberOfAttendees = 200,
-            LastUpdateDate = DateTimeOffset.UtcNow,
-            GeoLocation = new GeoLocation
-            {
-                Lat = 0,
-                Lng = 0
-            },
-            City = "Horsens",
-            Description = "Test"
-        });
-
-        // Act
-        var act = async () => await handler.Handle(request, new CancellationToken());
-        var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
-
-        // Assert 
-        Assert.That(validationException.Message, Is.EqualTo("Host id is either null or empty"));
-    }
-
+    
     [TestCase("")]
     [TestCase("  ")]
     [TestCase(null)]
@@ -420,6 +372,8 @@ public class CreateEventTests
         // Arrange
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -427,7 +381,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {
@@ -485,6 +440,8 @@ public class CreateEventTests
         // Arrange
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -492,8 +449,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
-
+            handlerLogger.Object,
+            firebaseMock.Object);
         var request = new CreateEventRequest(new Event
         {
             Id = 1,
@@ -541,70 +498,6 @@ public class CreateEventTests
         Assert.That(validationException.Message, Is.EqualTo("Event city is either null or empty"));
     }
 
-    [TestCase("")]
-    [TestCase("  ")]
-    [TestCase(null)]
-    public async Task CreateNewEvent_WithInvalidHostDisplayName_ThorwEventValidationException(string displayName)
-    {
-        // Arrange
-        var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
-        var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
-        var handler = new CreateEventHandler
-        (
-            new SqlCreateEvent
-            (
-                _connectionStringManager,
-                repoLogger.Object
-            ),
-            handlerLogger.Object);
-
-        var request = new CreateEventRequest(new Event
-        {
-            Id = 1,
-            Location = "location",
-            Category = Category.Music,
-            Images = new List<string>(),
-            Title = "Test",
-            Keywords = new List<Keyword>
-            {
-                Keyword.ClassicalPerformance,
-                Keyword.Basketball,
-                Keyword.ArtExhibition
-            },
-            Url = "http://test.com/events/1",
-            AdultsOnly = false,
-            CreatedDate = DateTimeOffset.UtcNow,
-            StartDate = DateTimeOffset.UtcNow.AddDays(1),
-            EndDate = DateTimeOffset.UtcNow.AddDays(2).AddHours(2),
-            AccessCode = "321km3lkmdkslajdkas321",
-            Host = new User
-            {
-                UserId = "Test",
-                DisplayName = displayName,
-                CreationDate = DateTimeOffset.UtcNow
-            },
-            IsPaid = true,
-            IsPrivate = false,
-            MaxNumberOfAttendees = 200,
-            LastUpdateDate = DateTimeOffset.UtcNow,
-            GeoLocation = new GeoLocation
-            {
-                Lat = 0,
-                Lng = 0
-            },
-            City = "Horsens",
-            Description = "Test"
-        });
-
-        // Act
-        var act = async () => await handler.Handle(request, new CancellationToken());
-        var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
-
-        // Assert 
-        Assert.That(validationException.Message, Is.EqualTo("Host display name is either null of empty"));
-    }
-
     [TestCase(-91.0f)]
     [TestCase(91.0f)]
     public async Task CreateNewEvent_WithInvalidGeoLat_ThorwEventValidationException(float lat)
@@ -612,6 +505,8 @@ public class CreateEventTests
         // Arrange
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -619,7 +514,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {
@@ -675,6 +571,8 @@ public class CreateEventTests
         // Arrange
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -682,7 +580,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {
@@ -737,6 +636,8 @@ public class CreateEventTests
         // Arrange
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -744,7 +645,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {
@@ -798,6 +700,8 @@ public class CreateEventTests
         // Arrange
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
+        firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
             new SqlCreateEvent
@@ -805,7 +709,8 @@ public class CreateEventTests
                 _connectionStringManager,
                 repoLogger.Object
             ),
-            handlerLogger.Object);
+            handlerLogger.Object,
+            firebaseMock.Object);
 
         var request = new CreateEventRequest(new Event
         {

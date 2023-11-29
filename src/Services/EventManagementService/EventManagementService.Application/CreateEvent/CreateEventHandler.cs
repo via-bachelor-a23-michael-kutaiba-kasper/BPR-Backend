@@ -14,37 +14,45 @@ public record CreateEventRequest(Event Event) : IRequest;
 public class CreateEventHandler : IRequestHandler<CreateEventRequest>
 {
     private readonly ISqlCreateEvent _sqlCreateEvent;
+    private readonly IFirebaseUser _firebaseUser;
     private readonly ILogger<CreateEventHandler> _logger;
 
-    public CreateEventHandler(ISqlCreateEvent sqlCreateEvent, ILogger<CreateEventHandler> logger)
+    public CreateEventHandler
+    (
+        ISqlCreateEvent sqlCreateEvent,
+        ILogger<CreateEventHandler> logger,
+        IFirebaseUser firebaseUser
+    )
     {
         _sqlCreateEvent = sqlCreateEvent;
         _logger = logger;
+        _firebaseUser = firebaseUser;
     }
 
     public async Task Handle(CreateEventRequest request, CancellationToken cancellationToken)
     {
         try
         {
-            
-            var mappedEvent = MapEvent(request);
-            
+            var userExists = await _firebaseUser.UserExistsAsync(request.Event.Host.UserId);
+            var mappedEvent = MapEvent(request, userExists);
+
             EventValidator.ValidateEvents(mappedEvent);
-            
+
             await _sqlCreateEvent.InsertEvent(mappedEvent);
-            
+
             _logger.LogInformation($"Event has been successfully created at: {DateTimeOffset.UtcNow}");
         }
         catch (Exception e)
         {
-            _logger.LogCritical($"Cannot create new event at: {DateTimeOffset.UtcNow}");
+            _logger.LogCritical($"Cannot create new event at: {DateTimeOffset.UtcNow}", e);
             throw new CreateEventException(
                 $"Something went wrong while creating a new event at: {DateTimeOffset.UtcNow}", e);
         }
     }
 
-    private static Event MapEvent(CreateEventRequest request)
+    private Event MapEvent(CreateEventRequest request, bool userExists)
     {
+        EventValidator.ValidateUser(userExists);
         return new Event
         {
             Title = request.Event.Title,
