@@ -122,6 +122,107 @@
                 },
                 "method": "POST"
             }
+        },
+        {
+            "name": "createEvent",
+            "args": [
+                {
+                    "name": "title",
+                    "type" : "String!",
+                    "for" : "body"
+                },
+                {
+                    "name": "startDate",
+                    "type" : "String!",
+                    "for" : "body"
+                },
+                {
+                    "name": "endDate",
+                    "type" : "String!",
+                    "for" : "body"
+                },
+                {
+                    "name": "createdDate",
+                    "type" : "String!",
+                    "for" : "body"
+                },
+                {
+                    "name": "lastUpdateDate",
+                    "type" : "String",
+                    "for" : "body"
+                },
+                {
+                    "name": "isPrivate",
+                    "type" : "Boolean!",
+                    "for" : "body"
+                },
+                
+                {
+                    "name": "adultOnly",
+                    "type" : "Boolean!",
+                    "for" : "body"
+                },
+                
+                {
+                    "name": "isPaid",
+                    "type" : "Boolean!",
+                    "for" : "body"
+                },
+                {
+                    "name": "host",
+                    "type" : "userInput!",
+                    "for" : "body"
+                },
+                {
+                    "name": "maxNumberOfAttendees",
+                    "type" : "Int!",
+                    "for" : "body"
+                },
+                {
+                    "name": "url",
+                    "type" : "String",
+                    "for" : "body"
+                },
+                {
+                    "name": "description",
+                    "type" : "String",
+                    "for" : "body"
+                },
+                {
+                    "name": "location",
+                    "type" : "String!",
+                    "for" : "body"
+                },
+                {
+                    "name": "city",
+                    "type" : "String!",
+                    "for" : "body"
+                },
+                {
+                    "name": "geoLocation",
+                    "type" : "geoLocationInput!",
+                    "for" : "body"
+                },
+                {
+                    "name": "category",
+                    "type" : "String!",
+                    "for" : "body"
+                },
+                {
+                    "name": "keywords",
+                    "type" : "[String]",
+                    "for" : "body"
+                }
+            ],
+            "resolver": {
+                "host": "http://localhost:8080",
+                "endpoint": "/api/v1/events/createEvent",
+                "port": 8080,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "method": "POST"
+            }
         }
     ]
 }

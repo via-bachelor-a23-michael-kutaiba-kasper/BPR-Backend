@@ -1,11 +1,11 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace EventManagementService.Application.ProcessExternalEvents.Util;
+namespace EventManagementService.Infrastructure.Util;
 
-internal static class UniqueEventAccessCodeGenerator
+public static class UniqueEventAccessCodeGenerator
 {
-    internal static string GenerateUniqueString(string title, DateTimeOffset creationDate)
+    public static string GenerateUniqueString(string title, DateTimeOffset creationDate)
     {
         var combinedInfo = $"{title}_{creationDate.ToString("yyyyMMddHHmmssfffzzz")}";
 

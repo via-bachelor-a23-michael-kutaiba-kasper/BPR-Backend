@@ -54,7 +54,6 @@ public class EventController : ControllerBase
                     Host = new UserDto
                     {
                         UserId = ev.Host.UserId,
-                        DateOfBirth = ev.Host.DateOfBirth,
                         DisplayName = ev.Host.DisplayName,
                         PhotoUrl = ev.Host.PhotoUrl,
                         LastSeenOnline = ev.Host.LastSeenOnline,
@@ -102,8 +101,7 @@ public class EventController : ControllerBase
                     LastSeenOnline = eventDto.Host.LastSeenOnline,
                     DisplayName = eventDto.Host.DisplayName,
                     PhotoUrl = eventDto.Host.PhotoUrl,
-                    UserId = eventDto.Host.UserId,
-                    DateOfBirth = eventDto.Host.DateOfBirth
+                    UserId = eventDto.Host.UserId
                 },
                 IsPaid = eventDto.IsPaid,
                 Description = eventDto.Description,

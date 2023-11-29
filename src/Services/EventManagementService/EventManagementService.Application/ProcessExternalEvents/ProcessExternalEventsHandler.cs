@@ -3,6 +3,7 @@ using EventManagementService.Application.ProcessExternalEvents.Repository;
 using EventManagementService.Application.ProcessExternalEvents.Util;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure.Util;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -77,7 +78,6 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                     CreationDate = e.Host.CreationDate,
                     DisplayName = e.Host.DisplayName,
                     PhotoUrl = e.Host.PhotoUrl,
-                    DateOfBirth = e.Host.DateOfBirth,
                     LastSeenOnline = e.Host.LastSeenOnline
                 },
                 IsPaid = e.IsPaid,

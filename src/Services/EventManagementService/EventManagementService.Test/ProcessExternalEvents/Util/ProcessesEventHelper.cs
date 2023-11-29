@@ -127,7 +127,6 @@ public class ProcessesEventHelper
                     CreationDate = psEvents[i].Host.CreationDate,
                     DisplayName = psEvents[i].Host.DisplayName,
                     PhotoUrl = psEvents[i].Host.PhotoUrl,
-                    DateOfBirth = psEvents[i].Host.DateOfBirth,
                     LastSeenOnline = psEvents[i].Host.LastSeenOnline
                 },
                 IsPaid = psEvents[i].IsPaid,

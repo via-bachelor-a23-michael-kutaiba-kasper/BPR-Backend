@@ -1,4 +1,5 @@
 using EventManagementService.Application.CreateEvent.Repository;
+using EventManagementService.Application.CreateEvent.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventManagementService.Application.CreateEvent;
