@@ -42,7 +42,7 @@
             "resolver" : {
                 "host": "http://eventmanagementservice-service",
                 "port": 80,
-                "endpoint": "api/v1/categories/allCategories",
+                "endpoint": "/api/v1/categories/allCategories",
                 "method": "GET"
             }
         },
@@ -52,7 +52,7 @@
             "resolver" : {
                 "host": "http://eventmanagementservice-service",
                 "port": 80,
-                "endpoint": "api/v1/keywords/allKeywords",
+                "endpoint": "/api/v1/keywords/allKeywords",
                 "method": "GET"
             }
         },
