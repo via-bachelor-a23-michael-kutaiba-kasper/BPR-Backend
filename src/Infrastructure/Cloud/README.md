@@ -7,7 +7,7 @@
 
 ## Before deployment
 
-1. Download GCP Service Account Key JSON file and store it somewhere, e.g. `~/Tools/gcp_vibeverse.json`
+1. Download GCP Service Account Key JSON and Service account key firebase JSON file and store it somewhere, e.g. `~/Tools/gcp_vibeverse.json`
 2. Authenticate to GCP by running:
    ` gcloud auth application-default login`
 3. Set docker username environment variable: `export TF_VAR_DOCKER_USERNAME=michaelbui293886` for windows use $env: instead of export
