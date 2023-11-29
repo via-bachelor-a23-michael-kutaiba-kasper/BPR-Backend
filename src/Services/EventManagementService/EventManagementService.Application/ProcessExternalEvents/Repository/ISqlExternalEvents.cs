@@ -5,6 +5,7 @@ using EventManagementService.Application.ProcessExternalEvents.Sql;
 using EventManagementService.Application.ProcessExternalEvents.Util;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
+using EventManagementService.Infrastructure.Util;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using NpgsqlTypes;
@@ -107,10 +108,9 @@ public class SqlExternalEvents : ISqlExternalEvents
                     et.MaxNumberOfAttendees,
                     NpgsqlDbType.Integer
                 );
-                await BinaryWriterHelper<DateTimeOffset>.WriteNullableAsync(
+                await BinaryWriterHelper<DateTimeOffset>.WriteNullableDatesAsync(
                     writer,
-                    et.LastUpdateDate.ToUniversalTime(),
-                    NpgsqlDbType.TimestampTz
+                    et.LastUpdateDate.ToUniversalTime()
                 );
                 await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Url, NpgsqlDbType.Varchar);
                 await BinaryWriterHelper<string>.WriteNullableAsync(writer, et.Description, NpgsqlDbType.Varchar);
@@ -125,6 +125,7 @@ public class SqlExternalEvents : ISqlExternalEvents
                     et.Location,
                     NpgsqlDbType.Varchar
                 );
+                await writer.WriteAsync(et.City, NpgsqlDbType.Varchar);
                 await writer.WriteAsync(et.GeoLocation.Lat, NpgsqlDbType.Numeric);
                 await writer.WriteAsync(et.GeoLocation.Lng, NpgsqlDbType.Numeric);
             }

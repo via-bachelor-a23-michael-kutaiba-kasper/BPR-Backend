@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EventManagementService.Application.ProcessExternalEvents.Repository;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using EventManagementService.Test.Shared;
@@ -105,27 +106,37 @@ public class ProcessesEventHelper
         var evs = new List<Event>();
         var psEvents =
             events;
-        foreach (var e in psEvents)
+        
+        for (int i = 0; i < psEvents.Count; i++)
         {
             evs.Add(new Event
             {
-                Title = e.Title,
-                Location = e.Location,
-                Description = e.Description,
-                Category = e.Category,
-                Url = e.Url,
-                Images = e.Images,
-                Keywords = e.Keywords,
-                AdultsOnly = e.AdultsOnly,
-                EndDate = e.EndDate,
-                CreatedDate = e.CreatedDate,
-                Host = e.Host,
-                IsPaid = e.IsPaid,
-                IsPrivate = e.IsPrivate,
-                StartDate = e.StartDate,
-                LastUpdateDate = e.LastUpdateDate,
-                MaxNumberOfAttendees = e.MaxNumberOfAttendees,
-                AccessCode = GenerateUniqueString(e.Title, e.CreatedDate)
+                Title = psEvents[i].Title,
+                Location = psEvents[i].Location,
+                Description = psEvents[i].Description,
+                Category = psEvents[i].Category,
+                Url = psEvents[i].Url,
+                Images = psEvents[i].Images,
+                Keywords = psEvents[i].Keywords,
+                AdultsOnly = psEvents[i].AdultsOnly,
+                EndDate = new DateTimeOffset(2023, 12, 28, 12, i, 0, TimeSpan.Zero),
+                CreatedDate = DateTimeOffset.UtcNow,
+                Host = new User
+                {
+                    UserId = psEvents[i].Host.UserId,
+                    CreationDate = psEvents[i].Host.CreationDate,
+                    DisplayName = psEvents[i].Host.DisplayName,
+                    PhotoUrl = psEvents[i].Host.PhotoUrl,
+                    LastSeenOnline = psEvents[i].Host.LastSeenOnline
+                },
+                IsPaid = psEvents[i].IsPaid,
+                IsPrivate = psEvents[i].IsPrivate,
+                StartDate = new DateTimeOffset(2023, 11, 28, 12, i, 0, TimeSpan.Zero),
+                LastUpdateDate = new DateTimeOffset(),
+                MaxNumberOfAttendees = psEvents[i].MaxNumberOfAttendees,
+                AccessCode = GenerateUniqueString(psEvents[i].Title, psEvents[i].CreatedDate),
+                GeoLocation = await FetchGeoLocation(geoCoding, psEvents[i].Location),
+                City = psEvents[i].City
             });
         }
 

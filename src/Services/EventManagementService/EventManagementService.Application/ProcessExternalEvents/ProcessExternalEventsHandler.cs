@@ -1,7 +1,9 @@
 using EventManagementService.Application.ProcessExternalEvents.Exceptions;
 using EventManagementService.Application.ProcessExternalEvents.Repository;
 using EventManagementService.Application.ProcessExternalEvents.Util;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure.Util;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -39,7 +41,7 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
         try
         {
             _logger.LogInformation($"Creating new events ar: {DateTimeOffset.UtcNow}");
-            var pubSubEvents = await PubSubEvents(request, cancellationToken);
+            var pubSubEvents = await PubSubEvents(cancellationToken);
             await _sqlExternalEvents.BulkUpsertEvents(pubSubEvents);
             _logger.LogInformation(
                 $"{pubSubEvents.Count} events have been successfully created at: {DateTimeOffset.UtcNow}");
@@ -52,15 +54,10 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
         }
     }
 
-    private async Task<IReadOnlyCollection<Event>> PubSubEvents
-    (
-        ProcessExternalEventsRequest request,
-        CancellationToken cancellationToken
-    )
+    private async Task<IReadOnlyCollection<Event>> PubSubEvents(CancellationToken cancellationToken)
     {
         var evs = new List<Event>();
-        var psEvents =
-            await _pubSubExternalEvents.FetchEvents(cancellationToken);
+        var psEvents = await _pubSubExternalEvents.FetchEvents(cancellationToken);
         foreach (var e in psEvents)
         {
             evs.Add(new Event
@@ -73,13 +70,20 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                 Images = e.Images,
                 Keywords = e.Keywords,
                 AdultsOnly = e.AdultsOnly,
-                EndDate = e.EndDate,
-                CreatedDate = e.CreatedDate,
-                Host = e.Host,
+                EndDate = new DateTimeOffset(),
+                CreatedDate = DateTimeOffset.UtcNow,
+                Host = new User
+                {
+                    UserId = e.Host.UserId,
+                    CreationDate = e.Host.CreationDate,
+                    DisplayName = e.Host.DisplayName,
+                    PhotoUrl = e.Host.PhotoUrl,
+                    LastSeenOnline = e.Host.LastSeenOnline
+                },
                 IsPaid = e.IsPaid,
                 IsPrivate = e.IsPrivate,
-                StartDate = e.StartDate,
-                LastUpdateDate = e.LastUpdateDate,
+                StartDate = new DateTimeOffset(),
+                LastUpdateDate = new DateTimeOffset(),
                 MaxNumberOfAttendees = e.MaxNumberOfAttendees,
                 AccessCode = UniqueEventAccessCodeGenerator.GenerateUniqueString(e.Title, e.CreatedDate),
                 City = e.City,

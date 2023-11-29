@@ -33,6 +33,10 @@
       <Content Include="ProcessExternalEvents\Fakes\ProcessedExternalEvents.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="ProcessExternalEvents\Fakes\GoogleGeoCodeResponse.json" />
+      <Content Include="ProcessExternalEvents\Fakes\GoogleGeoCodeResponse.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 
