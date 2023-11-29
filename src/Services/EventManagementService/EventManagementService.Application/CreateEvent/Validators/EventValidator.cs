@@ -46,21 +46,7 @@ internal static class EventValidator
         {
             throw new EventValidationException("Event created date is either null or greater than end or start dates");
         }
-
-        if
-        (
-            string.IsNullOrEmpty(eEvent.Host.UserId) ||
-            string.IsNullOrWhiteSpace(eEvent.Host.UserId)
-        )
-        {
-            throw new EventValidationException("Host id is either null or empty");
-        }
-
-        if (eEvent.Host.CreationDate == DateTimeOffset.MinValue)
-        {
-            throw new EventValidationException("Host account creation date is null");
-        }
-
+        
         if
         (
             string.IsNullOrEmpty(eEvent.Location) ||
@@ -76,14 +62,6 @@ internal static class EventValidator
         )
         {
             throw new EventValidationException("Event city is either null or empty");
-        }
-
-        if (
-            string.IsNullOrEmpty(eEvent.Host.DisplayName) ||
-            string.IsNullOrWhiteSpace(eEvent.Host.DisplayName)
-        )
-        {
-            throw new EventValidationException("Host display name is either null of empty");
         }
 
         if (eEvent.GeoLocation.Lat is < -90.0f or > 90.0f)
@@ -112,6 +90,14 @@ internal static class EventValidator
         )
         {
             throw new EventValidationException("Event access code is either null or empty");
+        }
+    }
+
+    internal static void ValidateUser(bool userExists)
+    {
+        if (!userExists)
+        {
+            throw new EventValidationException("User does not exist");
         }
     }
 }

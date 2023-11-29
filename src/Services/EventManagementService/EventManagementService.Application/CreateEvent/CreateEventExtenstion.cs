@@ -9,6 +9,7 @@ public static class CreateEventExtenstion
     public static IServiceCollection AddCreateEvent(this IServiceCollection services)
     {
         services.AddScoped<ISqlCreateEvent, SqlCreateEvent>();
+        services.AddScoped<IFirebaseUser, FirebaseUser>();
         return services;
     }
 }
