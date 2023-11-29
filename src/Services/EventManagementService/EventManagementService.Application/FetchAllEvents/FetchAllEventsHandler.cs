@@ -1,3 +1,4 @@
+using EventManagementService.Application.FetchAllEvents.Model;
 using EventManagementService.Application.FetchAllEvents.Repository;
 using EventManagementService.Domain.Models.Events;
 using MediatR;
@@ -7,8 +8,7 @@ namespace EventManagementService.Application.FetchAllEvents;
 
 public record FetchAllEventsRequest
 (
-    DateTimeOffset? From = null,
-    DateTimeOffset? To = null
+    Filters Filters
 ) : IRequest<IReadOnlyCollection<Event>>;
 
 public class FetchAllEventsHandler : IRequestHandler<FetchAllEventsRequest, IReadOnlyCollection<Event>>
@@ -32,11 +32,11 @@ public class FetchAllEventsHandler : IRequestHandler<FetchAllEventsRequest, IRea
         CancellationToken cancellationToken
     )
     {
-        return await AllEvents();
+        return await AllEvents(request.Filters);
     }
 
-    private async Task<IReadOnlyCollection<Event>> AllEvents()
+    private async Task<IReadOnlyCollection<Event>> AllEvents(Filters filters)
     {
-        return await _sqlAllEvents.GetAllEvents();
+        return await _sqlAllEvents.GetAllEvents(filters);
     }
 }

@@ -1,4 +1,6 @@
 using Dapper;
+using EventManagementService.Application.FetchAllEvents.Data;
+using EventManagementService.Application.FetchAllEvents.Model;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using EventManagementService.Infrastructure.AppSettings;
@@ -10,7 +12,7 @@ namespace EventManagementService.Application.FetchAllEvents.Repository;
 
 public interface ISqlAllEvents
 {
-    Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null, DateTimeOffset? to = null);
+    Task<IReadOnlyCollection<Event>> GetAllEvents(Filters filters);
 }
 
 public class SqlAllEvents : ISqlAllEvents
@@ -28,58 +30,60 @@ public class SqlAllEvents : ISqlAllEvents
         _logger = logger;
     }
 
-    public async Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null, DateTimeOffset? to = null)
+    public async Task<IReadOnlyCollection<Event>> GetAllEvents(Filters filters)
     {
-        _logger.LogInformation("Fetching all public events from database");
-        var events = new List<Event>();
-        using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
+        List<Event> events = new();
+        using (var connection = new NpgsqlConnection())
         {
             await connection.OpenAsync();
-            var result = await connection.QueryAsync(GetEventsSql());
-
-            events.AddRange(result.Select(e => new Event
+            var queryEventStatement = $"SELECT * from event {new ApplyFiltersInSql().Apply(filters)}";
+            var queryParams = new
             {
-                Title = e.title,
-                Description = e.description,
-                Url = e.url /*,
-                Location = new Location
-                {
-                    Country = e.country,
-                    StreetName = e.street_name,
-                    StreetNumber = e.street_number,
-                    HouseNumber = e.sub_premise,
-                    PostalCode = e.postal_code,
-                    City = e.city,
-                    GeoLocation = new GeoLocation { Lat = e.geolocation_lat, Lng = e.geolocation_lng }
-                }*/
-            }));
+                @from = filters.From,
+                @to = filters.To,
+                @hostId = filters.HostId
+            };
+            
+            var eventEntities =
+                await connection.QueryAsync<EventEntity>(SqlQueries.QueryAllFromEventTable, queryParams) ??
+                new List<EventEntity>();
 
-            _logger.LogInformation($"{result.Count()} retrieved from database");
+            var eventIds = eventEntities.Select(e => e.id);
+            var indexedKeywords = GetIndexedKeywordsByEventId(connection, eventIds.ToList());
 
-            return events;
+            var domainEvents = eventEntities.Select(e => new Event
+            {
+                
+            });
         }
+
+        return events;
     }
 
-    private static string GetEventsSql()
+    private async Task<IDictionary<int, List<int>>> GetIndexedKeywordsByEventId(NpgsqlConnection connection,
+        IReadOnlyCollection<int> eventIds)
     {
-        return """
-               SELECT
-                   e.*,
-                   l.*
-               FROM
-                   postgres.public.event e
-               JOIN
-                       location l ON e.location_id = l.id
-               LEFT JOIN
-                       public.event_attendee ea on e.id = ea.event_id
-               LEFT JOIN
-                       event_category ec ON e.id = ec.event_id
-               LEFT JOIN
-                       category c ON ec.category_id = c.id
-               LEFT JOIN
-                       keyword_category kc ON e.id = kc.event_id
-               LEFT JOIN
-                       keyword k ON kc.keyword = k.id;
-               """;
+            var queryEventKeywords = $"SELECT * from event_keyword WHERE event_id in {SqlUtil.AsIntList(eventIds.ToList())}";
+            var eventKeywordEntities = await connection.QueryAsync<EventKeywordEntity>(queryEventKeywords) ?? new List<EventKeywordEntity>();
+            return IndexKeywordsByEventId(eventKeywordEntities.ToList());
+    }
+    
+    private IDictionary<int, List<int>> IndexKeywordsByEventId(IReadOnlyCollection<EventKeywordEntity> eventKeywordEntities)
+    {
+        Dictionary<int, List<int>> indexedKeywords = new();
+
+        foreach (var entity in eventKeywordEntities)
+        {
+            if (!indexedKeywords.ContainsKey(entity.event_id))
+            {
+                indexedKeywords[entity.event_id] = new List<int>() { entity.keyword };
+            }
+            else
+            {
+                indexedKeywords[entity.event_id].Add(entity.keyword);
+            }
+        }
+
+        return indexedKeywords;
     }
 }

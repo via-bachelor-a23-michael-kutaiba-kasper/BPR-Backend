@@ -8,9 +8,7 @@ public static class FetchAllEventsServiceExtension
 {
     public static IServiceCollection AddFetchAllEvents(this IServiceCollection services)
     {
-        services.AddScoped<IPubSubExternalEvents, PubSubExternalEvents>();
         services.AddScoped<ISqlAllEvents, SqlAllEvents>();
-        services.AddScoped<IGeoCoding, GeoCoding>();
         
         return services;
     }

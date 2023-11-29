@@ -2,6 +2,7 @@ using System.Net;
 using EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 using EventManagementService.Application.CreateEvent;
 using EventManagementService.Application.FetchAllEvents;
+using EventManagementService.Application.FetchAllEvents.Model;
 using EventManagementService.Application.FetchEventById;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
@@ -29,9 +30,10 @@ public class EventController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Event>>> GetAllEvents([FromQuery] DateTimeOffset? from=null, [FromQuery] DateTimeOffset? to=null)
+    public async Task<ActionResult<List<Event>>> GetAllEvents([FromQuery] DateTimeOffset? from = null,
+        [FromQuery] DateTimeOffset? to = null, [FromQuery] string hostId = null)
     {
-        var events = await _mediator.Send(new FetchAllEventsRequest(from, to));
+        var events = await _mediator.Send(new FetchAllEventsRequest(new Filters{ From = from, To = to, HostId = hostId}));
 
         return Ok(events);
     }
