@@ -1,6 +1,7 @@
 using System.Net;
 using EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 using EventManagementService.Application.CreateEvent;
+using EventManagementService.Application.CreateEvent.Exceptions;
 using EventManagementService.Application.FetchAllEvents;
 using EventManagementService.Application.FetchEventById;
 using EventManagementService.Application.JoinEvent;
@@ -118,6 +119,10 @@ public class EventController : ControllerBase
             }));
             return Ok();
         }
+        catch (Exception e) when(e is CreateEventException or EventValidationException)
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest);
+        } 
         catch (Exception e)
         {
             return StatusCode((int)HttpStatusCode.InternalServerError);
