@@ -34,7 +34,7 @@ public class SqlAllEvents : ISqlAllEvents
     public async Task<IReadOnlyCollection<Event>> GetAllEvents(Filters filters)
     {
         List<Event> events = new();
-        using (var connection = new NpgsqlConnection())
+        using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
         {
             await connection.OpenAsync();
             var queryEventStatement = $"SELECT * from event {new ApplyFiltersInSql().Apply(filters)}";
@@ -52,8 +52,8 @@ public class SqlAllEvents : ISqlAllEvents
             var eventIds = eventEntities.Select(e => e.id);
             var indexedKeywords = await GetIndexedKeywordsByEventId(connection, eventIds.ToList());
 
-            var eventAttendeeEntities = await connection.QueryAsync<EventAttendeeEntity>(
-                                            $"SELECT * FROM postgres.public.event_attendee WHERE event_id IN {SqlUtil.AsIntList(eventIds.ToList())}") ??
+            var eventAttendeeEntities = eventIds.Any() ?  await connection.QueryAsync<EventAttendeeEntity>(
+                                            $"SELECT * FROM postgres.public.event_attendee WHERE event_id IN {SqlUtil.AsIntList(eventIds.ToList())}") :
                                         new List<EventAttendeeEntity>();
 
             var domainEvents = eventEntities.Select(e => new Event
@@ -93,7 +93,8 @@ public class SqlAllEvents : ISqlAllEvents
     {
         var queryEventKeywords =
             $"SELECT * from event_keyword WHERE event_id in {SqlUtil.AsIntList(eventIds.ToList())}";
-        var eventKeywordEntities = await connection.QueryAsync<EventKeywordEntity>(queryEventKeywords) ??
+        Console.WriteLine(queryEventKeywords);
+        var eventKeywordEntities = eventIds.Any() ?  await connection.QueryAsync<EventKeywordEntity>(queryEventKeywords) :
                                    new List<EventKeywordEntity>();
         return IndexKeywordsByEventId(eventKeywordEntities.ToList());
     }
