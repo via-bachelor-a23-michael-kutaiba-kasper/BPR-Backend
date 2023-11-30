@@ -29,7 +29,7 @@ internal static class EventValidator
         if
         (
             eEvent.EndDate == DateTimeOffset.MinValue ||
-            eEvent.EndDate < DateTimeOffset.UtcNow.AddHours(1)
+            eEvent.EndDate < DateTimeOffset.UtcNow.AddHours(-10)
         )
         {
             throw new EventValidationException("Event end date is either null or older than start or current date");
@@ -38,7 +38,7 @@ internal static class EventValidator
         if
         (
             eEvent.CreatedDate == DateTimeOffset.MinValue ||
-            eEvent.CreatedDate < DateTimeOffset.UtcNow.Date.AddHours(1)
+            eEvent.CreatedDate < DateTimeOffset.UtcNow.Date.AddHours(-10)
         )
         {
             throw new EventValidationException("Event created date is either null or greater than end or start dates");
