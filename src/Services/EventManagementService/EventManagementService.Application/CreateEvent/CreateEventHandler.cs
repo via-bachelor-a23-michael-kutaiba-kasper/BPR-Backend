@@ -38,8 +38,9 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest, Event>
 
             EventValidator.ValidateEvents(mappedEvent);
 
-            await _sqlCreateEvent.InsertEvent(mappedEvent);
-
+            var insertedEventId = await _sqlCreateEvent.InsertEvent(mappedEvent);
+            
+            mappedEvent.Id = insertedEventId;
             _logger.LogInformation($"Event has been successfully created at: {DateTimeOffset.UtcNow}");
             return mappedEvent;
         }
