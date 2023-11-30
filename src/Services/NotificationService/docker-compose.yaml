@@ -1,0 +1,16 @@
+services:
+  notificationservice:
+    container_name: notificationservice-service
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8081:80
+    env_file:
+      - ./.env
+    environment:
+      - DEPLOYMENT_ENVIRONMENT=LOCAL_CONTAINER
+networks:
+  default:
+    name: vibeverse-network
+    external: true
