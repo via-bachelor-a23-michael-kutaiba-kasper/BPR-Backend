@@ -33,9 +33,9 @@ public class EventController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<List<EventDto>>> GetAllEvents([FromQuery] DateTimeOffset? from = null,
-        [FromQuery] DateTimeOffset? to = null, [FromQuery] string hostId = null)
+        [FromQuery] string hostId = null)
     {
-        var events = await _mediator.Send(new FetchAllEventsRequest(new Filters{ From = from, To = to, HostId = hostId}));
+        var events = await _mediator.Send(new FetchAllEventsRequest(new Filters{ From = from, To = null, HostId = hostId}));
         var eventsAsDtos = events.Select(EventMapper.FromEventToDto);
         return Ok(eventsAsDtos);
     }
