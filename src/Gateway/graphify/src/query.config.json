@@ -5,7 +5,7 @@
             "args": [],
             "resolver": {
                 "host": "http://eventmanagementservice-service",
-                "port": 80,
+                "port": 443,
                 "endpoint": "/api/v1/events",
                 "method": "GET"
             }
@@ -32,14 +32,14 @@
             "resolver": {
                 "host": "http://eventmanagementservice-service",
                 "endpoint": "/api/v1/events/{eventId}",
-                "port": 80,
+                "port": 443,
                 "method": "GET"
             }
         },
         {
             "name": "categories",
             "args": [],
-            "resolver" : {
+            "resolver": {
                 "host": "http://eventmanagementservice-service",
                 "port": 80,
                 "endpoint": "/api/v1/categories/allCategories",
@@ -49,7 +49,7 @@
         {
             "name": "keywords",
             "args": [],
-            "resolver" : {
+            "resolver": {
                 "host": "http://eventmanagementservice-service",
                 "port": 80,
                 "endpoint": "/api/v1/keywords/allKeywords",
@@ -148,90 +148,90 @@
             "args": [
                 {
                     "name": "title",
-                    "type" : "String!",
-                    "for" : "body"
+                    "type": "String!",
+                    "for": "body"
                 },
                 {
                     "name": "startDate",
-                    "type" : "String!",
-                    "for" : "body"
+                    "type": "String!",
+                    "for": "body"
                 },
                 {
                     "name": "endDate",
-                    "type" : "String!",
-                    "for" : "body"
+                    "type": "String!",
+                    "for": "body"
                 },
                 {
                     "name": "createdDate",
-                    "type" : "String!",
-                    "for" : "body"
+                    "type": "String!",
+                    "for": "body"
                 },
                 {
                     "name": "lastUpdateDate",
-                    "type" : "String",
-                    "for" : "body"
+                    "type": "String",
+                    "for": "body"
                 },
                 {
                     "name": "isPrivate",
-                    "type" : "Boolean!",
-                    "for" : "body"
+                    "type": "Boolean!",
+                    "for": "body"
                 },
-                
+
                 {
                     "name": "adultOnly",
-                    "type" : "Boolean!",
-                    "for" : "body"
+                    "type": "Boolean!",
+                    "for": "body"
                 },
-                
+
                 {
                     "name": "isPaid",
-                    "type" : "Boolean!",
-                    "for" : "body"
+                    "type": "Boolean!",
+                    "for": "body"
                 },
                 {
                     "name": "host",
-                    "type" : "userInput!",
-                    "for" : "body"
+                    "type": "userInput!",
+                    "for": "body"
                 },
                 {
                     "name": "maxNumberOfAttendees",
-                    "type" : "Int!",
-                    "for" : "body"
+                    "type": "Int!",
+                    "for": "body"
                 },
                 {
                     "name": "url",
-                    "type" : "String",
-                    "for" : "body"
+                    "type": "String",
+                    "for": "body"
                 },
                 {
                     "name": "description",
-                    "type" : "String",
-                    "for" : "body"
+                    "type": "String",
+                    "for": "body"
                 },
                 {
                     "name": "location",
-                    "type" : "String!",
-                    "for" : "body"
+                    "type": "String!",
+                    "for": "body"
                 },
                 {
                     "name": "city",
-                    "type" : "String!",
-                    "for" : "body"
+                    "type": "String!",
+                    "for": "body"
                 },
                 {
                     "name": "geoLocation",
-                    "type" : "geoLocationInput!",
-                    "for" : "body"
+                    "type": "geoLocationInput!",
+                    "for": "body"
                 },
                 {
                     "name": "category",
-                    "type" : "String!",
-                    "for" : "body"
+                    "type": "String!",
+                    "for": "body"
                 },
                 {
                     "name": "keywords",
-                    "type" : "[String]",
-                    "for" : "body"
+                    "type": "[String]",
+                    "for": "body"
                 }
             ],
             "resolver": {
