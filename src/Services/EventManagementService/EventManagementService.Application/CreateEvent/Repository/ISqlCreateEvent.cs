@@ -144,6 +144,6 @@ public class SqlCreateEvent : ISqlCreateEvent
 
     private const string InsertEventKeywordsSql =
         """
-        INSERT INTO event_keyword(event_id, keyword) VALUES(@eventId, @keyword) ON CONFLICT (keyword) DO NOTHING;
+        INSERT INTO event_keyword(event_id, keyword) VALUES(@eventId, @keyword) ON CONFLICT (event_id, keyword) DO NOTHING;
         """;
 }

@@ -1,6 +1,7 @@
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
 using EventManagementService.Application.JoinEvent.Repositories;
+using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using EventManagementService.Infrastructure.AppSettings;
@@ -121,7 +122,7 @@ public class JoinEventTests
         // Arrange
         var databuilder = new DataBuilder(_connectionStringManager);
         var existingUserId = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
-        var existingEvent = databuilder.NewTestEvent(e => e.Attendees = new List<string> { existingUserId });
+        var existingEvent = databuilder.NewTestEvent(e => e.Attendees = new List<User> { new User(){UserId = existingUserId}});
 
         var invitationRepositoryMock = new Mock<IInvitationRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();

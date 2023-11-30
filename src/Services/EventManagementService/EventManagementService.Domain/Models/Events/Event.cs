@@ -22,7 +22,7 @@ public class Event
     public Category Category { get; set; }
     public IEnumerable<Keyword> Keywords { get; set; }
     public IEnumerable<string>? Images { get; set; }
-    public IEnumerable<string>? Attendees { get; set; }
+    public IEnumerable<User>? Attendees { get; set; }
 }
 
 public class GeoLocation

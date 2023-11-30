@@ -1,16 +1,16 @@
 input userInput {
-    userId: String!,
-    photoUrl: String,
-    displayName: String!,
-    dateOfBirth: String!,
-    LastSeenOnline: String,
+    userId: String!
+    photoUrl: String
+    displayName: String!
+    dateOfBirth: String!
+    LastSeenOnline: String
     CreationDate: String!
 }
 
 input geoLocationInput {
-            lat: Float!,
-            lng: Float!
-        }
+    lat: Float!
+    lng: Float!
+}
 
 type GeoLocation {
     lat: String
@@ -67,14 +67,19 @@ type Post {
 }
 
 type CreateEventResponse {
-    event: Event,
+    event: Event
     code: String
 }
 
 type Query {
-    events: [Event],
-    categories: [String],
-    keywords: [String],
+    """
+    All arguments are optional filters to apply.
+    from: UTC DateTime string. Fitlers events by endDate >= from
+    hostId: UUID string. Filters events by host.
+    """
+    events(from: String, hostId: String): [Event]
+    categories: [String]
+    keywords: [String]
     allPublicEvents: [Event]
     event(eventId: Int): Event
     posts(userId: Int): [Post]
@@ -88,27 +93,27 @@ type Mutation {
     Adds user as attendee to event. Does not return anything.
     """
     joinEvent(eventId: Int!, userId: String!): Event
-    
+
     """
     Create new event. Returns CreateEventResposne.
     """
     createEvent(
-        title: String!,
-        startDate: String!,
-        endDate: String!,
-        createdDate: String!,
-        lastUpdateDate: String,
-        isPrivate: Boolean!,
-        adultsOnly: Boolean!,
-        isPaid: Boolean!,
-        host: userInput!,
-        maxNumberOfAttendees: Int!,
-        url: String,
-        description: String,
-        location: String!,
-        city: String!,
-        geoLocation: geoLocationInput!,
-        category: String!,
+        title: String!
+        startDate: String!
+        endDate: String!
+        createdDate: String!
+        lastUpdateDate: String
+        isPrivate: Boolean!
+        adultsOnly: Boolean!
+        isPaid: Boolean!
+        host: userInput!
+        maxNumberOfAttendees: Int!
+        url: String
+        description: String
+        location: String!
+        city: String!
+        geoLocation: geoLocationInput!
+        category: String!
         keywords: [String!]
     ): CreateEventResponse
 }

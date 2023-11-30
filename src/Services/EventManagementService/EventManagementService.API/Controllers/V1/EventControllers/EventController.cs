@@ -4,6 +4,8 @@ using EventManagementService.API.Controllers.V1.EventControllers.Mappers;
 using EventManagementService.Application.CreateEvent;
 using EventManagementService.Application.CreateEvent.Exceptions;
 using EventManagementService.Application.FetchAllEvents;
+using EventManagementService.Application.FetchAllEvents.Exceptions;
+using EventManagementService.Application.FetchAllEvents.Model;
 using EventManagementService.Application.FetchEventById;
 using EventManagementService.Application.JoinEvent;
 using EventManagementService.Application.JoinEvent.Exceptions;
@@ -31,12 +33,20 @@ public class EventController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Event>>> GetAllEvents([FromQuery] DateTimeOffset? from = null,
-        [FromQuery] DateTimeOffset? to = null)
+    public async Task<ActionResult<List<EventDto>>> GetAllEvents([FromQuery] DateTimeOffset? from = null,
+        [FromQuery] string hostId = null)
     {
-        var events = await _mediator.Send(new FetchAllEventsRequest(from, to));
-
-        return Ok(events);
+        try
+        {
+            var events =
+                await _mediator.Send(new FetchAllEventsRequest(new Filters {From = from, To = null, HostId = hostId}));
+            var eventsAsDtos = events.Select(EventMapper.FromEventToDto);
+            return Ok(eventsAsDtos);
+        }
+        catch (Exception e)
+        {
+            return StatusCode((int) HttpStatusCode.InternalServerError);
+        }
     }
 
     [HttpGet("externalEvents")]

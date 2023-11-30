@@ -1,3 +1,4 @@
+using System.Text.Json;
 using EventManagementService.API.Settings;
 using EventManagementService.Application;
 using EventManagementService.Infrastructure;
@@ -9,7 +10,11 @@ builder.Services.AddSettingsConfigurations(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddScoped<IConnectionStringManager, ConnectionStringManager>();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

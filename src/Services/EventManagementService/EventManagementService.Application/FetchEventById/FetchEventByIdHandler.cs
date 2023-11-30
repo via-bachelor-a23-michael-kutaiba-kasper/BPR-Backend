@@ -32,6 +32,9 @@ public class FetchEventByIdHandler: IRequestHandler<FetchEventByIdRequest, Event
 
         var host = await _userRepository.GetUserById(existingEvent.Host.UserId);
         existingEvent.Host = host!;
+
+        var attendees = await _userRepository.GetUsersAsync(existingEvent.Attendees.Select(a => a.UserId).ToList());
+        existingEvent.Attendees = attendees;
         
         return existingEvent;
     }

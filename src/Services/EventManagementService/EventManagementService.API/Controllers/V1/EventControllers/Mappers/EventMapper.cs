@@ -94,6 +94,7 @@ internal static class EventMapper
                 Lat = eEvent.GeoLocation.Lat,
                 Lng = eEvent.GeoLocation.Lng
             },
+            Images = eEvent.Images,
             City = eEvent.City
         };
     }

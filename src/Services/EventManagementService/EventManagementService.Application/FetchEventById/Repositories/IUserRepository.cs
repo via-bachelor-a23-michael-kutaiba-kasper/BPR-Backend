@@ -7,6 +7,7 @@ namespace EventManagementService.Application.FetchEventById.Repositories;
 public interface IUserRepository
 {
     public Task<User?> GetUserById(string userId);
+    public Task<IReadOnlyCollection<User>> GetUsersAsync(IReadOnlyCollection<string> userIds);
 }
 
 public class UserRepository : IUserRepository
@@ -37,5 +38,31 @@ public class UserRepository : IUserRepository
         {
             return null;
         }
+    }
+    
+    public async Task<IReadOnlyCollection<User>> GetUsersAsync(IReadOnlyCollection<string> userIds)
+    {
+        var auth = FirebaseAuth.DefaultInstance;
+        if (auth is null)
+        {
+            Firestore.CreateFirebaseApp();
+            auth = FirebaseAuth.DefaultInstance;
+        }
+
+        List<Task<UserRecord>> userRecordTasks = new List<Task<UserRecord>>();
+        foreach (var id in userIds)
+        {
+            userRecordTasks.Add(auth.GetUserAsync(id));
+        }
+
+        var userRecords = await Task.WhenAll(userRecordTasks);
+        return userRecords.Select(u => new User()
+        {
+            CreationDate = u.UserMetaData.CreationTimestamp.Value,
+            UserId = u.Uid,
+            DisplayName = u.DisplayName,
+            PhotoUrl = u.PhotoUrl,
+            LastSeenOnline = u.UserMetaData.LastSignInTimestamp
+        }).ToList();
     }
 }

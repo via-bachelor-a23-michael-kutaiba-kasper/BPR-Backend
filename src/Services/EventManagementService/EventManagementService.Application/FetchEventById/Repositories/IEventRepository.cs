@@ -17,6 +17,7 @@ public class EventRepository : IEventRepository
 {
     private readonly ILogger<EventRepository> _logger;
     private readonly IConnectionStringManager _connectionStringManager;
+    private readonly IUserRepository _userRepository;
 
     public EventRepository(ILogger<EventRepository> logger, IConnectionStringManager connectionStringManager)
     {
@@ -40,7 +41,7 @@ public class EventRepository : IEventRepository
                 return null;
             }
 
-            var attendees = await connection.QueryAsync<string>(SqlQueries.QueryEventAttendees, queryParams);
+            var attendeeIds = await connection.QueryAsync<string>(SqlQueries.QueryEventAttendees, queryParams);
             var keywords =
                 (await connection.QueryAsync<int>(SqlQueries.QueryEventKeywords, queryParams))
                 .Select(kw => (Keyword)kw);
@@ -64,7 +65,7 @@ public class EventRepository : IEventRepository
                 Images = images,
                 Title = eventEntity.title,
                 Url = eventEntity.url,
-                Attendees = attendees,
+                Attendees = attendeeIds.Select(id => new User(){UserId = id}),
                 Id = eventEntity.id,
                 Location = eventEntity.location,
                 GeoLocation = new GeoLocation

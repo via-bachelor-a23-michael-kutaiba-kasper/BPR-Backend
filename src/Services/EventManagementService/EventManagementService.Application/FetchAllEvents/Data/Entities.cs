@@ -1,7 +1,8 @@
-namespace EventManagementService.Application.FetchAllEvents.Model;
+namespace EventManagementService.Application.FetchAllEvents.Data;
 
-public class EventTableModel
+public class EventEntity
 {
+    public int id{ get; set; }
     public string title { get; set; }
     public DateTimeOffset start_date { get; set; }
     public DateTimeOffset end_date { get; set; }
@@ -9,16 +10,15 @@ public class EventTableModel
     public DateTimeOffset last_update_date { get; set; }
     public bool is_private { get; set; }
     public bool adult_only { get; set; }
-    public bool is_free { get; set; }
+    public bool is_paid{ get; set; }
     public string host_id { get; set; }
     public int max_number_of_attendees { get; set; }
     public string url { get; set; }
     public string description { get; set; }
     public string location { get; set; }
-}
-
-public class LocationTable
-{
+    public int category_id { get; set; }
+    public int location_id{ get; set; }
+    public string access_code { get; set; }
     public string street_number { get; set; }
     public string street_name { get; set; }
     public string sub_premise { get; set; }
@@ -29,17 +29,19 @@ public class LocationTable
     public float geolocation_lng { get; set; }
 }
 
-public class Category
+public class EventKeywordEntity
 {
-    public string name { get; set; }
+    public int event_id { get; set; }
+    public int keyword { get; set; }
+}
+public class EventAttendeeEntity
+{
+    public int event_id { get; set; }
+    public string user_id { get; set; }
 }
 
-public class Image
+public class EventImageEntity
 {
-    public string uri { get; set; }
-}
-
-public class Keyword
-{
-    public string name { get; set; }
+    public int event_id{ get; set; }
+    public string uri{ get; set; }
 }
