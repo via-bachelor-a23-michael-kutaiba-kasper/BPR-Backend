@@ -32,6 +32,6 @@ public class ApplyFiltersInSql: IApplyFiltersStrategy
             queryStrings.Add($"is_private=false");
         }
 
-        return string.Join(" AND ", queryStrings);
+        return $"WHERE {string.Join(" AND ", queryStrings)}";
     }
 }

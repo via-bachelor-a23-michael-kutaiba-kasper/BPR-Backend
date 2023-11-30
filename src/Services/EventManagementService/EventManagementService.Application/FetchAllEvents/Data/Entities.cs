@@ -39,3 +39,9 @@ public class EventAttendeeEntity
     public int event_id { get; set; }
     public string user_id { get; set; }
 }
+
+public class EventImageEntity
+{
+    public int event_id{ get; set; }
+    public string uri{ get; set; }
+}
