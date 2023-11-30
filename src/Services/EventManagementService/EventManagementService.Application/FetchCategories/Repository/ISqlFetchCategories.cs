@@ -48,6 +48,6 @@ public class SqlFetchCategories : ISqlFetchCategories
 
     private const string GetAllCategoriesSql =
         """
-        SELECT name FROM category;
+        SELECT name FROM category WHERE name <> 'Un Assigned';
         """;
 }
