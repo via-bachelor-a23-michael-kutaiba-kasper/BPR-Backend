@@ -2,6 +2,7 @@ using Dapper;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
+using EventManagementService.Infrastructure.Util;
 using EventManagementService.Test.JoinEvent.Utils;
 using Npgsql;
 
@@ -9,6 +10,7 @@ namespace EventManagementService.Test.Shared.Builders;
 
 public class DataBuilder
 {
+    private int nextId = 1;
     private readonly ConnectionStringManager _connectionStringManager;
     public IList<Event> EventSet { get; set; } = new List<Event>();
 
@@ -40,7 +42,7 @@ public class DataBuilder
     {
         Event newEvent = new()
         {
-            Id = 1,
+            Id = nextId,
             Category = Category.Music,
             Images = new List<string>(),
             Title = "Beethoven Concerto",
@@ -69,7 +71,9 @@ public class DataBuilder
             Attendees = new List<User>()
         };
 
+        newEvent.AccessCode = UniqueEventAccessCodeGenerator.GenerateUniqueString(newEvent.Title, newEvent.CreatedDate);
         configureEvent?.Invoke(newEvent);
+        nextId++;
 
         return newEvent;
     }
