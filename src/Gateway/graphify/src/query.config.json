@@ -16,7 +16,7 @@
             ],
             "resolver": {
                 "host": "http://eventmanagementservice-service",
-                "port": 80,
+                "port": 443,
                 "endpoint": "/api/v1/events",
                 "method": "GET"
             }
@@ -43,7 +43,7 @@
             "resolver": {
                 "host": "http://eventmanagementservice-service",
                 "endpoint": "/api/v1/events/{eventId}",
-                "port": 80,
+                "port": 443,
                 "method": "GET"
             }
         },

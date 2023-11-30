@@ -93,9 +93,11 @@ function formatToQueryParams(
         return undefined;
     }
 
-    queryParamArgs.forEach((arg) => {
-        values.push(`${arg.name}=${args[arg.name]}`);
-    });
+    queryParamArgs
+        .filter((arg) => args[arg.name])
+        .forEach((arg) => {
+            values.push(`${arg.name}=${args[arg.name]}`);
+        });
 
     return values.join("&");
 }
