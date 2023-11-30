@@ -93,8 +93,8 @@ public class EventController : ControllerBase
             var eEvent = await _mediator.Send(new CreateEventRequest(EventMapper.ProcessIncomingEvent(eventDto)));
             var response = new CreateEventResponseDto
             {
-                EventDto = EventMapper.FromEventToDto(eEvent),
-                StatusCode = new StatusCode
+                Event = EventMapper.FromEventToDto(eEvent),
+                Code = new StatusCode
                 {
                     Code = HttpStatusCode.OK,
                     Message = "Event have been successfully created"

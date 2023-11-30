@@ -4,8 +4,8 @@ namespace EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 
 public class CreateEventResponseDto
 {
-    public EventDto EventDto { get; set; }
-    public StatusCode StatusCode { get; set; }
+    public EventDto Event { get; set; }
+    public StatusCode Code { get; set; }
 }
 
 public class StatusCode
