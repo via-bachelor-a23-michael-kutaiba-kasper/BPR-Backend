@@ -9,6 +9,7 @@ public static class FetchAllEventsServiceExtension
     public static IServiceCollection AddFetchAllEvents(this IServiceCollection services)
     {
         services.AddScoped<ISqlAllEvents, SqlAllEvents>();
+        services.AddScoped<IUserRepository, UserRepository>();
         
         return services;
     }
