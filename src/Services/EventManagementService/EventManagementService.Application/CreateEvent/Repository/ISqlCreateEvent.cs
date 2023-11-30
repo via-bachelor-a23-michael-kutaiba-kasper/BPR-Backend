@@ -10,7 +10,7 @@ namespace EventManagementService.Application.CreateEvent.Repository;
 
 public interface ISqlCreateEvent
 {
-    Task InsertEvent(Event eEvent);
+    Task<int> InsertEvent(Event eEvent);
 }
 
 public class SqlCreateEvent : ISqlCreateEvent
@@ -28,7 +28,7 @@ public class SqlCreateEvent : ISqlCreateEvent
         _logger = logger;
     }
 
-    public async Task InsertEvent(Event eEvent)
+    public async Task<int> InsertEvent(Event eEvent)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
@@ -38,6 +38,7 @@ public class SqlCreateEvent : ISqlCreateEvent
             var evtId = await InsertNewEvent(eEvent, connection);
             await InsertEventKeywords(eEvent, connection, evtId);
             await transaction.CommitAsync();
+            return evtId;
         }
         catch (Exception e)
         {
