@@ -26,6 +26,12 @@ public class ApplyFiltersInSql: IApplyFiltersStrategy
             queryStrings.Add($"host_id=@hostId");
         }
 
+
+        if (!filters.IncludePrivateEvents)
+        {
+            queryStrings.Add($"is_private=false");
+        }
+
         return string.Join(" AND ", queryStrings);
     }
 }
