@@ -13,7 +13,7 @@ public class ApplyFiltersInSql: IApplyFiltersStrategy
 
         if (filters.From != null)
         {
-            queryStrings.Add($"end_date <= @from");
+            queryStrings.Add($"end_date >= @from");
         }
         
         if (filters.To != null)

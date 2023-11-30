@@ -37,9 +37,11 @@ public class FetchAllEventsIntegration
     {
         // Arrange 
         var dataBuilder = new DataBuilder(_connectionStringManager);
-        var eventRepositoryMock = new Mock<ISqlAllEvents>();
         var loggerMock = new Mock<ILogger<FetchAllEventsHandler>>();
+        var loggerMock2 = new Mock<ILogger<SqlAllEvents>>();
         var userRepositoryMock = new Mock<IUserRepository>();
+        
+        ISqlAllEvents eventRepository = new SqlAllEvents(_connectionStringManager, loggerMock2.Object);
 
         var testEvents = new List<Event>
             {dataBuilder.NewTestEvent(e => e.Title = "E1"), dataBuilder.NewTestEvent(e => e.Title = "E2")};
@@ -51,20 +53,125 @@ public class FetchAllEventsIntegration
             testEvents[i].Id = dataBuilder.EventSet[i].Id;
         }
         
-        eventRepositoryMock.Setup(x => x.GetAllEvents(filters)).ReturnsAsync(testEvents);
         userRepositoryMock.Setup(x => x.GetUsersAsync(It.IsAny<IReadOnlyCollection<string>>()))
-            .ReturnsAsync(new List<User>(){testEvents[0].Host});
+            .ReturnsAsync(new List<User>() {testEvents[0].Host});
 
         var request = new FetchAllEventsRequest(filters);
         var handler =
-            new FetchAllEventsHandler(eventRepositoryMock.Object, loggerMock.Object, userRepositoryMock.Object);
-        
+            new FetchAllEventsHandler(eventRepository, loggerMock.Object, userRepositoryMock.Object);
+
         // Act
         var events = await handler.Handle(request, new CancellationToken());
-        
+
         // Assert
         Assert.That(events.Count, Is.EqualTo(2));
         Assert.That(events.ToList()[0].Title, Is.EqualTo("E1"));
         Assert.That(events.ToList()[1].Title, Is.EqualTo("E2"));
+    }
+
+    [Test]
+    public async Task FetchAllEvents_FromFilterIsApplied_ReturnsEventsFilteredByDate()
+    {
+        // Arrange 
+        var dataBuilder = new DataBuilder(_connectionStringManager);
+        var loggerMock = new Mock<ILogger<FetchAllEventsHandler>>();
+        var loggerMock2 = new Mock<ILogger<SqlAllEvents>>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+        
+        ISqlAllEvents eventRepository = new SqlAllEvents(_connectionStringManager, loggerMock2.Object);
+
+        var user1Id = Guid.NewGuid().ToString();
+        var user2Id = Guid.NewGuid().ToString();
+        var testEvents = new List<Event>
+        {
+            dataBuilder.NewTestEvent(e =>
+            {
+                e.Title = "E1";
+                e.Host.UserId = user1Id;
+                e.StartDate= DateTimeOffset.UtcNow.AddMinutes(-20);
+                e.EndDate = DateTimeOffset.UtcNow.AddMinutes(10);
+            }),
+            dataBuilder.NewTestEvent(e =>
+            {
+                e.Title = "E2";
+                e.Host.UserId = user2Id;
+                e.StartDate= DateTimeOffset.UtcNow.AddMinutes(-20);
+                e.EndDate = DateTimeOffset.UtcNow.AddMinutes(-10);
+            })
+        };
+        var filters = new Filters{From = DateTimeOffset.UtcNow};
+
+        dataBuilder.InsertEvents(testEvents);
+        for (var i = 0; i < dataBuilder.EventSet.Count; i++)
+        {
+            testEvents[i].Id = dataBuilder.EventSet[i].Id;
+        }
+
+        userRepositoryMock.Setup(x => x.GetUsersAsync(It.IsAny<IReadOnlyCollection<string>>()))
+            .ReturnsAsync(new List<User>() {testEvents[0].Host, testEvents[1].Host});
+
+        var request = new FetchAllEventsRequest(filters);
+        var handler =
+            new FetchAllEventsHandler(eventRepository, loggerMock.Object, userRepositoryMock.Object);
+
+        // Act
+        var events = await handler.Handle(request, new CancellationToken());
+
+        // Assert
+        Assert.That(events.Count, Is.EqualTo(1));
+        Assert.That(events.ToList()[0].Title, Is.EqualTo("E1"));
+    }
+    
+    [Test]
+    public async Task FetchAllEvents_HostIdFilterIsApplied_ReturnsEventsFilteredByHost()
+    {
+        // Arrange 
+        var dataBuilder = new DataBuilder(_connectionStringManager);
+        var loggerMock = new Mock<ILogger<FetchAllEventsHandler>>();
+        var loggerMock2 = new Mock<ILogger<SqlAllEvents>>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+        
+        ISqlAllEvents eventRepository = new SqlAllEvents(_connectionStringManager, loggerMock2.Object);
+
+        var user1Id = Guid.NewGuid().ToString();
+        var user2Id = Guid.NewGuid().ToString();
+        var testEvents = new List<Event>
+        {
+            dataBuilder.NewTestEvent(e =>
+            {
+                e.Title = "E1";
+                e.Host.UserId = user1Id;
+                e.StartDate= DateTimeOffset.UtcNow.AddMinutes(-20);
+                e.EndDate = DateTimeOffset.UtcNow.AddMinutes(10);
+            }),
+            dataBuilder.NewTestEvent(e =>
+            {
+                e.Title = "E2";
+                e.Host.UserId = user2Id;
+                e.StartDate= DateTimeOffset.UtcNow.AddMinutes(-20);
+                e.EndDate = DateTimeOffset.UtcNow.AddMinutes(-10);
+            })
+        };
+        var filters = new Filters{HostId = user2Id};
+
+        dataBuilder.InsertEvents(testEvents);
+        for (var i = 0; i < dataBuilder.EventSet.Count; i++)
+        {
+            testEvents[i].Id = dataBuilder.EventSet[i].Id;
+        }
+
+        userRepositoryMock.Setup(x => x.GetUsersAsync(It.IsAny<IReadOnlyCollection<string>>()))
+            .ReturnsAsync(new List<User>() {testEvents[0].Host, testEvents[1].Host});
+
+        var request = new FetchAllEventsRequest(filters);
+        var handler =
+            new FetchAllEventsHandler(eventRepository, loggerMock.Object, userRepositoryMock.Object);
+
+        // Act
+        var events = await handler.Handle(request, new CancellationToken());
+
+        // Assert
+        Assert.That(events.Count, Is.EqualTo(1));
+        Assert.That(events.ToList()[0].Title, Is.EqualTo("E2"));
     }
 }
