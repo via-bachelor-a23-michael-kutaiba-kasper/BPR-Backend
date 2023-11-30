@@ -20,7 +20,7 @@ internal static class EventValidator
         if
         (
             eEvent.StartDate == DateTimeOffset.MinValue ||
-            eEvent.StartDate < DateTimeOffset.UtcNow.AddHours(1)
+            eEvent.StartDate < DateTimeOffset.UtcNow.AddMinutes(-10)
         )
         {
             throw new EventValidationException("Event start date is either null or is in the past");
