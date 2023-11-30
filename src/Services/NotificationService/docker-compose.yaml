@@ -10,6 +10,15 @@ services:
       - ./.env
     environment:
       - DEPLOYMENT_ENVIRONMENT=LOCAL_CONTAINER
+  pubsub:
+    container_name: pubsub
+    image: gcr.io/google.com/cloudsdktool/cloud-sdk:emulators
+    ports:
+      - 8086:8085
+    command: gcloud beta emulators pubsub start --project=bachelorshenanigans --host-port=0.0.0.0:8085
+    environment:
+      - PUBSUB_PORT=8085
+      - PUBSUB_PROJECT=bachelorshenanigans
 networks:
   default:
     name: vibeverse-network
