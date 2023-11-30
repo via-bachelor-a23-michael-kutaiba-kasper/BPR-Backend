@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+/*using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -77,11 +77,11 @@ public class ProcessesEventHelper
         Console.Write(ser);
         
         
-        /*// Act
+        /#1#/ Act
         var act = async () => await repo.BulkUpsertEvents(events!);
 
         // Assert
-        Assert.DoesNotThrowAsync(()=> act.Invoke());*/
+        Assert.DoesNotThrowAsync(()=> act.Invoke());#1#
     }
     
     private async Task<GeoLocation> FetchGeoLocation(IGeoCoding _geoCoding, string location)
@@ -161,4 +161,4 @@ public class ProcessesEventHelper
             return stringBuilder.ToString();
         }
     }
-}
+}*/
