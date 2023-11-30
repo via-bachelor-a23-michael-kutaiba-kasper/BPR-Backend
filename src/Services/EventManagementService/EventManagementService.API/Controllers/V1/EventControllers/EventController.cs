@@ -1,5 +1,6 @@
 using System.Net;
 using EventManagementService.API.Controllers.V1.EventControllers.Dtos;
+using EventManagementService.API.Controllers.V1.EventControllers.Mappers;
 using EventManagementService.Application.CreateEvent;
 using EventManagementService.Application.CreateEvent.Exceptions;
 using EventManagementService.Application.FetchAllEvents;
@@ -31,12 +32,12 @@ public class EventController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Event>>> GetAllEvents([FromQuery] DateTimeOffset? from = null,
+    public async Task<ActionResult<List<EventDto>>> GetAllEvents([FromQuery] DateTimeOffset? from = null,
         [FromQuery] DateTimeOffset? to = null, [FromQuery] string hostId = null)
     {
         var events = await _mediator.Send(new FetchAllEventsRequest(new Filters{ From = from, To = to, HostId = hostId}));
-
-        return Ok(events);
+        var eventsAsDtos = events.Select(EventMapper.FromEventToDto);
+        return Ok(eventsAsDtos);
     }
 
     [HttpGet("externalEvents")]
@@ -86,45 +87,26 @@ public class EventController : ControllerBase
     }
 
     [HttpPost("createEvent")]
-    public async Task<ActionResult> CreateNewEvent([FromBody] EventDto eventDto)
+    public async Task<ActionResult<CreateEventResponseDto>> CreateNewEvent([FromBody] EventDto eventDto)
     {
         try
         {
-            await _mediator.Send(new CreateEventRequest(new Event
+            var eEvent = await _mediator.Send(new CreateEventRequest(EventMapper.ProcessIncomingEvent(eventDto)));
+            var response = new CreateEventResponseDto
             {
-                Title = eventDto.Title,
-                StartDate = eventDto.StartDate,
-                LastUpdateDate = eventDto.LastUpdateDate,
-                EndDate = eventDto.EndDate,
-                CreatedDate = eventDto.CreatedDate,
-                Host = new User
+                EventDto = EventMapper.FromEventToDto(eEvent),
+                StatusCode = new StatusCode
                 {
-                    LastSeenOnline = eventDto.Host.LastSeenOnline,
-                    DisplayName = eventDto.Host.DisplayName,
-                    PhotoUrl = eventDto.Host.PhotoUrl,
-                    UserId = eventDto.Host.UserId,
-                },
-                IsPaid = eventDto.IsPaid,
-                Description = eventDto.Description,
-                Category = EnumExtensions.GetEnumValueFromDescription<Category>(eventDto.Category),
-                Keywords = eventDto.Keywords.Select(EnumExtensions.GetEnumValueFromDescription<Keyword>),
-                AdultsOnly = eventDto.AdultsOnly,
-                IsPrivate = eventDto.IsPrivate,
-                MaxNumberOfAttendees = eventDto.MaxNumberOfAttendees,
-                Location = eventDto.Location,
-                GeoLocation = new GeoLocation
-                {
-                    Lng = eventDto.GeoLocation.Lng,
-                    Lat = eventDto.GeoLocation.Lat
-                },
-                City = eventDto.City
-            }));
-            return Ok();
+                    Code = HttpStatusCode.OK,
+                    Message = "Event have been successfully created"
+                }
+            };
+            return Ok(response);
         }
-        catch (Exception e) when(e is CreateEventException or EventValidationException)
+        catch (Exception e) when (e is CreateEventException or EventValidationException)
         {
             return StatusCode((int)HttpStatusCode.BadRequest);
-        } 
+        }
         catch (Exception e)
         {
             return StatusCode((int)HttpStatusCode.InternalServerError);

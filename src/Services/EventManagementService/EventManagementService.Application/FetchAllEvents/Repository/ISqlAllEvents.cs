@@ -116,7 +116,7 @@ public class SqlAllEvents : ISqlAllEvents
         IReadOnlyCollection<int> eventIds)
     {
         var queryEventImages =
-            $"SELECT uri from image WHERE event_id in {SqlUtil.AsIntList(eventIds.ToList())}";
+            $"SELECT * from image WHERE event_id in {SqlUtil.AsIntList(eventIds.ToList())}";
         var eventImages = eventIds.Any() ?  await connection.QueryAsync<EventImageEntity>(queryEventImages) :
                                    new List<EventImageEntity>();
         

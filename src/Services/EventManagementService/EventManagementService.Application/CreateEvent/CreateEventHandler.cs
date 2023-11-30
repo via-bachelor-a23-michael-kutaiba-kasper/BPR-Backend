@@ -9,9 +9,9 @@ using Microsoft.Extensions.Logging;
 
 namespace EventManagementService.Application.CreateEvent;
 
-public record CreateEventRequest(Event Event) : IRequest;
+public record CreateEventRequest(Event Event) : IRequest<Event>;
 
-public class CreateEventHandler : IRequestHandler<CreateEventRequest>
+public class CreateEventHandler : IRequestHandler<CreateEventRequest, Event>
 {
     private readonly ISqlCreateEvent _sqlCreateEvent;
     private readonly IFirebaseUser _firebaseUser;
@@ -29,7 +29,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest>
         _firebaseUser = firebaseUser;
     }
 
-    public async Task Handle(CreateEventRequest request, CancellationToken cancellationToken)
+    public async Task<Event> Handle(CreateEventRequest request, CancellationToken cancellationToken)
     {
         try
         {
@@ -41,6 +41,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest>
             await _sqlCreateEvent.InsertEvent(mappedEvent);
 
             _logger.LogInformation($"Event has been successfully created at: {DateTimeOffset.UtcNow}");
+            return mappedEvent;
         }
         catch (Exception e)
         {
@@ -60,7 +61,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest>
             StartDate = request.Event.StartDate,
             EndDate = request.Event.EndDate,
             CreatedDate = request.Event.CreatedDate,
-            LastUpdateDate = request.Event.LastUpdateDate,
+            LastUpdateDate = request.Event.CreatedDate,
             IsPrivate = request.Event.IsPaid,
             AdultsOnly = request.Event.AdultsOnly,
             IsPaid = request.Event.IsPaid,

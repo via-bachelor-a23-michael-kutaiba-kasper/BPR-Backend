@@ -19,4 +19,5 @@ public class EventDto
     public GeoLocationDto GeoLocation { get; set; }= default!;
     public string Category { get; set; } = default!;
     public IEnumerable<string> Keywords { get; set; } = default!;
+    public IEnumerable<string>?  Images{ get; set; }
 }

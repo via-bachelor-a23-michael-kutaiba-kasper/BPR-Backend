@@ -47,6 +47,6 @@ public class SqlFetchKeywords : ISqlFetchKeywords
 
     private const string GetAllKeywordsSql =
         """
-        SELECT name FROM keyword;
+        SELECT name FROM keyword WHERE name <> 'Un Assigned';
         """;
 }
