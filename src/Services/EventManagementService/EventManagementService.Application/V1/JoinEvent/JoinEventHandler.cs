@@ -21,7 +21,8 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
     private readonly IOptions<PubSub> _pubsubConfig;
 
     public JoinEventHandler(ILogger<JoinEventHandler> logger, IEventRepository eventRepository,
-        IInvitationRepository invitationRepository, IUserRepository userRepository, IEventBus eventBus, IOptions<PubSub> pubsubConfig)
+        IInvitationRepository invitationRepository, IUserRepository userRepository, IEventBus eventBus,
+        IOptions<PubSub> pubsubConfig)
     {
         _logger = logger;
         _eventRepository = eventRepository;
@@ -49,21 +50,32 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
             throw new EventNotFoundException(request.EventId);
         }
 
+        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() == existingEvent.MaxNumberOfAttendees)
+        {
+            throw new MaximumAttendeesReachedException(existingEvent.Id, existingEvent.MaxNumberOfAttendees);
+        }
+
         if (!await _userRepository.UserExistsAsync(request.UserId))
         {
             throw new UserNotFoundException(request.UserId);
         }
 
-        var userAlreadyJoined = existingEvent.Attendees.Any(attendee => attendee.UserId == request.UserId);
+        var userAlreadyJoined = existingEvent.Attendees?.Any(attendee => attendee.UserId == request.UserId) ?? false;
         if (userAlreadyJoined)
         {
             throw new AlreadyJoinedException(request.UserId, request.EventId);
         }
-        
+
+        if (request.UserId == existingEvent.Host.UserId)
+        {
+            throw new UserIsAlreadyHostOfEventException(request.UserId, existingEvent.Id);
+        }
+
         await AcceptInvitationIfInvited(request.UserId, request.EventId);
 
         await _eventRepository.AddAttendeeToEventAsync(request.UserId, request.EventId);
-        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[1].TopicId,_pubsubConfig.Value.Topics[1].ProjectId, request);
+        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[1].TopicId, _pubsubConfig.Value.Topics[1].ProjectId,
+            request);
         _logger.LogInformation($"User {request.UserId} has been added as attendee to event {request.EventId}");
     }
 

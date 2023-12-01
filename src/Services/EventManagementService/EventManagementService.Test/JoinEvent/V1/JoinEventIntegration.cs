@@ -130,4 +130,112 @@ public class JoinEventIntegration
         Assert.IsNotNull(updatedEvent);
         Assert.That(updatedEvent!.Attendees.Count(), Is.EqualTo(0));
     }
+    
+    
+    [Test]
+    public async Task JoinEvent_UserHasAlreadyJoined_NoDuplicateAttendeeIsCreated()
+    {
+        var existingUser = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
+        var dataBuilder = new DataBuilder(_connectionStringManager);
+        
+        var loggerMock = new Mock<ILogger<JoinEventHandler>>();
+        var invitationRepositoryMock = new Mock<IInvitationRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+        var eventBusMock = new Mock<IEventBus>();
+        
+        var pubsubConfig = new PubSub
+        {
+            Topics = new[]
+            {
+                new Topic
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                
+                new Topic
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                }
+            },
+            SubscriptionName = "test"
+        };
+
+        var existingEvent = dataBuilder.NewTestEvent((e) =>
+        {
+            e.Attendees = new List<User>{new User(){UserId = existingUser}};
+        });
+        dataBuilder.InsertEvents(new List<Event>() { existingEvent });
+        existingEvent = dataBuilder.EventSet[0];
+        
+        var eventRepository = new EventRepository(_connectionStringManager);
+        
+        userRepositoryMock.Setup(x => x.UserExistsAsync(existingUser)).ReturnsAsync(true);
+        invitationRepositoryMock.Setup(x => x.GetInvitationsAsync(existingEvent.Id))
+            .ReturnsAsync(new List<Invitation>());
+            
+        var joinEventRequest = new JoinEventRequest(existingUser, existingEvent.Id);
+        var handler = new JoinEventHandler(loggerMock.Object, eventRepository, invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object, Options.Create<PubSub>(pubsubConfig));
+
+        Assert.ThrowsAsync<AlreadyJoinedException>(() => handler.Handle(joinEventRequest, new CancellationToken()));
+
+        var updatedEvent = await eventRepository.GetByIdAsync(existingEvent.Id);
+        Assert.IsNotNull(updatedEvent);
+        Assert.That(updatedEvent!.Attendees.Count(), Is.EqualTo(1));
+    }
+    
+    [Test]
+    public async Task JoinEvent_UserIsHostOffEvent_DoesNotAddNewAttendee()
+    {
+        var existingUser = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
+        var dataBuilder = new DataBuilder(_connectionStringManager);
+        
+        var loggerMock = new Mock<ILogger<JoinEventHandler>>();
+        var invitationRepositoryMock = new Mock<IInvitationRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+        var eventBusMock = new Mock<IEventBus>();
+        
+        var pubsubConfig = new PubSub
+        {
+            Topics = new[]
+            {
+                new Topic
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                
+                new Topic
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                }
+            },
+            SubscriptionName = "test"
+        };
+
+        var existingEvent = dataBuilder.NewTestEvent((e) =>
+        {
+            e.Attendees = new List<User>{};
+            e.Host.UserId = existingUser;
+        });
+        dataBuilder.InsertEvents(new List<Event>{ existingEvent });
+        existingEvent = dataBuilder.EventSet[0];
+        
+        var eventRepository = new EventRepository(_connectionStringManager);
+        
+        userRepositoryMock.Setup(x => x.UserExistsAsync(existingUser)).ReturnsAsync(true);
+        invitationRepositoryMock.Setup(x => x.GetInvitationsAsync(existingEvent.Id))
+            .ReturnsAsync(new List<Invitation>());
+            
+        var joinEventRequest = new JoinEventRequest(existingUser, existingEvent.Id);
+        var handler = new JoinEventHandler(loggerMock.Object, eventRepository, invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object, Options.Create<PubSub>(pubsubConfig));
+
+        Assert.ThrowsAsync<UserIsAlreadyHostOfEventException>(() => handler.Handle(joinEventRequest, new CancellationToken()));
+
+        var updatedEvent = await eventRepository.GetByIdAsync(existingEvent.Id);
+        Assert.IsNotNull(updatedEvent);
+        Assert.That(updatedEvent!.Attendees.Count(), Is.EqualTo(0));
+    }
 }
