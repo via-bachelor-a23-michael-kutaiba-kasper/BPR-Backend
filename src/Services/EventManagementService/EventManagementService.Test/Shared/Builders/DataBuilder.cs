@@ -40,7 +40,7 @@ public class DataBuilder
                 foreach (var attendee in e.Attendees)
                 {
                     connection.Execute(
-                        "INSERT INTO event_attendee(event_id, user_id) VALUES (event_id=@eventId, user_id=@userId)",
+                        "INSERT INTO event_attendee(event_id, user_id) VALUES (@eventId, @userId)",
                         new {@eventId = e.Id, @userId = attendee.UserId});
                 }
 
