@@ -1,7 +1,7 @@
 using System.Net;
 using EventManagementService.API.Controllers.V1.EventControllers.Dtos;
-using EventManagementService.Application.JoinEvent;
-using EventManagementService.Application.JoinEvent.Exceptions;
+using EventManagementService.Application.V1.JoinEvent;
+using EventManagementService.Application.V1.JoinEvent.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,6 +1,5 @@
 using System.Net;
-using EventManagementService.Application.FetchCategories;
-using EventManagementService.Application.FetchKeywords;
+using EventManagementService.Application.V1.FetchKeywords;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

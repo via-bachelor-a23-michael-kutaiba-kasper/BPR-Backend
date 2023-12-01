@@ -1,21 +1,18 @@
 using System.Net;
 using EventManagementService.API.Controllers.V1.EventControllers.Dtos;
 using EventManagementService.API.Controllers.V1.EventControllers.Mappers;
-using EventManagementService.Application.CreateEvent;
-using EventManagementService.Application.CreateEvent.Exceptions;
-using EventManagementService.Application.FetchAllEvents;
-using EventManagementService.Application.FetchAllEvents.Exceptions;
-using EventManagementService.Application.FetchAllEvents.Model;
-using EventManagementService.Application.FetchEventById;
-using EventManagementService.Application.JoinEvent;
-using EventManagementService.Application.JoinEvent.Exceptions;
-using EventManagementService.Application.ProcessExternalEvents;
+using EventManagementService.Application.V1.CreateEvent;
+using EventManagementService.Application.V1.CreateEvent.Exceptions;
+using EventManagementService.Application.V1.FetchAllEvents;
+using EventManagementService.Application.V1.FetchAllEvents.Model;
+using EventManagementService.Application.V1.FetchEventById;
+using EventManagementService.Application.V1.ProcessExternalEvents;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.Util;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using EventNotFoundException = EventManagementService.Application.FetchEventById.Exceptions.EventNotFoundException;
+using EventNotFoundException = EventManagementService.Application.V1.FetchEventById.Exceptions.EventNotFoundException;
 
 namespace EventManagementService.API.Controllers.V1.EventControllers;
 
