@@ -46,6 +46,14 @@ internal static class EventMapper
                 PhotoUrl = eventDto.Host.PhotoUrl,
                 UserId = eventDto.Host.UserId,
             },
+            Attendees = eventDto.Attendees.Select(user => new User 
+            {
+                UserId = user.UserId,
+                DisplayName = user.DisplayName,
+                PhotoUrl = user.PhotoUrl,
+                CreationDate = user.CreationDate,
+                LastSeenOnline = user.LastSeenOnline
+            }).ToList(),
             IsPaid = eventDto.IsPaid,
             Description = eventDto.Description,
             Category = category,
@@ -82,6 +90,14 @@ internal static class EventMapper
                 CreationDate = eEvent.Host.CreationDate,
             },
             IsPaid = eEvent.IsPaid,
+            Attendees = eEvent.Attendees.Select(user => new UserDto
+            {
+                UserId = user.UserId,
+                DisplayName = user.DisplayName,
+                PhotoUrl = user.PhotoUrl,
+                CreationDate = user.CreationDate,
+                LastSeenOnline = user.LastSeenOnline
+            }).ToList(),
             Description = eEvent.Description,
             Category = eEvent.Category.GetDescription(),
             Keywords = eEvent.Keywords.Select(kw => kw.GetDescription()),

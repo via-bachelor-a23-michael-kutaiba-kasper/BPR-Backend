@@ -84,7 +84,7 @@ public class SqlAllEvents : ISqlAllEvents
                     LastUpdateDate = e.last_update_date,
                     MaxNumberOfAttendees = e.max_number_of_attendees,
                     Keywords = indexedKeywords[e.id].Select(id => (Keyword)id),
-                    Attendees = eventAttendeeEntities.Select(ea => ea.user_id).Select(id => new User { UserId = id })
+                    Attendees = eventAttendeeEntities.Where(ea => ea.event_id == e.id).Select(ea => ea.user_id).Select(id => new User { UserId = id })
                 });
                 
                 events.AddRange(domainEvents);

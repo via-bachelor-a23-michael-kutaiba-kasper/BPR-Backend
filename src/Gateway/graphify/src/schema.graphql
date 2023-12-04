@@ -53,7 +53,7 @@ type Event {
     category: String
     keywords: [String]
     images: [String]
-    attendees: [String]
+    attendees: [User]
     geoLocation: GeoLocation
     city: String
     location: String
