@@ -91,21 +91,12 @@ public class EventController : ControllerBase
     }
 
     [HttpPost("createEvent")]
-    public async Task<ActionResult<CreateEventResponseDto>> CreateNewEvent([FromBody] EventDto eventDto)
+    public async Task<ActionResult<EventDto>> CreateNewEvent([FromBody] EventDto eventDto)
     {
         try
         {
             var eEvent = await _mediator.Send(new CreateEventRequest(EventMapper.ProcessIncomingEvent(eventDto)));
-            var response = new CreateEventResponseDto
-            {
-                Event = EventMapper.FromEventToDto(eEvent),
-                Code = new StatusCode
-                {
-                    Code = HttpStatusCode.OK,
-                    Message = "Event have been successfully created"
-                }
-            };
-            return Ok(response);
+            return Ok(EventMapper.FromEventToDto(eEvent));
         }
         catch (Exception e) when (e is CreateEventException or EventValidationException)
         {
