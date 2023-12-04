@@ -12,6 +12,11 @@ input geoLocationInput {
     lng: Float!
 }
 
+type Status {
+    code: Number,
+    message: String
+}
+
 type GeoLocation {
     lat: String
     lng: String
@@ -66,9 +71,25 @@ type Post {
     body: String
 }
 
-type CreateEventResponse {
-    event: Event
-    code: String
+type EventResponse {
+    result: Event
+    status: Status
+}
+
+type EventsResponse {
+    result: [Event]
+    status: Status
+}
+
+type KeywordsResponse {
+    result: [String]
+    status: Status
+}
+
+
+type CategoriesResponse {
+    result: [String]
+    status: Status
 }
 
 type Query {
@@ -77,13 +98,11 @@ type Query {
     from: UTC DateTime string. Fitlers events by endDate >= from
     hostId: UUID string. Filters events by host.
     """
-    events(from: String, hostId: String): [Event]
-    categories: [String]
-    keywords: [String]
-    allPublicEvents: [Event]
+    events(from: String, hostId: String): EventResponse
+    categories: CategoriesResponse
+    keywords: KeywordsResponse
+    allPublicEvents: EventsResponse
     event(eventId: Int): Event
-    posts(userId: Int): [Post]
-    post(id: Int!): Post
 }
 
 type Mutation {
@@ -92,7 +111,7 @@ type Mutation {
     """
     Adds user as attendee to event. Does not return anything.
     """
-    joinEvent(eventId: Int!, userId: String!): Event
+    joinEvent(eventId: Int!, userId: String!): EventResponse
 
     """
     Create new event. Returns CreateEventResposne.
