@@ -9,5 +9,5 @@ public class ResponseStatus
 public class GatewayResponse<T>
 {
     public Type Status { get; set; } = default!;
-    public T Result { get; set; }
+    public T Result { get; set; } 
 }

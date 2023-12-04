@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using RecommendationService.Infrastructure.EventBus;
 
 namespace RecommendationService.Infrastructure;
 

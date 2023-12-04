@@ -1,11 +1,14 @@
 using System.Text.Json;
+using RecommendationService.API.Settings;
 using RecommendationService.Application;
 using RecommendationService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// AppSettings configurations
+builder.Services.AddAppSettingsConfigurations(builder.Configuration);
 
+// Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;

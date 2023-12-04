@@ -5,7 +5,7 @@ using Google.Cloud.PubSub.V1;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 
-namespace RecommendationService.Infrastructure;
+namespace RecommendationService.Infrastructure.EventBus;
 
 public interface IEventBus
 {
