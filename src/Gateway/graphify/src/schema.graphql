@@ -13,7 +13,7 @@ input geoLocationInput {
 }
 
 type Status {
-    code: Number,
+    code: Int,
     message: String
 }
 
