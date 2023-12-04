@@ -6,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddScoped<IConnectionStringManager, ConnectionStringManager>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
@@ -20,6 +19,7 @@ builder.Services.AddMediatR(config =>
         AppDomain.CurrentDomain.Load("RecommendationService.Application")));
 
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 
 // Register HTTP client here: 
 builder.Services.AddHttpClient("HTTP_CLIENT")
