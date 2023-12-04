@@ -7,8 +7,6 @@ using EventManagementService.Application.V1.FetchAllEvents;
 using EventManagementService.Application.V1.FetchAllEvents.Model;
 using EventManagementService.Application.V1.FetchEventById;
 using EventManagementService.Application.V1.ProcessExternalEvents;
-using EventManagementService.Domain.Models;
-using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.Util;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -125,38 +123,7 @@ public class EventController : ControllerBase
         try
         {
             var existingEvent = await _mediator.Send(new FetchEventByIdRequest(eventId));
-
-            return Ok(new EventDto
-            {
-                Id = existingEvent.Id,
-                Title = existingEvent.Title,
-                StartDate = existingEvent.StartDate,
-                LastUpdateDate = existingEvent.LastUpdateDate,
-                EndDate = existingEvent.EndDate,
-                CreatedDate = existingEvent.CreatedDate,
-                Host = new UserDto
-                {
-                    UserId = existingEvent.Host.UserId,
-                    LastSeenOnline = existingEvent.Host.LastSeenOnline,
-                    DisplayName = existingEvent.Host.DisplayName,
-                    PhotoUrl = existingEvent.Host.PhotoUrl,
-                    CreationDate = existingEvent.Host.CreationDate,
-                },
-                IsPaid = existingEvent.IsPaid,
-                Description = existingEvent.Description,
-                Category = existingEvent.Category.GetDescription(),
-                Keywords = existingEvent.Keywords.Select(kw => kw.GetDescription()),
-                AdultsOnly = existingEvent.AdultsOnly,
-                IsPrivate = existingEvent.IsPrivate,
-                MaxNumberOfAttendees = existingEvent.MaxNumberOfAttendees,
-                Location = existingEvent.Location,
-                GeoLocation = new GeoLocationDto
-                {
-                    Lat = existingEvent.GeoLocation.Lat,
-                    Lng = existingEvent.GeoLocation.Lng
-                },
-                City = existingEvent.City
-            });
+            return Ok(EventMapper.FromEventToDto(existingEvent));
         }
         catch (Exception e) when (e is EventNotFoundException)
         {

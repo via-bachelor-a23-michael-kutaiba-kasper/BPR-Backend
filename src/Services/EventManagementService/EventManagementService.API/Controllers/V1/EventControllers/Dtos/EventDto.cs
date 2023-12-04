@@ -13,6 +13,7 @@ public class EventDto
     public bool IsPaid { get; set; }
     public UserDto Host { get; set; }
     public int MaxNumberOfAttendees { get; set; }
+    public IReadOnlyCollection<UserDto> Attendees { get; set; } = new List<UserDto>();
     public string? Description { get; set; }
     public string Location { get; set; }
     public string City { get; set; }
