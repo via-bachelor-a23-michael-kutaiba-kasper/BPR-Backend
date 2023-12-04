@@ -68,24 +68,33 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
                     `Response body: ${JSON.stringify(resBody, undefined, 4)}\n`
                 );
 
-                return resBody;
+                return {
+                    result: resBody,
+                    status: {
+                        code: res.status,
+                        message:
+                            res.status > 200 || res.status < 200
+                                ? resBody
+                                : res.statusText,
+                    },
+                };
             } catch (err) {
-               return {
-                result: null,
-                status: {
-                    code: res.status,
-                    message: res.statusText
-                }
-               }
+                return {
+                    result: null,
+                    status: {
+                        code: res.status,
+                        message: res.statusText,
+                    },
+                };
             }
         } catch (err) {
             return {
                 result: null,
                 status: {
                     code: 500,
-                    message: "Server is down"
-                }
-               }
+                    message: "Server is down",
+                },
+            };
         }
     };
 }
