@@ -15,8 +15,4 @@
     <ProjectReference Include="..\RecommendationService.Infrastructure\RecommendationService.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="V1\" />
-  </ItemGroup>
-
 </Project>

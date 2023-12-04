@@ -2,11 +2,18 @@ using System.Text.Json;
 using RecommendationService.API.Settings;
 using RecommendationService.Application;
 using RecommendationService.Infrastructure;
+using RecommendationService.Infrastructure.ApiGateway;
+using RecommendationService.Infrastructure.AppSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // AppSettings configurations
 builder.Services.AddAppSettingsConfigurations(builder.Configuration);
+Gateway gatewayConfig = (Gateway) builder.Configuration.GetSection("Gateway");
+
+// Gateway Abstraction
+// NOTE: Not able to access IOptions from infrastructure project, so this will suffice for now.
+builder.Services.AddScoped<IApiGateway>(_ => new ApiGateway(gatewayConfig));
 
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -35,19 +42,10 @@ builder.Services.AddHttpClient("HTTP_CLIENT")
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-// }
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseCors(options =>
-{
-    options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-});
-
-// app.UseHttpsRedirection();
+app.UseCors(options => { options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
 
 app.UseAuthorization();
 

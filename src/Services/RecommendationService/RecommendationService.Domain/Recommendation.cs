@@ -1,11 +1,9 @@
-using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 
 namespace RecommendationService.Domain;
 
 public class Recommendation
 {
-    public User User { get; set; } = default!;
-    public IReadOnlyCollection<Event> EventsProcessed { get; set; } = new List<Event>();
-    public IReadOnlyCollection<Event> Recommendations { get; set; } = new List<Event>();
+    public Event Event { get; set; }
+    public float RelevanceScore { get; set; }
 }
