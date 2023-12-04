@@ -74,7 +74,7 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         await AcceptInvitationIfInvited(request.UserId, request.EventId);
 
         await _eventRepository.AddAttendeeToEventAsync(request.UserId, request.EventId);
-        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[1].TopicId, _pubsubConfig.Value.Topics[1].ProjectId,
+        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].TopicId, _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].ProjectId,
             request);
         _logger.LogInformation($"User {request.UserId} has been added as attendee to event {request.EventId}");
     }

@@ -5,6 +5,7 @@ using EventManagementService.Application.V1.FetchEventById;
 using EventManagementService.Application.V1.FetchKeywords;
 using EventManagementService.Application.V1.JoinEvent;
 using EventManagementService.Application.V1.ProcessExternalEvents;
+using EventManagementService.Application.V1.ReviewEvent;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventManagementService.Application.V1;
@@ -20,6 +21,7 @@ public static class V1ServiceExtension
         services.AddFetchKeywords();
         services.AddCreateEvent();
         services.AddFetchEventById();
+        services.AddReviewEventServices();
         return services;
     }
 }

@@ -33,8 +33,8 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest, Event>
     {
         try
         {
-        //    var userExists = await _firebaseUser.UserExistsAsync(request.Event.Host.UserId);
-            var mappedEvent = MapEvent(request, true);
+            var userExists = await _firebaseUser.UserExistsAsync(request.Event.Host.UserId);
+            var mappedEvent = MapEvent(request, userExists);
 
             EventValidator.ValidateEvents(mappedEvent);
 
