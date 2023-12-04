@@ -134,5 +134,5 @@ type Mutation {
         geoLocation: geoLocationInput!
         category: String!
         keywords: [String!]
-    ): CreateEventResponse
+    ): EventResponse
 }
