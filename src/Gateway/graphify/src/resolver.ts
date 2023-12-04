@@ -70,12 +70,22 @@ function buildResolver(resolvers: any, config: QueryDeclaration) {
 
                 return resBody;
             } catch (err) {
-                console.error(err);
+               return {
+                result: null,
+                status: {
+                    code: res.status,
+                    message: res.statusText
+                }
+               }
             }
-            return {};
         } catch (err) {
-            console.error(err);
-            throw err;
+            return {
+                result: null,
+                status: {
+                    code: 500,
+                    message: "Server is down"
+                }
+               }
         }
     };
 }
