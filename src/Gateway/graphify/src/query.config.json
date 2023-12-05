@@ -254,6 +254,40 @@
                 },
                 "method": "POST"
             }
+        },
+        {
+            "name": "createReview",
+            "args": [
+                {
+                    "name": "rate",
+                    "type": "Float!",
+                    "for": "body"
+                },
+                {
+                    "name": "reviewerId",
+                    "type": "String!",
+                    "for": "body"
+                },
+                {
+                    "name": "eventId",
+                    "type": "Int!",
+                    "for": "body"
+                },
+                {
+                    "name": "reviewDate",
+                    "type": "String!",
+                    "for": "body"
+                }
+            ],
+            "resolver": {
+                "host": "http://localhost:8080",
+                "endpoint": "api/v1/reviews/createReview",
+                "port": 8080,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "method": "POST"
+            }
         }
     ]
 }
