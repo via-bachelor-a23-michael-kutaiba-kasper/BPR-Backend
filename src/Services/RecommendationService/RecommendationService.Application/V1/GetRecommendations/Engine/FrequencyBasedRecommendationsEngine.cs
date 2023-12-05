@@ -67,7 +67,7 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
         var keywords = Enum.GetValues<Keyword>();
         var categoryWeights = new Dictionary<Category, float>();
         var keywordWeights = new Dictionary<Keyword, float>();
-        var indexedEvents = EventUtil.IndexEvents(events);
+        var indexedEvents = IndexingUtil.IndexEvents(events);
 
         foreach (var category in categories)
         {

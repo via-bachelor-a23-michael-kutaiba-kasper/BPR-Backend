@@ -9,6 +9,7 @@ using RecommendationService.Domain.Events;
 
 namespace RecommendationService.Application.V1.GetRecommendations.Engine;
 
+// TODO: Implement this when we have more time in the future.
 public class NaiveBayesRecommendationsEngine : IRecommendationsEngine
 {
     public Recommendations Process(User user, IReadOnlyCollection<Event> completedEvents,
@@ -20,7 +21,7 @@ public class NaiveBayesRecommendationsEngine : IRecommendationsEngine
                 .Where(e => e.Attendees != null)
                 .Where(e => e.Attendees!.Any(u => u.UserId == user.UserId)).ToList();
         
-        var futureEventsIndexed = EventUtil.IndexEvents(futureEvents);
+        var futureEventsIndexed = IndexingUtil.IndexEvents(futureEvents);
 
         var context = new MLContext();
         var trainingData = context.Data.LoadFromEnumerable(ProcessData(relevantCompletedEvents, reviews));

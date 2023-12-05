@@ -8,6 +8,7 @@ namespace RecommendationService.Application.V1.GetRecommendations.Repository;
 public interface IEventsRepository
 {
     public Task<IReadOnlyCollection<Event>> GetEventsWhereUserHasAttendedAsync(string userId);
+    public Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null);
 }
 
 public class EventsRepository : IEventsRepository
@@ -24,6 +25,11 @@ public class EventsRepository : IEventsRepository
     public Task<IReadOnlyCollection<Event>> GetEventsWhereUserHasAttendedAsync(string userId)
     {
         
+        throw new NotImplementedException();
+    }
+
+    public Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null)
+    {
         throw new NotImplementedException();
     }
 }

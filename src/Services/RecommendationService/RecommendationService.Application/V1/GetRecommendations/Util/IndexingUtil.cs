@@ -2,7 +2,7 @@ using EventManagementService.Domain.Models.Events;
 
 namespace RecommendationService.Application.V1.GetRecommendations.Util;
 
-public static class EventUtil
+public static class IndexingUtil
 {
     public static IDictionary<int, Event> IndexEvents(IReadOnlyCollection<Event> events)
     {
