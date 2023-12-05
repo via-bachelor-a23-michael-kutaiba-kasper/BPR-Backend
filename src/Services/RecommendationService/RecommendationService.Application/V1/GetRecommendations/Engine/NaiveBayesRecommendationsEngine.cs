@@ -17,11 +17,21 @@ public class NaiveBayesRecommendationsEngine: IRecommendationsEngine
         throw new NotImplementedException();
     }
 
+    private IReadOnlyCollection<DataPoint> ProcessData()
+    {
+        throw new NotImplementedException();
+    }
+
     private class DataPoint
     {
         public uint Label { get; set; }
         [VectorType(85)]
         public float[] Features { get; set; }
+    }
+
+    private class Prediction
+    {
+        
     }
 }
 
