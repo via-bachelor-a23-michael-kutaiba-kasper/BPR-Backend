@@ -33,3 +33,4 @@ jobs:
               env:
                   DEPLOYMENT_ENVIRONMENT: CI
                   CI: "yes"
+                  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
