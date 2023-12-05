@@ -52,7 +52,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<FetchReviewsByUSerResponseDto>> GetReviewsByUserId
+    public async Task<ActionResult<IReadOnlyCollection<EventReviewDto>>> GetReviewsByUserId
     (
         [FromQuery] string? userId = null
     )
@@ -60,16 +60,7 @@ public class ReviewController : ControllerBase
         try
         {
             var eventReview = await _mediator.Send(new FetchReviewsByUserRequest(userId));
-            var response = new FetchReviewsByUSerResponseDto
-            {
-                Result = ReviewMapper.FromEventReviewToDto(eventReview).ToArray(),
-                status = new StatusCode
-                {
-                    Code = HttpStatusCode.OK,
-                    Message = $"{eventReview.Count()} reviews have been successfully retrieved"
-                }
-            };
-            return Ok(response);
+            return Ok(ReviewMapper.FromEventReviewToDto(eventReview));
         }
         catch (Exception e) when (e is InvalidUserIdException)
         {
