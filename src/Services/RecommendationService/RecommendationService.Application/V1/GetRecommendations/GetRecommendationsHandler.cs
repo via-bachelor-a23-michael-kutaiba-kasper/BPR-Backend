@@ -1,6 +1,8 @@
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RecommendationService.Application.V1.GetRecommendations.Engine;
+using RecommendationService.Application.V1.GetRecommendations.Exceptions;
 using RecommendationService.Application.V1.GetRecommendations.Repository;
 using RecommendationService.Domain;
 
@@ -15,12 +17,14 @@ public class GetRecommendationsHandler : IRequestHandler<GetRecommendationsReque
     private readonly IEventsRepository _eventsRepository;
     private readonly IReviewRepository _reviewRepository;
     private readonly ISurveyRepository _surveyRepository;
+    private readonly IUserRepository _userRepository;
 
     public GetRecommendationsHandler(
         ILogger<GetRecommendationsHandler> logger,
         IEventsRepository eventsRepository,
         IReviewRepository reviewRepository,
         ISurveyRepository surveyRepository,
+        IUserRepository userRepository,
         IRecommendationsEngine? engine = null)
     {
         _logger = logger;
@@ -28,14 +32,25 @@ public class GetRecommendationsHandler : IRequestHandler<GetRecommendationsReque
         _eventsRepository = eventsRepository;
         _reviewRepository = reviewRepository;
         _surveyRepository = surveyRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<Recommendations> Handle(GetRecommendationsRequest request, CancellationToken cancellationToken)
     {
+        var user = await _userRepository.GetById(request.UserId);
+        if (user is null)
+        {
+            throw new UserNotFoundException(request.UserId);
+        }
+            
         var survey = await _surveyRepository.GetAsync(request.UserId);
         var reviews = await _reviewRepository.GetReviewsByUserAsync(request.UserId);
-        var attendedEvents = _eventsRepository.GetEventsWhereUserHasAttendedAsync(request.UserId);
-        var futureEvents = _eventsRepository.GetAllEvents(DateTimeOffset.UtcNow);
-        throw new NotImplementedException();
+        var attendedEvents = await _eventsRepository.GetEventsWhereUserHasAttendedAsync(request.UserId);
+        var futureEvents = await _eventsRepository.GetAllEvents(DateTimeOffset.UtcNow);
+
+        var recommendations = _engine.Process(user, attendedEvents, reviews, survey, futureEvents);
+        recommendations.Result = recommendations.Result.Take(request.Limit).ToList();
+        
+        return recommendations;
     }
 }
