@@ -5,12 +5,12 @@ using RecommendationService.Application.V1.GetRecommendations;
 namespace RecommendationService.API.Controllers.V1.Recommendation;
 
 [ApiController]
-[Route("api/v1/{controller}")]
+[Route("api/v1/recommendations")]
 public class RecommendationsController: ControllerBase
 {
     private readonly ILogger<RecommendationsController> _logger;
     private readonly IMediator _mediator;
-    public RecommendationsController(Logger<RecommendationsController> logger, IMediator mediator)
+    public RecommendationsController(ILogger<RecommendationsController> logger, IMediator mediator)
     {
         _logger = logger;
         _mediator = mediator;

@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // AppSettings configurations
 builder.Services.AddAppSettingsConfigurations(builder.Configuration);
-Gateway gatewayConfig = (Gateway) builder.Configuration.GetSection("Gateway");
+Gateway gatewayConfig = builder.Configuration.GetSection("Gateway").Get<Gateway>();
 
 // Gateway Abstraction
 // NOTE: Not able to access IOptions from infrastructure project, so this will suffice for now.

@@ -1,3 +1,4 @@
+using EventManagementService.Domain.Models.Events;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -5,6 +6,7 @@ using RecommendationService.Application.V1.GetRecommendations.Engine;
 using RecommendationService.Application.V1.GetRecommendations.Exceptions;
 using RecommendationService.Application.V1.GetRecommendations.Repository;
 using RecommendationService.Domain;
+using RecommendationService.Domain.Events;
 
 namespace RecommendationService.Application.V1.GetRecommendations;
 
@@ -43,11 +45,12 @@ public class GetRecommendationsHandler : IRequestHandler<GetRecommendationsReque
             throw new UserNotFoundException(request.UserId);
         }
             
-        var survey = await _surveyRepository.GetAsync(request.UserId);
         var reviews = await _reviewRepository.GetReviewsByUserAsync(request.UserId);
         var attendedEvents = await _eventsRepository.GetEventsWhereUserHasAttendedAsync(request.UserId);
         var futureEvents = await _eventsRepository.GetAllEvents(DateTimeOffset.UtcNow);
+        var survey = await _surveyRepository.GetAsync(request.UserId);
 
+        _logger.LogInformation($"Processing recommendations for user {request.UserId} based on {reviews.Count} reviews, {attendedEvents.Count} completed events and {futureEvents.Count} future events");
         var recommendations = _engine.Process(user, attendedEvents, reviews, survey, futureEvents);
         recommendations.Result = recommendations.Result.Take(request.Limit).ToList();
         
