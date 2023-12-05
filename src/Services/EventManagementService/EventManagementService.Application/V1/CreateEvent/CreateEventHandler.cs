@@ -63,7 +63,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest, Event>
             EndDate = request.Event.EndDate,
             CreatedDate = request.Event.CreatedDate,
             LastUpdateDate = request.Event.CreatedDate,
-            IsPrivate = request.Event.IsPaid,
+            IsPrivate = request.Event.IsPrivate,
             AdultsOnly = request.Event.AdultsOnly,
             IsPaid = request.Event.IsPaid,
             Host = new User
