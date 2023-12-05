@@ -1,8 +1,9 @@
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using RecommendationService.Domain;
+using RecommendationService.Domain.Events;
 
-namespace RecommendationService.Application.V1.GetRecommendations;
+namespace RecommendationService.Application.V1.GetRecommendations.Engine;
 
 // NOTE: Keep this pure for easier testing, no side effects (network calls etc.)
 public interface IRecommendationsEngine
@@ -12,23 +13,9 @@ public interface IRecommendationsEngine
     /// </summary>
     /// <param name="user">User to process recommendations for</param>
     /// <param name="completedEvents">Completed events the user has attended</param>
+    /// <param name="reviews">Reviews that user has created</param>
     /// <param name="futureEvents">Events that are current (not started / in progress) that are valid recommendations</param>
     /// <returns></returns>
-    Recommendations Process(User user, IReadOnlyCollection<Event> completedEvents,
+    Recommendations Process(User user, IReadOnlyCollection<Event> completedEvents, IReadOnlyCollection<Review> reviews,
         IReadOnlyCollection<Event> futureEvents);
-}
-
-public class RecommendationsEngine : IRecommendationsEngine
-{
-    public Recommendations Process(User user, IReadOnlyCollection<Event> completedEvents,
-        IReadOnlyCollection<Event> futureEvents)
-    {
-        IDictionary<Category, int> categoryFrequencyMap = new Dictionary<Category, int>();
-        IDictionary<Keyword, int> keywordFrequencyMap = new Dictionary<Keyword, int>();
-
-        var relevantEvents = completedEvents
-            .Where(e => e.Attendees != null)
-            .Where(e => e.Attendees.Any(u => u.UserId == user.UserId));
-        throw new NotImplementedException();
-    }
 }
