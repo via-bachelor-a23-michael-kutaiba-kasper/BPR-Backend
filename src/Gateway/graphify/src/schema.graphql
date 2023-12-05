@@ -118,6 +118,7 @@ type Query {
     allPublicEvents: EventsResponse
     event(eventId: Int): EventResponse
     reviewsByUser(userId: String) : ReviewsByUserResponse
+    finishedJoinedEvents(userId: String) : EventsResponse
 }
 
 type Mutation {

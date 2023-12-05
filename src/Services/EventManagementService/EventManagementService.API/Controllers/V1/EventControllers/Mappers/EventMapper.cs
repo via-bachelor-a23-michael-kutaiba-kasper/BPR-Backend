@@ -46,7 +46,7 @@ internal static class EventMapper
                 PhotoUrl = eventDto.Host.PhotoUrl,
                 UserId = eventDto.Host.UserId,
             },
-            Attendees = eventDto.Attendees.Select(user => new User 
+            Attendees = eventDto.Attendees.Select(user => new User
             {
                 UserId = user.UserId,
                 DisplayName = user.DisplayName,
@@ -113,5 +113,47 @@ internal static class EventMapper
             Images = eEvent.Images,
             City = eEvent.City
         };
+    }
+
+    internal static IReadOnlyCollection<EventDto> FromEventListToDtoList(IReadOnlyCollection<Event> events)
+    {
+        return events.Select(ev => new EventDto
+            {
+                Id = ev.Id,
+                Title = ev.Title,
+                StartDate = ev.StartDate,
+                LastUpdateDate = ev.LastUpdateDate,
+                EndDate = ev.EndDate,
+                CreatedDate = ev.CreatedDate,
+                Host = new UserDto
+                {
+                    UserId = ev.Host.UserId,
+                    LastSeenOnline = ev.Host.LastSeenOnline,
+                    DisplayName = ev.Host.DisplayName,
+                    PhotoUrl = ev.Host.PhotoUrl,
+                    CreationDate = ev.Host.CreationDate,
+                },
+                IsPaid = ev.IsPaid,
+                Attendees = ev.Attendees.Select(user => new UserDto
+                    {
+                        UserId = user.UserId,
+                        DisplayName = user.DisplayName,
+                        PhotoUrl = user.PhotoUrl,
+                        CreationDate = user.CreationDate,
+                        LastSeenOnline = user.LastSeenOnline
+                    })
+                    .ToList(),
+                Description = ev.Description,
+                Category = ev.Category.GetDescription(),
+                Keywords = ev.Keywords.Select(kw => kw.GetDescription()),
+                AdultsOnly = ev.AdultsOnly,
+                IsPrivate = ev.IsPrivate,
+                MaxNumberOfAttendees = ev.MaxNumberOfAttendees,
+                Location = ev.Location,
+                GeoLocation = new GeoLocationDto { Lat = ev.GeoLocation.Lat, Lng = ev.GeoLocation.Lng },
+                Images = ev.Images,
+                City = ev.City
+            })
+            .ToList();
     }
 }

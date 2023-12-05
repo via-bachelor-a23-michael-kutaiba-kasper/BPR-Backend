@@ -2,6 +2,7 @@ using EventManagementService.Application.V1.CreateEvent;
 using EventManagementService.Application.V1.FetchAllEvents;
 using EventManagementService.Application.V1.FetchCategories;
 using EventManagementService.Application.V1.FetchEventById;
+using EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser;
 using EventManagementService.Application.V1.FetchKeywords;
 using EventManagementService.Application.V1.FetchReviewsByUser;
 using EventManagementService.Application.V1.JoinEvent;
@@ -24,6 +25,7 @@ public static class V1ServiceExtension
         services.AddFetchEventById();
         services.AddReviewEventServices();
         services.AddFetchReviewsByUser();
+        services.AddFinishedParticipatedInEventsByUser();
         return services;
     }
 }
