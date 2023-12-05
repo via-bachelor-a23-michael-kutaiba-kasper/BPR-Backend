@@ -71,6 +71,22 @@
                 "endpoint": "/api/v1/keywords/allKeywords",
                 "method": "GET"
             }
+        },
+        {
+            "name": "reviewsByUser",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String!",
+                    "for": "urlQueryParam"
+                }
+            ],
+            "resolver": {
+                "host": "http://eventmanagementservice-service",
+                "port": 80,
+                "endpoint": "/api/v1/reviews",
+                "method": "GET"
+            }
         }
     ],
     "mutations": [
