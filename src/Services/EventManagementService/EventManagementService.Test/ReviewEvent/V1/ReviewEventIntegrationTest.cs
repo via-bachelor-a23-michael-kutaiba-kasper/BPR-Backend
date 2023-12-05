@@ -246,9 +246,9 @@ public class ReviewEventIntegrationTest
     {
         using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         connection.OpenAsync();
-        var sql = """
-                  SELECT * FROM event_review WHERE review_id = @reviewId
-                  """;
+        const string sql = """
+                           SELECT * FROM event_review WHERE review_id = @reviewId
+                           """;
         return connection.QueryFirstOrDefault<EventReviewTable>(sql, new { reviewId = id });
     }
 }
