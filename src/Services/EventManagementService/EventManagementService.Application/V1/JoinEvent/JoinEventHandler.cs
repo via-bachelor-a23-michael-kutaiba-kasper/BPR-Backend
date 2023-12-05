@@ -50,7 +50,7 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
             throw new EventNotFoundException(request.EventId);
         }
 
-        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() >= existingEvent.MaxNumberOfAttendees && existingEvent.MaxNumberOfAttendees < 0)
+        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() >= existingEvent.MaxNumberOfAttendees && existingEvent.MaxNumberOfAttendees > 0)
         {
             throw new MaximumAttendeesReachedException(existingEvent.Id, existingEvent.MaxNumberOfAttendees);
         }
@@ -81,7 +81,7 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
 
     private async Task AcceptInvitationIfInvited(string userId, int eventId)
     {
-        var invitations = await _invitationRepository.GetInvitationsAsync(eventId);
+        var invitations = await _invitationRepository.GetInvitationsAsync(eventId) ?? new List<Invitation>();
         var pendingInvitationForUser = invitations
             .Where(invitation => invitation.Status == InvitationStatus.Pending)
             .FirstOrDefault(invitation => invitation.UserId == userId);
