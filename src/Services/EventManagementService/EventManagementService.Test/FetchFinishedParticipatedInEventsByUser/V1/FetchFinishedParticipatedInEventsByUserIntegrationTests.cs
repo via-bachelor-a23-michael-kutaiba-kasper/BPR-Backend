@@ -58,6 +58,8 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
             }),
             dataBuilder.NewTestEvent(e => e.Title = "Test2")
         };
+        
+        dataBuilder.InsertEvents(testEvents);
         for (var i = 0; i < dataBuilder.EventSet.Count; i++)
         {
             testEvents[i].Id = dataBuilder.EventSet[i].Id;
