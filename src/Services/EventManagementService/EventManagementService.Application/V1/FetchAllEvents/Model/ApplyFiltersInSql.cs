@@ -6,10 +6,6 @@ public class ApplyFiltersInSql: IApplyFiltersStrategy
     {
         
         List<string> queryStrings = new();
-        if (filters.From == null && filters.To == null && filters.HostId == null)
-        {
-            return "";
-        }
 
         if (filters.From != null)
         {
@@ -30,6 +26,10 @@ public class ApplyFiltersInSql: IApplyFiltersStrategy
         if (!filters.IncludePrivateEvents)
         {
             queryStrings.Add($"is_private=false");
+        }
+        else
+        {
+            queryStrings.Add("(is_private=false or is_private=true)");
         }
 
         return $"WHERE {string.Join(" AND ", queryStrings)}";

@@ -12,6 +12,11 @@
                     "name": "hostId",
                     "for": "urlQueryParam",
                     "type": "String"
+                },
+                {
+                    "name": "includePrivateEvents",
+                    "for": "urlQueryParam",
+                    "type": "Boolean"
                 }
             ],
             "resolver": {
@@ -66,70 +71,9 @@
                 "endpoint": "/api/v1/keywords/allKeywords",
                 "method": "GET"
             }
-        },
-        {
-            "name": "posts",
-            "args": [
-                {
-                    "name": "userId",
-                    "type": "Int",
-                    "for": "urlQueryParam"
-                }
-            ],
-            "resolver": {
-                "host": "https://jsonplaceholder.typicode.com",
-                "endpoint": "/posts",
-                "port": 443,
-                "method": "GET"
-            }
-        },
-        {
-            "name": "post",
-            "args": [
-                {
-                    "name": "id",
-                    "type": "Int!",
-                    "for": "urlPath"
-                }
-            ],
-            "resolver": {
-                "host": "https://jsonplaceholder.typicode.com",
-                "endpoint": "/posts/{id}",
-                "port": 443,
-                "method": "GET"
-            }
         }
     ],
     "mutations": [
-        {
-            "name": "createPost",
-            "args": [
-                {
-                    "name": "userId",
-                    "type": "Int!",
-                    "for": "body"
-                },
-                {
-                    "name": "title",
-                    "type": "String!",
-                    "for": "body"
-                },
-                {
-                    "name": "body",
-                    "type": "String!",
-                    "for": "body"
-                }
-            ],
-            "resolver": {
-                "host": "https://jsonplaceholder.typicode.com",
-                "endpoint": "/posts",
-                "port": 80,
-                "headers": {
-                    "Content-Type": "application/json; charset=UTF-8"
-                },
-                "method": "POST"
-            }
-        },
         {
             "name": "joinEvent",
             "args": [

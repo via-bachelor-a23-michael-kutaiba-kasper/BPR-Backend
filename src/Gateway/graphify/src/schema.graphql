@@ -13,7 +13,7 @@ input geoLocationInput {
 }
 
 type Status {
-    code: Int,
+    code: Int
     message: String
 }
 
@@ -72,13 +72,6 @@ type Review {
     reviewDate: String
 }
 
-type Post {
-    userId: Int
-    id: Int
-    title: String
-    body: String
-}
-
 type EventResponse {
     result: Event
     status: Status
@@ -93,7 +86,6 @@ type KeywordsResponse {
     result: [String]
     status: Status
 }
-
 
 type CategoriesResponse {
     result: [String]
@@ -111,16 +103,18 @@ type Query {
     from: UTC DateTime string. Fitlers events by endDate >= from
     hostId: UUID string. Filters events by host.
     """
-    events(from: String, hostId: String): EventResponse
+    events(
+        from: String
+        hostId: String
+        includePrivateEvents: Boolean
+    ): EventsResponse
     categories: CategoriesResponse
     keywords: KeywordsResponse
     allPublicEvents: EventsResponse
-    event(eventId: Int): Event
+    event(eventId: Int): EventResponse
 }
 
 type Mutation {
-    createPost(userId: Int!, title: String!, body: String!): Post
-
     """
     Adds user as attendee to event. Does not return anything.
     """
