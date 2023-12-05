@@ -64,6 +64,14 @@ type Event {
     location: String
 }
 
+type Review {
+    id: Int,
+    rate: Float,
+    reviewerId: String,
+    eventId: Int,
+    reviewDate: String
+}
+
 type EventResponse {
     result: Event
     status: Status
@@ -81,6 +89,11 @@ type KeywordsResponse {
 
 type CategoriesResponse {
     result: [String]
+    status: Status
+}
+
+type ReviewResponse {
+    result: Review,
     status: Status
 }
 
@@ -129,4 +142,11 @@ type Mutation {
         category: String!
         keywords: [String!]
     ): EventResponse
+
+    createReview(
+        rate: Float!,
+        reviewerId: String!,
+        eventId: Int!,
+        reviewDate: String!
+    ): ReviewResponse
 }

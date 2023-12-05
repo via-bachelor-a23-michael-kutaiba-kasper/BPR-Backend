@@ -11,7 +11,7 @@ using Moq;
 namespace EventManagementService.Test.CreateEvent.V1;
 
 [TestFixture]
-public class CreateEventTests
+public class CreateEventIntegrationTests
 {
     private readonly TestDataContext _context = new();
     private readonly ConnectionStringManager _connectionStringManager = new();
