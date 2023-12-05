@@ -90,7 +90,11 @@ type Query {
     from: UTC DateTime string. Fitlers events by endDate >= from
     hostId: UUID string. Filters events by host.
     """
-    events(from: String, hostId: String): EventsResponse
+    events(
+        from: String
+        hostId: String
+        includePrivateEvents: Boolean
+    ): EventsResponse
     categories: CategoriesResponse
     keywords: KeywordsResponse
     allPublicEvents: EventsResponse

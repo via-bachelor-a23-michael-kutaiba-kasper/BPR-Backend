@@ -12,6 +12,11 @@
                     "name": "hostId",
                     "for": "urlQueryParam",
                     "type": "String"
+                },
+                {
+                    "name": "includePrivateEvents",
+                    "for": "urlQueryParam",
+                    "type": "Boolean"
                 }
             ],
             "resolver": {
