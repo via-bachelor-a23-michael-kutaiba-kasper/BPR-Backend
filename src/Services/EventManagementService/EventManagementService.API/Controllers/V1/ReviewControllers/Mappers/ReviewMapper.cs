@@ -1,4 +1,5 @@
 using EventManagementService.API.Controllers.V1.ReviewControllers.Dtos;
+using EventManagementService.Application.V1.FetchReviewsByUser.Model;
 using EventManagementService.Domain.Models.Events;
 
 namespace EventManagementService.API.Controllers.V1.ReviewControllers.Mappers;
@@ -26,5 +27,21 @@ internal static class ReviewMapper
             Rate = review.Rate,
             Id = review.Id
         };
+    }
+
+    internal static IReadOnlyCollection<EventReviewDto> FromEventReviewToDto
+    (
+        IReadOnlyCollection<EventReview> eventReviews
+    )
+    {
+        return eventReviews.Select(er => new EventReviewDto
+            {
+                UserId = er.UserId,
+                Rate = er.Rate,
+                EventId = er.EventId,
+                ReviewDate = er.ReviewDate,
+                ReviewId = er.ReviewId
+            })
+            .ToList();
     }
 }
