@@ -42,6 +42,7 @@ module "api_gateway" {
     "QUERY_CREATEEVENT_HOST"     = module.eventmanagement_service.service_url
     "QUERY_CATEGORIES_HOST"      = module.eventmanagement_service.service_url
     "QUERY_KEYWORDS_HOST"        = module.eventmanagement_service.service_url
+    "QUERY_CREATEREVIEW_HOST"    = module.eventmanagement_service.service_url
   }
   cloud_sql_instance = google_sql_database_instance.main.connection_name
 }
