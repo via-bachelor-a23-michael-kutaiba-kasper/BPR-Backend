@@ -133,7 +133,7 @@
                 },
 
                 {
-                    "name": "adultOnly",
+                    "name": "adultsOnly",
                     "type": "Boolean!",
                     "for": "body"
                 },
