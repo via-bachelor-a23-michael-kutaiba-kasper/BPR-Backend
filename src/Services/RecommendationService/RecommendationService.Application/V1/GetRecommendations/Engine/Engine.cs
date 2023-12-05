@@ -16,6 +16,6 @@ public interface IRecommendationsEngine
     /// <param name="reviews">Reviews that user has created</param>
     /// <param name="futureEvents">Events that are current (not started / in progress) that are valid recommendations</param>
     /// <returns></returns>
-    Recommendations Process(User user, IReadOnlyCollection<Event> completedEvents, IReadOnlyCollection<Review> reviews,
+    Recommendations Process(User user, IReadOnlyCollection<Event> completedEvents, IReadOnlyCollection<Review> reviews, InterestSurvey survey,
         IReadOnlyCollection<Event> futureEvents);
 }
