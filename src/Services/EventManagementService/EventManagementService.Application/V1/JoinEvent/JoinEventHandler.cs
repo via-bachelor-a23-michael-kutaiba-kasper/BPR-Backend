@@ -50,7 +50,7 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
             throw new EventNotFoundException(request.EventId);
         }
 
-        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() == existingEvent.MaxNumberOfAttendees)
+        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() >= existingEvent.MaxNumberOfAttendees && existingEvent.MaxNumberOfAttendees < 0)
         {
             throw new MaximumAttendeesReachedException(existingEvent.Id, existingEvent.MaxNumberOfAttendees);
         }

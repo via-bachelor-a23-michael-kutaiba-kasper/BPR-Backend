@@ -106,9 +106,7 @@ public class SqlReviewEvent : ISqlReviewEvent
     private const string CreateEventReviewSql =
         """
         INSERT INTO event_review(event_id, review_id)
-        VALUES (@eventId, @reviewId)
-        ON CONFLICT (event_id, review_id)
-            DO NOTHING ;
+        VALUES (@eventId, @reviewId);
         """;
 
     private const string CheckUserReviewSql =
