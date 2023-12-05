@@ -22,7 +22,7 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
             .Where(review => review.ReviewerId == user.UserId)
             .ToList();
 
-        var weights = CalculateWeights(relevantEvents, GetFrequencyMaps(relevantEvents), relevantReviews);
+        var weights = CalculateWeights(relevantEvents, GetFrequencyMaps(relevantEvents, survey), relevantReviews);
 
         // tuple where (score, event)
         var scoredEvents = futureEvents.Select(e => (ScoreEvent(e, weights), e));
@@ -76,7 +76,7 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
                 continue;
             }
 
-            categoryWeights.Add(category, 1f);
+            categoryWeights.Add(category, BaselineWeight);
         }
 
         foreach (var keyword in keywords)
@@ -86,7 +86,7 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
                 continue;
             }
 
-            keywordWeights.Add(keyword, 1f);
+            keywordWeights.Add(keyword, BaselineWeight);
         }
 
         var orderedCategoryFrequencyAscending = frequencyMaps.CategoryFrequencyMap
@@ -152,10 +152,35 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
         return new WeightMaps(categoryWeights, keywordWeights);
     }
 
-    private FrequencyMaps GetFrequencyMaps(IReadOnlyCollection<Event> events)
+    private FrequencyMaps GetFrequencyMaps(IReadOnlyCollection<Event> events, InterestSurvey survey)
     {
         IDictionary<Category, int> categoryFrequencyMap = new Dictionary<Category, int>();
         IDictionary<Keyword, int> keywordFrequencyMap = new Dictionary<Keyword, int>();
+        
+        foreach (var keyword in survey.Keywords)
+        {
+                if (!keywordFrequencyMap.ContainsKey(keyword))
+                {
+                    keywordFrequencyMap.Add(keyword, 1);
+                }
+                else
+                {
+                    keywordFrequencyMap[keyword] += 1;
+                }
+        }
+        
+        foreach (var category in survey.Categories)
+        {
+            if (!categoryFrequencyMap.ContainsKey(category))
+            {
+                categoryFrequencyMap.Add(category, 1);
+            }
+            else
+            {
+                categoryFrequencyMap[category] += 1;
+            }
+        }
+        
         foreach (var @event in events)
         {
             Category category = @event.Category;
