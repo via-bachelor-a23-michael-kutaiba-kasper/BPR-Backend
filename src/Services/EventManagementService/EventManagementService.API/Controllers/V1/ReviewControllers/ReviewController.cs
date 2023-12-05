@@ -30,7 +30,7 @@ public class ReviewController : ControllerBase
             var review = await _mediator.Send(new ReviewEventRequest(ReviewMapper.ProcessIncomingReview(reviewDto)));
             var response = new CreateReviewResponseDto
             {
-                Review = ReviewMapper.FromReviewToDto(review),
+                Result = ReviewMapper.FromReviewToDto(review),
                 status = new StatusCode
                 {
                     Code = HttpStatusCode.OK,

@@ -4,7 +4,7 @@ namespace EventManagementService.API.Controllers.V1.ReviewControllers.Dtos;
 
 public class CreateReviewResponseDto
 {
-    public ReviewDto Review { get; set; }
+    public ReviewDto Result { get; set; }
     public StatusCode status { get; set; }
 }
 
