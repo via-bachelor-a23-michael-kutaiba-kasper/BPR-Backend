@@ -31,7 +31,7 @@ public class ReviewController : ControllerBase
             var response = new CreateReviewResponseDto
             {
                 Review = ReviewMapper.FromReviewToDto(review),
-                Code = new StatusCode
+                status = new StatusCode
                 {
                     Code = HttpStatusCode.OK,
                     Message = "Review have been successfully created"
