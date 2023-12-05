@@ -1,6 +1,8 @@
 using System.Net;
 using EventManagementService.API.Controllers.V1.ReviewControllers.Dtos;
 using EventManagementService.API.Controllers.V1.ReviewControllers.Mappers;
+using EventManagementService.Application.V1.FetchReviewsByUser;
+using EventManagementService.Application.V1.FetchReviewsByUser.Exceptions;
 using EventManagementService.Application.V1.ReviewEvent;
 using EventManagementService.Application.V1.ReviewEvent.Exceptions;
 using MediatR;
@@ -20,9 +22,8 @@ public class ReviewController : ControllerBase
         _mediator = mediator;
         _logger = logger;
     }
-    
-    [HttpPost("createReview")]
 
+    [HttpPost("createReview")]
     public async Task<ActionResult<CreateReviewResponseDto>> CreateNewReview([FromBody] ReviewDto reviewDto)
     {
         try
@@ -40,7 +41,28 @@ public class ReviewController : ControllerBase
 
             return Ok(response);
         }
-        catch (Exception e) when(e is ReviewAlreadyExistException)
+        catch (Exception e) when (e is ReviewAlreadyExistException)
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest);
+        }
+        catch (Exception e)
+        {
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyCollection<EventReviewDto>>> GetReviewsByUserId
+    (
+        [FromQuery] string? userId = null
+    )
+    {
+        try
+        {
+            var eventReview = await _mediator.Send(new FetchReviewsByUserRequest(userId));
+            return Ok(ReviewMapper.FromEventReviewToDto(eventReview));
+        }
+        catch (Exception e) when (e is InvalidUserIdException)
         {
             return StatusCode((int)HttpStatusCode.BadRequest);
         }

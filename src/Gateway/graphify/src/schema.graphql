@@ -97,6 +97,11 @@ type ReviewResponse {
     status: Status
 }
 
+type ReviewsByUserResponse {
+    result: [Review],
+    status: Status
+}
+
 type Query {
     """
     All arguments are optional filters to apply.
@@ -112,6 +117,7 @@ type Query {
     keywords: KeywordsResponse
     allPublicEvents: EventsResponse
     event(eventId: Int): EventResponse
+    reviewsByUser(userId: String) : ReviewsByUserResponse
 }
 
 type Mutation {
