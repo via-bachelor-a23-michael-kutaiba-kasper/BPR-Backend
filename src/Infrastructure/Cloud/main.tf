@@ -35,15 +35,16 @@ module "api_gateway" {
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
   max_instances                = 1
   container_envs = {
-    "QUERY_EVENTS_HOST"          = module.eventmanagement_service.service_url
-    "QUERY_EVENT_HOST"           = module.eventmanagement_service.service_url
-    "QUERY_ALLPUBLICEVENTS_HOST" = module.eventmanagement_service.service_url
-    "QUERY_JOINEVENT_HOST"       = module.eventmanagement_service.service_url
-    "QUERY_CREATEEVENT_HOST"     = module.eventmanagement_service.service_url
-    "QUERY_CATEGORIES_HOST"      = module.eventmanagement_service.service_url
-    "QUERY_KEYWORDS_HOST"        = module.eventmanagement_service.service_url
-    "QUERY_CREATEREVIEW_HOST"    = module.eventmanagement_service.service_url
-    "QUERY_REVIEWSBYUSER_HOST"    = module.eventmanagement_service.service_url
+    "QUERY_EVENTS_HOST"                 = module.eventmanagement_service.service_url
+    "QUERY_EVENT_HOST"                  = module.eventmanagement_service.service_url
+    "QUERY_ALLPUBLICEVENTS_HOST"        = module.eventmanagement_service.service_url
+    "QUERY_JOINEVENT_HOST"              = module.eventmanagement_service.service_url
+    "QUERY_CREATEEVENT_HOST"            = module.eventmanagement_service.service_url
+    "QUERY_CATEGORIES_HOST"             = module.eventmanagement_service.service_url
+    "QUERY_KEYWORDS_HOST"               = module.eventmanagement_service.service_url
+    "QUERY_CREATEREVIEW_HOST"           = module.eventmanagement_service.service_url
+    "QUERY_REVIEWSBYUSER_HOST"          = module.eventmanagement_service.service_url
+    "QUERY_FINISHEDJOINEDEVENTS_HOST"   = module.eventmanagement_service.service_url
   }
   cloud_sql_instance = google_sql_database_instance.main.connection_name
 }
