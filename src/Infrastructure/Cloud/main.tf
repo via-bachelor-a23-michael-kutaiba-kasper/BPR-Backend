@@ -21,6 +21,11 @@ variable "GOOGLE_API_KEY" {
   sensitive   = true
   description = "Google Maps Platform API Key"
 }
+variable "POSTGRES_PASSWORD" {
+  type        = string
+  sensitive   = true
+  description = "Password to postgres user"
+}
 
 module "api_gateway" {
   source                       = "./modules/container-service"
@@ -53,6 +58,7 @@ module "eventmanagement_service" {
   container_envs = {
     "GOOGLE_API_KEY"                    = var.GOOGLE_API_KEY
     "SERVICE_ACCOUNT_KEY_FIREBASE_JSON" = var.GCP_SERVICE_ACCOUNT_KEY_FIREBASE_JSON
+    "POSTGRES_PASSWORD"                 = var.POSTGRES_PASSWORD
     "DEPLOYMENT_ENVIRONMENT"            = "PRODUCTION"
   }
 }
