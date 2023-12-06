@@ -37,7 +37,7 @@ public class SqlEvent : ISqlEvent
             var query = await connection.QueryAsync<Event>
             (
                 GetFinishedParticipatedEventsByUserIdSql,
-                new { userId }
+                new { urId = userId, now = DateTimeOffset.UtcNow.ToUniversalTime() }
             );
 
             _logger.LogInformation($"{query.Count()} events have been successfully retrieved");
@@ -54,6 +54,6 @@ public class SqlEvent : ISqlEvent
         """
         SELECT * FROM event e
             JOIN public.event_attendee ea on e.id = ea.event_id
-                 WHERE ea.user_id = @userId AND e.end_date < CURRENT_TIMESTAMP
+                 WHERE ea.user_id = @urId AND e.end_date < @now
         """;
 }
