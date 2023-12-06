@@ -40,7 +40,7 @@ public class ApiGatewayComponentTests
         });
         
         IApiGateway apiGateway =
-            new Infrastructure.ApiGateway.ApiGateway(new Gateway() { Url = "http://gateway.test" }, httpClientFactory.Object.CreateClient("HTTP_CLIENT"));
+            new Infrastructure.ApiGateway.ApiGateway(new Gateway { Url = "http://gateway.test" }, httpClientFactory.Object.CreateClient("HTTP_CLIENT"));
         
         // Act 
         var response = await apiGateway.QueryAsync<IEnumerable<ReadEventDto>>(new ApiGatewayQuery
@@ -51,7 +51,7 @@ public class ApiGatewayComponentTests
         
         // Assert
         Assert.That(response.Status.Code, Is.EqualTo(200)); 
-        Assert.That(response.Result.Count(), Is.GreaterThan(0)); 
+        Assert.That(response.Result.Count(), Is.GreaterThan(1)); 
     }
     private string EventsQuery() => """
       query Events($from: String) {

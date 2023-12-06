@@ -334,6 +334,82 @@ public class GetRecommendationTests
             Has.Some.Matches(new Predicate<Keyword>(kw => kw == Keyword.Beer)));
     }
     
+    
+    [Test]
+    public async Task
+        GetRecommendations_UserHasAttendedSingleEvent_ReturnsRecommendationsRankedInCorrectOrder()
+    {
+        // Arrange
+        var dataBuilder = new DataBuilder(_connectionStringManager);
+        var loggerMock = new Mock<ILogger<GetRecommendationsHandler>>();
+        var eventsRepositoryMock = new Mock<IEventsRepository>();
+        var reviewRepositoryMock = new Mock<IReviewRepository>();
+        var surveyRepositoryMock = new Mock<ISurveyRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+        var recommendationsEngine = new FrequencyBasedRecommendationsEngine();
+
+        var userIdToRecommendEventsFor = "Oq8tmHrYV6SeEpWf1olCJNJ1JW99";
+        var attendedEvent = dataBuilder.BuildTestEventObject(e =>
+        {
+            e.Attendees = new List<User> { new User{UserId = userIdToRecommendEventsFor}};
+            e.Category = Category.FoodAndDrink;
+            e.Keywords = new List<Keyword> { Keyword.Beer, Keyword.BBQ, Keyword.Cocktail };
+        });
+        var futureEvents = new List<Event>
+        {
+            dataBuilder.BuildTestEventObject(e =>
+            {
+                e.Id = 1;
+                e.Title = "Food and drinks 1";
+                e.Category = Category.FoodAndDrink;
+                e.Keywords = new List<Keyword> { Keyword.Beer, Keyword.BBQ, Keyword.Blues };
+            }),
+            dataBuilder.BuildTestEventObject(e =>
+            {
+                e.Id = 2;
+                e.Title = "music event";
+                e.Category = Category.Music;
+                e.Keywords = new List<Keyword> { Keyword.Poetry, Keyword.Coding, Keyword.Blues };
+            }),
+            dataBuilder.BuildTestEventObject(e =>
+            {
+                e.Id = 3;
+                e.Title = "food and drink event 2";
+                e.Category = Category.FoodAndDrink;
+                e.Keywords = new List<Keyword>
+                {
+                    Keyword.Beer, Keyword.BBQ, Keyword.Cocktail
+                };
+            })
+        };
+
+        userRepositoryMock.Setup(x => x.GetById(userIdToRecommendEventsFor))
+            .ReturnsAsync(new User() { UserId = userIdToRecommendEventsFor });
+        eventsRepositoryMock.Setup(x => x.GetAllEvents(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
+        eventsRepositoryMock.Setup(x => x.GetEventsWhereUserHasAttendedAsync(userIdToRecommendEventsFor))
+            .ReturnsAsync(new List<Event> { attendedEvent });
+        reviewRepositoryMock.Setup(x => x.GetReviewsByUserAsync(userIdToRecommendEventsFor))
+            .ReturnsAsync(new List<Review> { });
+        surveyRepositoryMock.Setup(x => x.GetAsync(userIdToRecommendEventsFor)).ReturnsAsync(new InterestSurvey()
+        {
+            User = new User { UserId = userIdToRecommendEventsFor }, Keywords = new List<Keyword>(),
+            Categories = new List<Category>()
+        });
+
+
+        var request = new GetRecommendationsRequest(userIdToRecommendEventsFor, 3);
+        var handler = new GetRecommendationsHandler(loggerMock.Object, eventsRepositoryMock.Object,
+            reviewRepositoryMock.Object, surveyRepositoryMock.Object, userRepositoryMock.Object, recommendationsEngine);
+
+        // Act
+        var recommendations = await handler.Handle(request, new CancellationToken());
+
+        // Assert
+        Assert.That(recommendations.Result.ToList()[0].Event.Id, Is.EqualTo(3));
+        Assert.That(recommendations.Result.ToList()[1].Event.Id, Is.EqualTo(1));
+        Assert.That(recommendations.Result.ToList()[2].Event.Id, Is.EqualTo(2));
+    }
+    
     [Test]
     public async Task
         GetRecommendations_UserAttendsAllFutureEvents_ReturnsNoRecommendations()

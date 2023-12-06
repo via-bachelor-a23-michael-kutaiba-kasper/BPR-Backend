@@ -812,7 +812,11 @@
           "city": "Danmark",
           "location": "Hospitalsparken, 7400 Herning, Danmark"
         }
-      ]
+      ],
+      "status": {
+        "code": 200,
+        "message": "OK"
+      }
     }
   }
 }
