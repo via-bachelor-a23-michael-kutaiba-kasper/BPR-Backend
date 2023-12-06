@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using RecommendationService.Application.V1.GetRecommendations.Exceptions;
 using RecommendationService.Domain.Events;
 using RecommendationService.Infrastructure.ApiGateway;
 
@@ -22,13 +23,23 @@ public class ReviewRepository : IReviewRepository
 
     public async Task<IReadOnlyCollection<Review>> GetReviewsByUserAsync(string userId)
     {
-        var response = await _apiGateway.QueryAsync<List<Review>>(new ApiGatewayQuery
+        try
         {
-            Query = EventsByUserQuery,
-            Variables = new {userId}
-        }, "reviewsByUser");
+            var response = await _apiGateway.QueryAsync<List<Review>>(new ApiGatewayQuery
+            {
+                Query = EventsByUserQuery,
+                Variables = new { userId }
+            }, "reviewsByUser");
 
-        return response.Result;
+            return response.Result;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Failed to fetch reviews from API Gateway");
+            _logger.LogError(e.Message);
+            _logger.LogError(e.StackTrace);
+            throw new FailedToFetchException("Reviews", "API Gateway", null, e);
+        }
     }
 
     private string EventsByUserQuery => """
