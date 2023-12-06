@@ -1,4 +1,5 @@
 using System.Text;
+using Google.Apis.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,11 +19,10 @@ public class ApiGateway : IApiGateway
     private readonly HttpClient _client;
     private readonly Gateway _gatewayConfig;
 
-    public ApiGateway(Gateway gatewayConfig)
+    public ApiGateway(Gateway gatewayConfig, HttpClient? client = null)
     {
-        HttpClient client = new();
-        client.DefaultRequestHeaders.Add("Accept", "application/json");
-        _client = client;
+        _client = client ?? new HttpClient();
+        _client.DefaultRequestHeaders.Add("Accept", "application/json");
 
         _gatewayConfig = gatewayConfig;
     }
