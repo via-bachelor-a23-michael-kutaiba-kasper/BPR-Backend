@@ -45,6 +45,7 @@ module "api_gateway" {
     "QUERY_CREATEREVIEW_HOST"         = module.eventmanagement_service.service_url
     "QUERY_REVIEWSBYUSER_HOST"        = module.eventmanagement_service.service_url
     "QUERY_FINISHEDJOINEDEVENTS_HOST" = module.eventmanagement_service.service_url
+    "QUERY_RECOMMENDATIONS_HOST"      = module.recommendation_service.service_url
   }
   cloud_sql_instance = google_sql_database_instance.main.connection_name
 }
@@ -53,6 +54,23 @@ module "eventmanagement_service" {
   source                       = "./modules/container-service"
   service_name                 = "event-management"
   image                        = "docker.io/${var.DOCKER_USERNAME}/vibeverse-eventmanagementservice"
+  port                         = 80
+  gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
+  max_instances                = 1
+  cloud_sql_instance           = google_sql_database_instance.main.connection_name
+
+  container_envs = {
+    "GOOGLE_API_KEY"                    = var.GOOGLE_API_KEY
+    "SERVICE_ACCOUNT_KEY_FIREBASE_JSON" = var.GCP_SERVICE_ACCOUNT_KEY_FIREBASE_JSON
+    "POSTGRES_PASSWORD"                 = var.POSTGRES_PASSWORD
+    "DEPLOYMENT_ENVIRONMENT"            = "PRODUCTION"
+  }
+}
+
+module "recommendation_service" {
+  source                       = "./modules/container-service"
+  service_name                 = "recommendation"
+  image                        = "docker.io/${var.DOCKER_USERNAME}/vibeverse-recommendationservice"
   port                         = 80
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
   max_instances                = 1
