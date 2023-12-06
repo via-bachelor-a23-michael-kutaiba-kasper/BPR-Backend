@@ -50,7 +50,7 @@ public class GetRecommendationsHandler : IRequestHandler<GetRecommendationsReque
         var futureEvents = await _eventsRepository.GetAllEvents(DateTimeOffset.UtcNow);
         var survey = await _surveyRepository.GetAsync(request.UserId);
 
-        _logger.LogInformation($"Processing recommendations for user {request.UserId} based on {reviews.Count} reviews, {attendedEvents.Count} completed events and {futureEvents.Count} future events");
+        // _logger.LogInformation($"Processing recommendations for user {request.UserId} based on {reviews.Count} reviews, {attendedEvents.Count} completed events and {futureEvents.Count} future events");
         var recommendations = _engine.Process(user, attendedEvents, reviews, survey, futureEvents);
         recommendations.Result = recommendations.Result.Take(request.Limit).ToList();
         

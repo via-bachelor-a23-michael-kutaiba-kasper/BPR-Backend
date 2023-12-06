@@ -1,4 +1,5 @@
 using System.Text.Json;
+using FirebaseAdmin.Auth;
 using RecommendationService.API.Settings;
 using RecommendationService.Application;
 using RecommendationService.Infrastructure;
@@ -52,3 +53,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

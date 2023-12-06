@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace RecommendationService.Infrastructure.ApiGateway;
 
 public class ResponseStatus
@@ -8,6 +10,8 @@ public class ResponseStatus
 
 public class GatewayResponse<T>
 {
-    public Type Status { get; set; } = default!;
+    [JsonProperty("status")]
+    public ResponseStatus Status { get; set; } = default!;
+    [JsonProperty("result")]
     public T Result { get; set; } 
 }

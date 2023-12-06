@@ -36,7 +36,7 @@ public class ApiGateway : IApiGateway
         string responseBodyJsonString = await responseFromGateway.Content.ReadAsStringAsync();
 
         dynamic jsonElement = Deserialize<JObject>(responseBodyJsonString);
-        var data = jsonElement.data.ToString();
+        var data = jsonElement.data[queryName].ToString();
 
         return Deserialize<GatewayResponse<T>>(data);
     }

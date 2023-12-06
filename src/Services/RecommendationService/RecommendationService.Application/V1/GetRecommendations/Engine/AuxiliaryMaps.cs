@@ -1,4 +1,5 @@
 using EventManagementService.Domain.Models.Events;
+using RecommendationService.Domain.Events;
 
 namespace RecommendationService.Application.V1.GetRecommendations.Engine;
 

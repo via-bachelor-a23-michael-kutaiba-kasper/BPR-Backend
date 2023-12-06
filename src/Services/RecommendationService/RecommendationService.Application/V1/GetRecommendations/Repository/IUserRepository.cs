@@ -1,6 +1,7 @@
 using EventManagementService.Domain.Models;
 using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Logging;
+using RecommendationService.Application.V1.GetRecommendations.Exceptions;
 using RecommendationService.Infrastructure;
 
 namespace RecommendationService.Application.V1.GetRecommendations.Repository;
@@ -41,8 +42,16 @@ public class UserRepository : IUserRepository
         }
         catch (FirebaseAuthException e)
         {
-            _logger.LogInformation(e.Message);
+            _logger.LogWarning("Failed to fetch user from firebase, user does potentially not exist.");
+            _logger.LogWarning(e.Message);
             return null;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Failed to fetch user from firebase");
+            _logger.LogError(e.Message);
+            _logger.LogError(e.StackTrace);
+            throw new FailedToFetchException($"{nameof(User)}", "Firebase", userId, e);
         }
     }
 }

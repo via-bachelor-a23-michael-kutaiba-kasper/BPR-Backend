@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RecommendationService.API.Controllers.V1.Recommendation.Mappers;
 using RecommendationService.Application.V1.GetRecommendations;
 
 namespace RecommendationService.API.Controllers.V1.Recommendation;
@@ -20,6 +21,6 @@ public class RecommendationsController: ControllerBase
     public async Task<ActionResult<object>> GetRecommendations([FromQuery] string userId, [FromQuery] int limit)
     {
         var recommendations = await _mediator.Send(new GetRecommendationsRequest(userId, limit));
-        throw new NotImplementedException();
+        return Ok(RecommendationsMapper.FromDomainToRecommendationsDto(recommendations));
     }
 }

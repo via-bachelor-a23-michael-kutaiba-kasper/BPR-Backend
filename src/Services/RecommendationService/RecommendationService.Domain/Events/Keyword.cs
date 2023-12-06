@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace EventManagementService.Domain.Models.Events;
+namespace RecommendationService.Domain.Events;
 
 public enum Keyword
 {
