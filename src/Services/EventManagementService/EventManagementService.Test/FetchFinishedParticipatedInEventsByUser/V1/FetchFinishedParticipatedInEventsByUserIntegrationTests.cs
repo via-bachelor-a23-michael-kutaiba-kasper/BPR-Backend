@@ -41,6 +41,8 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
         const string userId = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
         var dataBuilder = new DataBuilder(_connectionStringManager);
         var sqlLogger = new Mock<ILogger<SqlEvent>>();
+        var firebaseLogger = new Mock<ILogger<FirebaseUser>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
         var handlerLogger = new Mock<ILogger<FetchFinishedParticipatedInEventsByUserHandler>>();
         var testEvents = new List<Event>
         {
@@ -55,6 +57,7 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
                         CreationDate = DateTimeOffset.UtcNow.ToUniversalTime()
                     }
                 };
+                e.EndDate = new DateTimeOffset(2022, 1, 1, 12, 0, 0, TimeSpan.Zero);
             }),
             dataBuilder.NewTestEvent(e => e.Title = "Test2")
         };
@@ -64,12 +67,15 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
         {
             testEvents[i].Id = dataBuilder.EventSet[i].Id;
         }
+        firebaseMock.Setup(x => x.GetUsers(It.IsAny<IReadOnlyCollection<string>>()))
+            .ReturnsAsync(new List<User>() {testEvents[0].Host});
 
         var request = new FetchFinishedParticipatedInEventsByUserRequest(userId);
         var handler = new FetchFinishedParticipatedInEventsByUserHandler
         (
             new SqlEvent(sqlLogger.Object, _connectionStringManager),
-            handlerLogger.Object
+            handlerLogger.Object,
+            firebaseMock.Object
         );
 
         // Act
@@ -87,7 +93,9 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
         const string userId = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
         var dataBuilder = new DataBuilder(_connectionStringManager);
         var sqlLogger = new Mock<ILogger<SqlEvent>>();
+        var firebaseLogger = new Mock<ILogger<FirebaseUser>>();
         var handlerLogger = new Mock<ILogger<FetchFinishedParticipatedInEventsByUserHandler>>();
+        var firebaseMock = new Mock<IFirebaseUser>();
         var testEvents = new List<Event>
         {
             dataBuilder.NewTestEvent(e =>
@@ -95,12 +103,12 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
                 e.Title = "Test1"; 
                 e.Attendees = new[]
                 {
-                    new User()
+                    new User
                     {
                         UserId = userId,
                         CreationDate = DateTimeOffset.UtcNow.ToUniversalTime()
                     },
-                    new User()
+                    new User
                     {
                         UserId = "test",
                         CreationDate = DateTimeOffset.UtcNow.ToUniversalTime()
@@ -112,12 +120,12 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
                 e.Title = "Test2"; 
                 e.Attendees = new[]
                 {
-                    new User()
+                    new User
                     {
                         UserId = userId,
                         CreationDate = DateTimeOffset.UtcNow.ToUniversalTime()
                     },
-                    new User()
+                    new User
                     {
                         UserId = "test",
                         CreationDate = DateTimeOffset.UtcNow.ToUniversalTime()
@@ -132,13 +140,15 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
         {
             testEvents[i].Id = dataBuilder.EventSet[i].Id;
         }
-        
+        firebaseMock.Setup(x => x.GetUsers(It.IsAny<IReadOnlyCollection<string>>()))
+            .ReturnsAsync(new List<User>() {testEvents[0].Host});
 
         var request = new FetchFinishedParticipatedInEventsByUserRequest(userId);
         var handler = new FetchFinishedParticipatedInEventsByUserHandler
         (
             new SqlEvent(sqlLogger.Object, _connectionStringManager),
-            handlerLogger.Object
+            handlerLogger.Object,
+            firebaseMock.Object
         );
 
         // Act
@@ -163,6 +173,7 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
     {
         // Arrange
         //const string userId = "Oq8tmUrDV6SeEpWf1olCJNJ1JW93";
+        var firebaseLogger = new Mock<ILogger<FirebaseUser>>();
         var dataBuilder = new DataBuilder(_connectionStringManager);
         var sqlLogger = new Mock<ILogger<SqlEvent>>();
         var handlerLogger = new Mock<ILogger<FetchFinishedParticipatedInEventsByUserHandler>>();
@@ -216,7 +227,8 @@ public class FetchFinishedParticipatedInEventsByUserIntegrationTests
         var handler = new FetchFinishedParticipatedInEventsByUserHandler
         (
             new SqlEvent(sqlLogger.Object, _connectionStringManager),
-            handlerLogger.Object
+            handlerLogger.Object,
+            new FirebaseUser(firebaseLogger.Object)
         );
 
         // Act
