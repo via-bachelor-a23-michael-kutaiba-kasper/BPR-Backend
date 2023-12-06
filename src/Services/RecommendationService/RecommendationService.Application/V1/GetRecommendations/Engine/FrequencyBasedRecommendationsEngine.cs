@@ -25,7 +25,9 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
         var weights = CalculateWeights(relevantEvents, GetFrequencyMaps(relevantEvents, survey), relevantReviews);
 
         // tuple where (score, event)
-        var scoredEvents = futureEvents.Select(e => (ScoreEvent(e, weights), e));
+        var scoredEvents = futureEvents
+            .Where(e => e.Attendees == null || e.Attendees.All(u => u.UserId != user.UserId))
+            .Select(e => (ScoreEvent(e, weights), e));
 
         var rankedRecommendations = scoredEvents
             .OrderByDescending(pair => pair.Item1) // Highest score first
