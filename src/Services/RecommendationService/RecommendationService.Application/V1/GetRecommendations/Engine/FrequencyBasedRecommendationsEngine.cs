@@ -116,8 +116,6 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
                     reviewEvent.Keywords.ToList().ForEach(kw => keywordWeights[kw] *= badReviewPenaltyFactor);
                     break;
                 case 3:
-                    categoryWeights[reviewEvent.Category] *= 1f;
-                    reviewEvent.Keywords.ToList().ForEach(kw => keywordWeights[kw] *= 1f);
                     break;
                 case 4:
                     var goodReviewRewardFactor = 1.1f;
@@ -156,6 +154,15 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
     {
         IDictionary<Category, int> categoryFrequencyMap = new Dictionary<Category, int>();
         IDictionary<Keyword, int> keywordFrequencyMap = new Dictionary<Keyword, int>();
+        
+        Enum.GetValues<Category>().ToList().ForEach(category =>
+        {
+            categoryFrequencyMap.Add(category, 0);
+        });
+        Enum.GetValues<Keyword>().ToList().ForEach(keyword=>
+        {
+            keywordFrequencyMap.Add(keyword, 0);
+        });
         
         foreach (var keyword in survey.Keywords)
         {

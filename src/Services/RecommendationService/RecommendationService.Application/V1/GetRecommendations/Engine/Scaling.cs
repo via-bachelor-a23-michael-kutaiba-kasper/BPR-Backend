@@ -6,14 +6,17 @@ public static class Scaling
     {
         float Scale(float min, float max, float dataPoint)
         {
-            return min + ((dataPoint - min) / (max - min)) * (max - min);
+            if (Math.Abs(max - min) < 0.001)
+            {
+                return min;
+            }
+
+            var scaledValue = ((dataPoint - min) / (max - min)) * (max - min) + max;
+            return scaledValue;
         }
 
         var enumerable = data as float[] ?? data.ToArray();
         
-        float max = enumerable.Max();
-        float min = enumerable.Min();
-
-        return enumerable.Select(x => Scale(min, max, x));
+        return enumerable.Select(x => Scale(lowerBound, upperBound, x));
     }
 }
