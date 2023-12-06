@@ -1,12 +1,12 @@
-name: Event Management container image
+name: Recommendation Service Container Image
 
 on:
     push:
         branches:
             - "main"
         paths:
-            - src/Services/EventManagementService/EventManagementService.*/**
-            - src/Services/EventManagementService/Dockerfile
+            - src/Services/RecommendationService/RecommendationService.*/**
+            - src/Services/RecommendationService/Dockerfile
 
 jobs:
     push-container-image:
@@ -25,7 +25,7 @@ jobs:
                   password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
             - name: Build image
-              run: docker build --build-arg SERVICE_ACCOUNT_KEY="$SERVICE_ACCOUNT_KEY_JSON" -t "$DOCKERHUB_USERNAME"/vibeverse-eventmanagementservice:latest .
+              run: docker build --build-arg SERVICE_ACCOUNT_KEY="$SERVICE_ACCOUNT_KEY_JSON" -t "$DOCKERHUB_USERNAME"/vibeverse-recommendationservice:latest .
               working-directory: src/Services/EventManagementService
               env:
                   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
