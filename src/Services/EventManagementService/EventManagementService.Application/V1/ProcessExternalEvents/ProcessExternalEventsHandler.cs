@@ -56,6 +56,7 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
     private async Task<IReadOnlyCollection<Event>> PubSubEvents(CancellationToken cancellationToken)
     {
         var evs = new List<Event>();
+        var createdDate = DateTimeOffset.UtcNow;
         var psEvents = await _pubSubExternalEvents.FetchEvents(cancellationToken);
         foreach (var e in psEvents)
         {
@@ -69,8 +70,8 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                 Images = e.Images,
                 Keywords = e.Keywords,
                 AdultsOnly = e.AdultsOnly,
-                EndDate = new DateTimeOffset(),
-                CreatedDate = DateTimeOffset.UtcNow,
+                EndDate = createdDate.AddMonths(1),
+                CreatedDate = createdDate,
                 Host = new User
                 {
                     UserId = e.Host.UserId,
@@ -81,10 +82,10 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                 },
                 IsPaid = e.IsPaid,
                 IsPrivate = e.IsPrivate,
-                StartDate = new DateTimeOffset(),
-                LastUpdateDate = new DateTimeOffset(),
+                StartDate = createdDate,
+                LastUpdateDate = new DateTimeOffset().ToUniversalTime(),
                 MaxNumberOfAttendees = e.MaxNumberOfAttendees,
-                AccessCode = UniqueEventAccessCodeGenerator.GenerateUniqueString(e.Title, e.CreatedDate),
+                AccessCode = UniqueEventAccessCodeGenerator.GenerateUniqueStringForExternal(e.Title, e.Description!, e.Host.UserId),
                 City = e.City,
                 GeoLocation = await FetchGeoLocation(e.Location)
             });

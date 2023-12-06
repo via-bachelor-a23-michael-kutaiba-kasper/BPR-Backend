@@ -6,6 +6,8 @@ using EventManagementService.Application.V1.CreateEvent.Exceptions;
 using EventManagementService.Application.V1.FetchAllEvents;
 using EventManagementService.Application.V1.FetchAllEvents.Model;
 using EventManagementService.Application.V1.FetchEventById;
+using EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser;
+using EventManagementService.Application.V1.FetchReviewsByUser.Exceptions;
 using EventManagementService.Application.V1.ProcessExternalEvents;
 using EventManagementService.Infrastructure.Util;
 using MediatR;
@@ -29,18 +31,19 @@ public class EventController : ControllerBase
 
     [HttpGet]
     public async Task<ActionResult<List<EventDto>>> GetAllEvents([FromQuery] DateTimeOffset? from = null,
-        [FromQuery] string hostId = null)
+        [FromQuery] string hostId = null, [FromQuery] bool includePrivateEvents = false)
     {
         try
         {
             var events =
-                await _mediator.Send(new FetchAllEventsRequest(new Filters {From = from, To = null, HostId = hostId}));
+                await _mediator.Send(new FetchAllEventsRequest(new Filters
+                    { From = from, To = null, HostId = hostId, IncludePrivateEvents = includePrivateEvents }));
             var eventsAsDtos = events.Select(EventMapper.FromEventToDto);
             return Ok(eventsAsDtos);
         }
         catch (Exception e)
         {
-            return StatusCode((int) HttpStatusCode.InternalServerError);
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 
@@ -124,6 +127,25 @@ public class EventController : ControllerBase
         {
             _logger.LogError(e.Message, e);
             _logger.LogError(e.StackTrace);
+            return StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet("finishedJoinedEvents")]
+    public async Task<ActionResult<IReadOnlyCollection<EventDto>>> GetFinishedJoinedEventsByUserId(
+        [FromQuery] string? userId)
+    {
+        try
+        {
+            var events = await _mediator.Send(new FetchFinishedParticipatedInEventsByUserRequest(userId));
+            return Ok(EventMapper.FromEventListToDtoList(events));
+        }
+        catch (Exception e) when (e is InvalidUserIdException)
+        {
+            return StatusCode((int)HttpStatusCode.BadRequest);
+        }
+        catch (Exception e)
+        {
             return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }

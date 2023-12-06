@@ -12,6 +12,11 @@
                     "name": "hostId",
                     "for": "urlQueryParam",
                     "type": "String"
+                },
+                {
+                    "name": "includePrivateEvents",
+                    "for": "urlQueryParam",
+                    "type": "Boolean"
                 }
             ],
             "resolver": {
@@ -64,6 +69,59 @@
                 "host": "http://eventmanagementservice-service",
                 "port": 80,
                 "endpoint": "/api/v1/keywords/allKeywords",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "reviewsByUser",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String!",
+                    "for": "urlQueryParam"
+                }
+            ],
+            "resolver": {
+                "host": "http://eventmanagementservice-service",
+                "port": 80,
+                "endpoint": "/api/v1/reviews",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "finishedJoinedEvents",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String!",
+                    "for": "urlQueryParam"
+                }
+            ],
+            "resolver": {
+                "host": "http://eventmanagementservice-service",
+                "port": 80,
+                "endpoint": "/api/v1/events/finishedJoinedEvents",
+                "method": "GET"
+            }
+        },
+        {
+            "name": "recommendations",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String!",
+                    "for": "urlQueryParam"
+                },
+                {
+                    "name": "limit",
+                    "type": "Float",
+                    "for": "urlQueryParam"
+                }
+            ],
+            "resolver": {
+                "host": "http://recommendationservice-service",
+                "port": 80,
+                "endpoint": "/api/v1/recommendations",
                 "method": "GET"
             }
         }
@@ -128,7 +186,7 @@
                 },
 
                 {
-                    "name": "adultOnly",
+                    "name": "adultsOnly",
                     "type": "Boolean!",
                     "for": "body"
                 },
@@ -187,6 +245,40 @@
             "resolver": {
                 "host": "http://localhost:8080",
                 "endpoint": "/api/v1/events/createEvent",
+                "port": 8080,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "method": "POST"
+            }
+        },
+        {
+            "name": "createReview",
+            "args": [
+                {
+                    "name": "rate",
+                    "type": "Float!",
+                    "for": "body"
+                },
+                {
+                    "name": "reviewerId",
+                    "type": "String!",
+                    "for": "body"
+                },
+                {
+                    "name": "eventId",
+                    "type": "Int!",
+                    "for": "body"
+                },
+                {
+                    "name": "reviewDate",
+                    "type": "String!",
+                    "for": "body"
+                }
+            ],
+            "resolver": {
+                "host": "http://localhost:8080",
+                "endpoint": "/api/v1/reviews/createReview",
                 "port": 8080,
                 "headers": {
                     "Content-Type": "application/json; charset=UTF-8"

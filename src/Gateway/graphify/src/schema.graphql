@@ -64,6 +64,26 @@ type Event {
     location: String
 }
 
+type Review {
+    id: Int
+    rate: Float
+    reviewerId: String
+    eventId: Int
+    reviewDate: String
+}
+
+type Recommendation {
+    event: Event
+    relevanceScore: Float
+}
+
+type Recommendations {
+    user: User
+    eventsProcessed: [Event]
+    reviewsProcessed: [Review]
+    result: [Recommendation]
+}
+
 type EventResponse {
     result: Event
     status: Status
@@ -84,17 +104,39 @@ type CategoriesResponse {
     status: Status
 }
 
+type ReviewResponse {
+    result: Review
+    status: Status
+}
+
+type ReviewsByUserResponse {
+    result: [Review]
+    status: Status
+}
+
+type RecommendationsResponse {
+    result: Recommendations
+    status: Status
+}
+
 type Query {
     """
     All arguments are optional filters to apply.
     from: UTC DateTime string. Fitlers events by endDate >= from
     hostId: UUID string. Filters events by host.
     """
-    events(from: String, hostId: String): EventsResponse
+    events(
+        from: String
+        hostId: String
+        includePrivateEvents: Boolean
+    ): EventsResponse
     categories: CategoriesResponse
     keywords: KeywordsResponse
     allPublicEvents: EventsResponse
     event(eventId: Int): EventResponse
+    reviewsByUser(userId: String): ReviewsByUserResponse
+    finishedJoinedEvents(userId: String): EventsResponse
+    recommendations(userId: String!, limit: Int): RecommendationsResponse
 }
 
 type Mutation {
@@ -125,4 +167,11 @@ type Mutation {
         category: String!
         keywords: [String!]
     ): EventResponse
+
+    createReview(
+        rate: Float!
+        reviewerId: String!
+        eventId: Int!
+        reviewDate: String!
+    ): ReviewResponse
 }

@@ -50,7 +50,7 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
             throw new EventNotFoundException(request.EventId);
         }
 
-        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() == existingEvent.MaxNumberOfAttendees)
+        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() >= existingEvent.MaxNumberOfAttendees && existingEvent.MaxNumberOfAttendees > 0)
         {
             throw new MaximumAttendeesReachedException(existingEvent.Id, existingEvent.MaxNumberOfAttendees);
         }
@@ -74,14 +74,14 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         await AcceptInvitationIfInvited(request.UserId, request.EventId);
 
         await _eventRepository.AddAttendeeToEventAsync(request.UserId, request.EventId);
-        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[1].TopicId, _pubsubConfig.Value.Topics[1].ProjectId,
+        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].TopicId, _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].ProjectId,
             request);
         _logger.LogInformation($"User {request.UserId} has been added as attendee to event {request.EventId}");
     }
 
     private async Task AcceptInvitationIfInvited(string userId, int eventId)
     {
-        var invitations = await _invitationRepository.GetInvitationsAsync(eventId);
+        var invitations = await _invitationRepository.GetInvitationsAsync(eventId) ?? new List<Invitation>();
         var pendingInvitationForUser = invitations
             .Where(invitation => invitation.Status == InvitationStatus.Pending)
             .FirstOrDefault(invitation => invitation.UserId == userId);

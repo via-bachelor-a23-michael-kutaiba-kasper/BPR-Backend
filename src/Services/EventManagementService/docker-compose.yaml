@@ -24,8 +24,15 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-       
-    
+  pubsub:
+    container_name: pubsub
+    image: gcr.io/google.com/cloudsdktool/cloud-sdk:emulators
+    ports:
+      - 8086:8085
+    command: gcloud beta emulators pubsub start --project=bachelorshenanigans --host-port=0.0.0.0:8085
+    environment:
+      - PUBSUB_PORT=8085
+      - PUBSUB_PROJECT=bachelorshenanigans   
 volumes:
   postgres_data:
     driver: local
