@@ -129,7 +129,7 @@ internal static class EventMapper
                 {
                     UserId = ev.Host.UserId,
                     LastSeenOnline = ev.Host.LastSeenOnline,
-                    DisplayName = ev.Host.DisplayName,
+                    DisplayName = ev.Host.DisplayName ?? "",
                     PhotoUrl = ev.Host.PhotoUrl,
                     CreationDate = ev.Host.CreationDate,
                 },
@@ -137,7 +137,7 @@ internal static class EventMapper
                 Attendees = ev.Attendees.Select(user => new UserDto
                     {
                         UserId = user.UserId,
-                        DisplayName = user.DisplayName,
+                        DisplayName = user.DisplayName ?? "",
                         PhotoUrl = user.PhotoUrl,
                         CreationDate = user.CreationDate,
                         LastSeenOnline = user.LastSeenOnline
