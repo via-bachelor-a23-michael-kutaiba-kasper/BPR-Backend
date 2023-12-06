@@ -257,7 +257,7 @@
             ],
             "resolver": {
                 "host": "http://localhost:8080",
-                "endpoint": "api/v1/reviews/createReview",
+                "endpoint": "/api/v1/reviews/createReview",
                 "port": 8080,
                 "headers": {
                     "Content-Type": "application/json; charset=UTF-8"
