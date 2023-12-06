@@ -6,6 +6,7 @@ using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Npgsql;
 
 namespace EventManagementService.Application.V1.FetchAllEvents.Repository;
@@ -38,6 +39,7 @@ public class SqlAllEvents : ISqlAllEvents
             using (var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString()))
             {
                 await connection.OpenAsync();
+                await InsertUnassignedKeywordsForEventsWithoutKeywords(connection);
                 var queryEventStatement = $"SELECT * from event {new ApplyFiltersInSql().Apply(filters)}";
                 var queryParams = new
                 {
@@ -104,11 +106,33 @@ public class SqlAllEvents : ISqlAllEvents
     {
         var queryEventKeywords =
             $"SELECT * from event_keyword WHERE event_id in {SqlUtil.AsIntList(eventIds.ToList())}";
-        var eventKeywordEntities = eventIds.Any() ?  await connection.QueryAsync<EventKeywordEntity>(queryEventKeywords) :
-                                   new List<EventKeywordEntity>();
+        var eventKeywordEntities = eventIds.Any()
+            ? await connection.QueryAsync<EventKeywordEntity>(queryEventKeywords)
+            : new List<EventKeywordEntity>();
+
+        
         return IndexKeywordsByEventId(eventKeywordEntities.ToList());
     }
 
+    private async Task InsertUnassignedKeywordsForEventsWithoutKeywords(NpgsqlConnection connection)
+    {
+        var queryEventsWithoutKeywords =
+            $"SELECT e.id from event e WHERE e.id not in (SELECT event_id from postgres.public.event_keyword)";
+        var eventsWithoutKeywords = await connection.QueryAsync<int>(queryEventsWithoutKeywords);
+
+        var insertKeywordsStatement =
+            $"INSERT INTO postgres.public.event_keyword(keyword, event_id) VALUES (@keyword, @event_id)";
+        
+        foreach (var eventWithoutKeywords in eventsWithoutKeywords)
+        {
+            var queryParams = new
+            {
+                @keyword = (int)Keyword.UnAssigned,
+                @event_id = eventWithoutKeywords
+            };
+            await connection.ExecuteAsync(insertKeywordsStatement, queryParams );
+        }
+    }
     private async Task<IDictionary<int, List<string>>> GetIndexedImagesByEventId(NpgsqlConnection connection,
         IReadOnlyCollection<int> eventIds)
     {
