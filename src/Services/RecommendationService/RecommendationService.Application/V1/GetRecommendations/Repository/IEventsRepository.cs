@@ -27,7 +27,7 @@ public class EventsRepository : IEventsRepository
 
     public async Task<IReadOnlyCollection<Event>> GetEventsWhereUserHasAttendedAsync(string userId)
     {
-        var response = await _apiGateway.QueryAsync<List<ReadEventDto>>(new ApiGatewayQuery
+        var response = await _apiGateway.QueryAsync<IEnumerable<ReadEventDto>>(new ApiGatewayQuery
         {
             Query = FinishedJoinedEventsQuery,
             Variables = new {userId}
@@ -79,7 +79,7 @@ public class EventsRepository : IEventsRepository
 
     public async Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null)
     {
-        var response = await _apiGateway.QueryAsync<List<ReadEventDto>>(new ApiGatewayQuery
+        var response = await _apiGateway.QueryAsync<IEnumerable<ReadEventDto>>(new ApiGatewayQuery
         {
             Query = EventsQuery,
             Variables = new
