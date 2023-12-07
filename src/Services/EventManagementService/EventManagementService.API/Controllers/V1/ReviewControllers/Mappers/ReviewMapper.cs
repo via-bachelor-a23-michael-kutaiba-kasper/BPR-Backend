@@ -36,11 +36,11 @@ internal static class ReviewMapper
     {
         return eventReviews.Select(er => new EventReviewDto
             {
-                UserId = er.UserId,
+                ReviewerId = er.UserId,
                 Rate = er.Rate,
                 EventId = er.EventId,
                 ReviewDate = er.ReviewDate,
-                ReviewId = er.ReviewId
+                Id = er.ReviewId
             })
             .ToList();
     }
