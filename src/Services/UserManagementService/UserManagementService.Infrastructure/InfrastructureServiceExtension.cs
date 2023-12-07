@@ -1,9 +1,9 @@
-using EventManagementService.Infrastructure.EventBus;
-using EventManagementService.Infrastructure.Notifications;
-using EventManagementService.Infrastructure.Notifications.Strategies;
 using Microsoft.Extensions.DependencyInjection;
+using UserManagementService.Infrastructure.Notifications;
+using UserManagementService.Infrastructure.Notifications.Strategies;
+using UserManagementService.Infrastructure.PubSub;
 
-namespace EventManagementService.Infrastructure;
+namespace UserManagementService.Infrastructure;
 
 public static class InfrastructureServiceExtension
 {
