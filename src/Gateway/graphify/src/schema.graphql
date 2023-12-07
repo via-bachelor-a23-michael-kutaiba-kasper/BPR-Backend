@@ -65,11 +65,23 @@ type Event {
 }
 
 type Review {
-    id: Int,
-    rate: Float,
-    reviewerId: String,
-    eventId: Int,
+    id: Int
+    rate: Float
+    reviewerId: String
+    eventId: Int
     reviewDate: String
+}
+
+type Recommendation {
+    event: Event
+    relevanceScore: Float
+}
+
+type Recommendations {
+    user: User
+    eventsProcessed: [Event]
+    reviewsProcessed: [Review]
+    result: [Recommendation]
 }
 
 type EventResponse {
@@ -93,12 +105,17 @@ type CategoriesResponse {
 }
 
 type ReviewResponse {
-    result: Review,
+    result: Review
     status: Status
 }
 
 type ReviewsByUserResponse {
-    result: [Review],
+    result: [Review]
+    status: Status
+}
+
+type RecommendationsResponse {
+    result: Recommendations
     status: Status
 }
 
@@ -117,8 +134,9 @@ type Query {
     keywords: KeywordsResponse
     allPublicEvents: EventsResponse
     event(eventId: Int): EventResponse
-    reviewsByUser(userId: String) : ReviewsByUserResponse
-    finishedJoinedEvents(userId: String) : EventsResponse
+    reviewsByUser(userId: String): ReviewsByUserResponse
+    finishedJoinedEvents(userId: String): EventsResponse
+    recommendations(userId: String!, limit: Int): RecommendationsResponse
 }
 
 type Mutation {
@@ -151,9 +169,9 @@ type Mutation {
     ): EventResponse
 
     createReview(
-        rate: Float!,
-        reviewerId: String!,
-        eventId: Int!,
+        rate: Float!
+        reviewerId: String!
+        eventId: Int!
         reviewDate: String!
     ): ReviewResponse
 }

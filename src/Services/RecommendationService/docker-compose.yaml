@@ -1,0 +1,14 @@
+services:
+    recommendationservice:
+        container_name: recommendationservice-service
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        ports:
+            - 8088:80
+        env_file:
+            - ./.env
+networks:
+    default:
+        name: couch-potatoes-network
+        external: true

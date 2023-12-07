@@ -103,6 +103,27 @@
                 "endpoint": "/api/v1/events/finishedJoinedEvents",
                 "method": "GET"
             }
+        },
+        {
+            "name": "recommendations",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String!",
+                    "for": "urlQueryParam"
+                },
+                {
+                    "name": "limit",
+                    "type": "Float",
+                    "for": "urlQueryParam"
+                }
+            ],
+            "resolver": {
+                "host": "http://recommendationservice-service",
+                "port": 80,
+                "endpoint": "/api/v1/recommendations",
+                "method": "GET"
+            }
         }
     ],
     "mutations": [

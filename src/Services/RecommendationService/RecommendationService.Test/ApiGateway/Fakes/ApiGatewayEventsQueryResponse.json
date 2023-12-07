@@ -1,0 +1,822 @@
+{
+  "data": {
+    "events": {
+      "result": [
+        {
+          "id": 4,
+          "title": "Hujmm",
+          "startDate": "2023-12-05T15:38:51.464418+00:00",
+          "endDate": "2023-12-05T18:38:51.464525+00:00",
+          "createdDate": "2023-12-05T16:39:35.884231+00:00",
+          "lastUpdateDate": "2023-12-05T16:39:35.884231+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": false,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Health and Wellness",
+          "keywords": [
+            "Gaming",
+            "Yoga",
+            "Networking"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.6817",
+            "lng": "12.5367"
+          },
+          "city": "Frederiksberg",
+          "location": "Hostrupsvej, Frederiksberg, Danmark"
+        },
+        {
+          "id": 5,
+          "title": "Hujmm",
+          "startDate": "2023-12-05T15:38:51.464418+00:00",
+          "endDate": "2023-12-05T18:38:51.464525+00:00",
+          "createdDate": "2023-12-05T16:40:05.929669+00:00",
+          "lastUpdateDate": "2023-12-05T16:40:05.929669+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": false,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Health and Wellness",
+          "keywords": [
+            "Gaming",
+            "Yoga",
+            "Networking"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.8619",
+            "lng": "9.84804"
+          },
+          "city": "Danmark",
+          "location": "Søndergade, 8700 Horsens, Danmark"
+        },
+        {
+          "id": 6,
+          "title": "Hujmm",
+          "startDate": "2023-12-05T15:38:51.464418+00:00",
+          "endDate": "2023-12-05T18:38:51.464525+00:00",
+          "createdDate": "2023-12-05T16:40:24.792221+00:00",
+          "lastUpdateDate": "2023-12-05T16:40:24.792221+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": false,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Health and Wellness",
+          "keywords": [
+            "Gaming",
+            "Yoga",
+            "Networking"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.8613",
+            "lng": "9.84547"
+          },
+          "city": "Danmark",
+          "location": "Hospitalsgade, 8700 Horsens, Danmark"
+        },
+        {
+          "id": 7,
+          "title": "Hujmm",
+          "startDate": "2023-12-05T15:38:51.464418+00:00",
+          "endDate": "2023-12-05T18:38:51.464525+00:00",
+          "createdDate": "2023-12-05T16:41:24.135622+00:00",
+          "lastUpdateDate": "2023-12-05T16:41:24.135622+00:00",
+          "isPrivate": false,
+          "adultsOnly": true,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Health and Wellness",
+          "keywords": [
+            "Gaming",
+            "Yoga",
+            "Networking"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.3643",
+            "lng": "10.3917"
+          },
+          "city": "Danmark",
+          "location": "Odensevej, Odense, Danmark"
+        },
+        {
+          "id": 8,
+          "title": "Huj",
+          "startDate": "2023-12-06T09:27:05.100243+00:00",
+          "endDate": "2023-12-06T09:44:54.532935+00:00",
+          "createdDate": "2023-12-06T10:28:06.359249+00:00",
+          "lastUpdateDate": "2023-12-06T10:28:06.359249+00:00",
+          "isPrivate": false,
+          "adultsOnly": true,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Charity and Fundraising",
+          "keywords": [
+            "Yoga",
+            "Art Exhibition",
+            "Gaming"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.614",
+            "lng": "12.3639"
+          },
+          "city": "Danmark",
+          "location": "Vejlebrovej, 2635 Ishøj, Danmark"
+        },
+        {
+          "id": 9,
+          "title": "Huj",
+          "startDate": "2023-12-06T09:27:05.100243+00:00",
+          "endDate": "2023-12-06T09:44:54.532935+00:00",
+          "createdDate": "2023-12-06T10:30:04.362912+00:00",
+          "lastUpdateDate": "2023-12-06T10:30:04.362912+00:00",
+          "isPrivate": false,
+          "adultsOnly": true,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Charity and Fundraising",
+          "keywords": [
+            "Yoga",
+            "Art Exhibition",
+            "Gaming"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.614",
+            "lng": "12.3639"
+          },
+          "city": "Danmark",
+          "location": "Vejlebrovej, 2635 Ishøj, Danmark"
+        },
+        {
+          "id": 10,
+          "title": "Huj",
+          "startDate": "2023-12-06T09:27:05.100243+00:00",
+          "endDate": "2023-12-06T09:44:54.532935+00:00",
+          "createdDate": "2023-12-06T10:30:13.413225+00:00",
+          "lastUpdateDate": "2023-12-06T10:30:13.413225+00:00",
+          "isPrivate": false,
+          "adultsOnly": true,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Charity and Fundraising",
+          "keywords": [
+            "Yoga",
+            "Art Exhibition",
+            "Gaming"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.614",
+            "lng": "12.3639"
+          },
+          "city": "Danmark",
+          "location": "Vejlebrovej, 2635 Ishøj, Danmark"
+        },
+        {
+          "id": 11,
+          "title": "Huj",
+          "startDate": "2023-12-06T09:27:05.100243+00:00",
+          "endDate": "2023-12-06T09:44:54.532935+00:00",
+          "createdDate": "2023-12-06T10:33:23.142484+00:00",
+          "lastUpdateDate": "2023-12-06T10:33:23.142484+00:00",
+          "isPrivate": false,
+          "adultsOnly": true,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Charity and Fundraising",
+          "keywords": [
+            "Yoga",
+            "Art Exhibition",
+            "Gaming"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.614",
+            "lng": "12.3639"
+          },
+          "city": "Danmark",
+          "location": "Vejlebrovej, 2635 Ishøj, Danmark"
+        },
+        {
+          "id": 43,
+          "title": "Familieaktivitet: Det Skjulte Stempel",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Prøv fængselsmuseets familieaktivitet med lærerige, sjove og udfordrende opgaver.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 44,
+          "title": "Børneaktivitet: Fuglen er fløjet",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Prøv Fængselsmuseets børneaktivitet 'Fuglen er fløjet' og se om I kan finde fuglene på Fængselsmuseet. ",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 45,
+          "title": "Betjentrundvisning",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Kom med en fængselsbetjent på rundvisning og få en oplevelse udover det sædvanlige. ",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 46,
+          "title": "Guidet rundvisning",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Kom med på en spændende rundvisning og få et unikt indblik i fængselslivet gennem 153 år.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 47,
+          "title": "Locked Escape Room",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "LOCKED og FÆNGSLET byder velkommen til en 60 minutters højintensiv spændings-oplevelse! Du og din gruppe har 60 minutter til at finde ledetråde og løse gåder for til sidst at kunne løse missionen.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 48,
+          "title": "Verdens vildeste flugt i VR",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Træd ind i en helt ny verden på Fængselsmuseet – flygt fra fængslet gennem en 18 meter lang tunnel i Virtual Reality.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 49,
+          "title": "Juleaktivitet for daginstitutioner og skoler i Fængselsmuseet",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Juleaktivitet for daginstitutioner og skoler i Fængselsmuseet",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 50,
+          "title": "Julehygge i Fængselsmuseet",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Besøg Fængselsmuseet i december og prøv de mange hyggelige juleaktiviteter.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 51,
+          "title": "Wrestling: Hardcore X-Mas",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Dansk Pro Wrestling vender tilbage til FÆNGSLET med hårdtslående juleshow.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 52,
+          "title": "Krimimessen",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "FÆNGSLET udgør rammen om Krimimessen den 16. og 17. marts. Få spændingen helt ind under huden og kom tæt på et væld af populære krimiforfattere og foredragsholdere. ",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 53,
+          "title": "Habengut Marked på FÆNGSLET",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Oplev Habengut Markeds kæmpestore loppemarked den 13. og 14. april. Private sælger guld fra gemmerne, så kom og gør et rigtig godt kup på FÆNGSLET.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 54,
+          "title": "Prison Ink",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "For ottende gang slår FÆNGSLET dørene op for den internationale tattoo festival Prison Ink, der er den mest succesfulde tatoveringsfestival i Skandinavien.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 55,
+          "title": "Jailbreak",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Vi er glade for og stolte over, at vi igen i 2024 kan åbne dørene op til fængselsgården og invitere jer indenfor til endnu en JAILBREAK festival!",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 56,
+          "title": "Horsens Middelalderfestival",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "Den 30. og 31. august 2024 tager Horsens Middelalderfestival sine gæster med på en eventyrlig rejse tilbage i tiden. De flotte omgivelser inden for og uden for murene ved FÆNGSLET, det forhenværende statsfængsel, danner rammen om et middelaldermarked med alt, hvad der hører til. Men selvom drilske gøglere og andet muntert godtfolk blander sig i selskabet, er festivalen ikke kun gøgl og underholdning. Horsens Middelalderfestival har hele tiden fokus på kvalitet og lægger stor vægt på, at den så autentisk som muligt skal afspejle alle sider af livet i middelalderen i perioden 1350-1536: kunst, håndværk, musik, markedsliv, daglig skik og brug. Til gengæld kan man ikke støve en god gammeldags kop kaffe op – det fandtes nemlig ikke i Danmark i 1350. Plastikkrus og ketchup til pølserne er ikke tilladt, og gæsterne må spise med ske og kniv eller fingrene, for gaflen var heller ikke opfundet i middelalderen.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 57,
+          "title": "Beers Behind Bars",
+          "startDate": "2023-12-06T10:25:54.492773+00:00",
+          "endDate": "2024-01-06T10:25:54.492773+00:00",
+          "createdDate": "2023-12-06T10:25:54.492773+00:00",
+          "lastUpdateDate": "0001-01-01T00:00:00+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "FÆNGSLET, Horsens & Friends og Danske Ølentusiaster indbyder alle ølglade til en forrygende rundtur i øllets verden, når der for FEMTE gang arrangeres den store ølfestival Beers Behind Bars lørdag 5. oktober 2024.",
+          "accessCode": null,
+          "category": "Un Assigned",
+          "keywords": [
+            "Un Assigned"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.87407",
+            "lng": "9.836241"
+          },
+          "city": "Horsens",
+          "location": "Fussingvej 8, 8700 Horsens, Denmark"
+        },
+        {
+          "id": 58,
+          "title": "Testing",
+          "startDate": "2023-12-20T13:18:21.905361+00:00",
+          "endDate": "2023-12-31T04:18:26.19745+00:00",
+          "createdDate": "2023-12-06T14:20:02.788664+00:00",
+          "lastUpdateDate": "2023-12-06T14:20:02.788664+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": false,
+          "maxNumberOfAttendees": 100,
+          "url": null,
+          "description": "Destin\n",
+          "accessCode": null,
+          "category": "Food and Drink",
+          "keywords": [
+            "Fitness",
+            "Live Music",
+            "Coding"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "55.8372",
+            "lng": "9.81254"
+          },
+          "city": "Danmark",
+          "location": "Vejlevej, Horsens, Danmark"
+        },
+        {
+          "id": 59,
+          "title": "Testing2\n",
+          "startDate": "2023-12-21T04:20:31.454803+00:00",
+          "endDate": "2024-01-10T03:20:37.538757+00:00",
+          "createdDate": "2023-12-06T14:20:51.652318+00:00",
+          "lastUpdateDate": "2023-12-06T14:20:51.652318+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": false,
+          "maxNumberOfAttendees": 100,
+          "url": null,
+          "description": "Destin\n",
+          "accessCode": null,
+          "category": "Food and Drink",
+          "keywords": [
+            "Fitness",
+            "Live Music",
+            "Coding"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "56.1507",
+            "lng": "10.2043"
+          },
+          "city": "Aarhus",
+          "location": "Banegårdspladsen, 8000 Aarhus, Danmark"
+        },
+        {
+          "id": 60,
+          "title": "Testing2\n13",
+          "startDate": "2023-12-21T04:20:31.454803+00:00",
+          "endDate": "2024-01-10T03:20:37.538757+00:00",
+          "createdDate": "2023-12-06T14:23:00.952175+00:00",
+          "lastUpdateDate": "2023-12-06T14:23:00.952175+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": false,
+          "maxNumberOfAttendees": 100,
+          "url": null,
+          "description": "Destin\n",
+          "accessCode": null,
+          "category": "Charity and Fundraising",
+          "keywords": [
+            "Yoga",
+            "Art Exhibition",
+            "Gaming"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "56.1507",
+            "lng": "10.2043"
+          },
+          "city": "Aarhus",
+          "location": "Banegårdspladsen, 8000 Aarhus, Danmark"
+        },
+        {
+          "id": 61,
+          "title": "Testing2\n134",
+          "startDate": "2023-12-21T04:20:31.454803+00:00",
+          "endDate": "2024-01-10T03:20:37.538757+00:00",
+          "createdDate": "2023-12-06T14:23:16.550667+00:00",
+          "lastUpdateDate": "2023-12-06T14:23:16.550667+00:00",
+          "isPrivate": false,
+          "adultsOnly": false,
+          "isPaid": false,
+          "maxNumberOfAttendees": 100,
+          "url": null,
+          "description": "Destin\n",
+          "accessCode": null,
+          "category": "Charity and Fundraising",
+          "keywords": [
+            "Yoga",
+            "Art Exhibition",
+            "Gaming"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "56.1507",
+            "lng": "10.2043"
+          },
+          "city": "Aarhus",
+          "location": "Banegårdspladsen, 8000 Aarhus, Danmark"
+        },
+        {
+          "id": 62,
+          "title": "Mic Event ",
+          "startDate": "2023-12-06T14:23:59.321648+00:00",
+          "endDate": "2023-12-06T14:35:18.46112+00:00",
+          "createdDate": "2023-12-06T15:24:39.585143+00:00",
+          "lastUpdateDate": "2023-12-06T15:24:39.585143+00:00",
+          "isPrivate": false,
+          "adultsOnly": true,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Charity and Fundraising",
+          "keywords": [
+            "Yoga",
+            "Food Tasting",
+            "Networking"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "56.1582",
+            "lng": "8.88675"
+          },
+          "city": "Danmark",
+          "location": "Hospitalsparken, 7400 Herning, Danmark"
+        },
+        {
+          "id": 63,
+          "title": "Mic Event2",
+          "startDate": "2023-12-06T14:23:59.321648+00:00",
+          "endDate": "2023-12-06T14:35:18.46112+00:00",
+          "createdDate": "2023-12-06T15:25:00.985029+00:00",
+          "lastUpdateDate": "2023-12-06T15:25:00.985029+00:00",
+          "isPrivate": false,
+          "adultsOnly": true,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Charity and Fundraising",
+          "keywords": [
+            "Food Tasting",
+            "Gaming",
+            "Coding"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "56.1582",
+            "lng": "8.88675"
+          },
+          "city": "Danmark",
+          "location": "Hospitalsparken, 7400 Herning, Danmark"
+        },
+        {
+          "id": 64,
+          "title": "Mic Event3",
+          "startDate": "2023-12-06T14:23:59.321648+00:00",
+          "endDate": "2023-12-06T14:35:18.46112+00:00",
+          "createdDate": "2023-12-06T15:25:17.763937+00:00",
+          "lastUpdateDate": "2023-12-06T15:25:17.763937+00:00",
+          "isPrivate": false,
+          "adultsOnly": true,
+          "isPaid": true,
+          "maxNumberOfAttendees": 0,
+          "url": null,
+          "description": "",
+          "accessCode": null,
+          "category": "Conferences",
+          "keywords": [
+            "Networking",
+            "Yoga",
+            "Art Exhibition"
+          ],
+          "images": [],
+          "geoLocation": {
+            "lat": "56.1582",
+            "lng": "8.88675"
+          },
+          "city": "Danmark",
+          "location": "Hospitalsparken, 7400 Herning, Danmark"
+        }
+      ],
+      "status": {
+        "code": 200,
+        "message": "OK"
+      }
+    }
+  }
+}
