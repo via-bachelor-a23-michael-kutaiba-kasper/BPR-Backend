@@ -30,16 +30,18 @@ public class ConnectionStringManager: IConnectionStringManager
     
     public ConnectionStringManager()
     {
+        var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? "postgres";
+        
         _ci = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
         // Values should be "LOCAL", "PRODUCTION", "CI" or "LOCAL_CONTAINER"
         _deploymentEnvironment = Environment.GetEnvironmentVariable("DEPLOYMENT_ENVIRONMENT") ?? "LOCAL";
         Console.WriteLine($"Deployment Environment: {_deploymentEnvironment}");
         
         // NOTE: This is only here due to it being a school project. Otherwise we would use a vault or pass by environment variable.
-        _connectionStrings.Add("PRODUCTION", "Server=34.159.177.93;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
-        _connectionStrings.Add("CI", "Server=34.107.115.110;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
-        _connectionStrings.Add("LOCAL", "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
-        _connectionStrings.Add("LOCAL_CONTAINER", "Server=eventmanagement_postgres;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
+        _connectionStrings.Add($"PRODUCTION", $"Server=34.159.177.93;Port=5432;Database=postgres;User Id=postgres;Password={password}");
+        _connectionStrings.Add($"CI", $"Server=34.107.115.110;Port=5432;Database=postgres;User Id=postgres;Password={password}");
+        _connectionStrings.Add($"LOCAL", $"Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
+        _connectionStrings.Add($"LOCAL_CONTAINER", $"Server=eventmanagement_postgres;Port=5432;Database=postgres;User Id=postgres;Password=postgres");
     }
 
     public string GetConnectionString()
