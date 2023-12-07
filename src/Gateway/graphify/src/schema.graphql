@@ -90,12 +90,6 @@ type InterestSurvey {
     categories: [String]
 }
 
-input InterestSurvey {
-    user: User
-    keywords: [String]
-    categories: [String]
-}
-
 type EventResponse {
     result: Event
     status: Status
@@ -128,6 +122,11 @@ type ReviewsByUserResponse {
 
 type RecommendationsResponse {
     result: Recommendations
+    status: Status
+}
+
+type InterestSurveyResponse {
+    result: InterestSurvey
     status: Status
 }
 
@@ -191,5 +190,5 @@ type Mutation {
         userId: String!
         keywords: [String]!
         categories: [String]!
-    )
+    ): InterestSurveyResponse
 }
