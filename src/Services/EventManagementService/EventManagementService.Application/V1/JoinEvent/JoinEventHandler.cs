@@ -3,6 +3,8 @@ using EventManagementService.Application.V1.JoinEvent.Repositories;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
 using EventManagementService.Infrastructure.EventBus;
+using EventManagementService.Infrastructure.Notifications;
+using EventManagementService.Infrastructure.Notifications.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -19,10 +21,11 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
     private readonly IEventBus _eventBus;
     private readonly ILogger<JoinEventHandler> _logger;
     private readonly IOptions<PubSub> _pubsubConfig;
+    private readonly INotifier _notifier;
 
     public JoinEventHandler(ILogger<JoinEventHandler> logger, IEventRepository eventRepository,
         IInvitationRepository invitationRepository, IUserRepository userRepository, IEventBus eventBus,
-        IOptions<PubSub> pubsubConfig)
+        IOptions<PubSub> pubsubConfig, INotifier notifier)
     {
         _logger = logger;
         _eventRepository = eventRepository;
@@ -30,6 +33,7 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         _userRepository = userRepository;
         _eventBus = eventBus;
         _pubsubConfig = pubsubConfig;
+        _notifier = notifier;
     }
 
     /// <summary>
@@ -50,7 +54,8 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
             throw new EventNotFoundException(request.EventId);
         }
 
-        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() >= existingEvent.MaxNumberOfAttendees && existingEvent.MaxNumberOfAttendees > 0)
+        if (existingEvent.Attendees != null && existingEvent.Attendees.Count() >= existingEvent.MaxNumberOfAttendees &&
+            existingEvent.MaxNumberOfAttendees > 0)
         {
             throw new MaximumAttendeesReachedException(existingEvent.Id, existingEvent.MaxNumberOfAttendees);
         }
@@ -74,7 +79,17 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         await AcceptInvitationIfInvited(request.UserId, request.EventId);
 
         await _eventRepository.AddAttendeeToEventAsync(request.UserId, request.EventId);
-        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].TopicId, _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].ProjectId,
+        
+        var hostNotificationToken = await _userRepository.GetNotificationTokenByUserIdAsync(existingEvent.Host.UserId);
+        await _notifier.SendNotificationAsync(new UserNotification
+        {
+            Title = "New attendee",
+            Body = $"A new user has joined your event {existingEvent.Title}!",
+            Token = hostNotificationToken
+        });
+        
+        await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].TopicId,
+            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].ProjectId,
             request);
         _logger.LogInformation($"User {request.UserId} has been added as attendee to event {request.EventId}");
     }

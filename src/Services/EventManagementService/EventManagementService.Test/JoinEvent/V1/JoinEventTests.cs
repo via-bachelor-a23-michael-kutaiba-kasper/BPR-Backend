@@ -6,6 +6,7 @@ using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
 using EventManagementService.Infrastructure.AppSettings;
 using EventManagementService.Infrastructure.EventBus;
+using EventManagementService.Infrastructure.Notifications;
 using EventManagementService.Test.Shared;
 using EventManagementService.Test.Shared.Builders;
 using Microsoft.Extensions.Logging;
@@ -46,6 +47,7 @@ public class JoinEventTests
         var userRepositoryMock = new Mock<IUserRepository>();
         var eventRepositoryMock = new Mock<IEventRepository>();
         var eventBusMock = new Mock<IEventBus>();
+        var notifierMock = new Mock<INotifier>();
         var pubsubConfig = new PubSub
         {
             Topics = new[]
@@ -70,7 +72,7 @@ public class JoinEventTests
 
         var handler = new JoinEventHandler(loggerMock.Object, eventRepositoryMock.Object,
             invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object,
-            Options.Create(pubsubConfig));
+            Options.Create(pubsubConfig), notifierMock.Object);
         var request = new JoinEventRequest(nonExistingUserId, existingEvent.Id);
 
         Assert.ThrowsAsync<UserNotFoundException>(() => handler.Handle(request, new CancellationToken()));
@@ -88,6 +90,7 @@ public class JoinEventTests
         var eventRepositoryMock = new Mock<IEventRepository>();
         var loggerMock = new Mock<ILogger<JoinEventHandler>>();
         var eventBusMock = new Mock<IEventBus>();
+        var notifierMock = new Mock<INotifier>();
         var pubsubConfig = new PubSub
         {
             Topics = new[]
@@ -111,7 +114,7 @@ public class JoinEventTests
 
         var handler = new JoinEventHandler(loggerMock.Object, eventRepositoryMock.Object,
             invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object,
-            Options.Create(pubsubConfig));
+            Options.Create(pubsubConfig), notifierMock.Object);
         var request = new JoinEventRequest(existingUserId, nonExistingEventId);
 
         Assert.ThrowsAsync<EventNotFoundException>(() => handler.Handle(request, new CancellationToken()));
@@ -131,6 +134,7 @@ public class JoinEventTests
         var eventRepositoryMock = new Mock<IEventRepository>();
         var loggerMock = new Mock<ILogger<JoinEventHandler>>();
         var eventBusMock = new Mock<IEventBus>();
+        var notifierMock = new Mock<INotifier>();
         var pubsubConfig = new PubSub
         {
             Topics = new[]
@@ -154,7 +158,7 @@ public class JoinEventTests
 
         var handler = new JoinEventHandler(loggerMock.Object, eventRepositoryMock.Object,
             invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object,
-            Options.Create(pubsubConfig));
+            Options.Create(pubsubConfig), notifierMock.Object);
         var request = new JoinEventRequest(existingUserId, existingEvent.Id);
 
         Assert.ThrowsAsync<AlreadyJoinedException>(() => handler.Handle(request, new CancellationToken()));
@@ -182,6 +186,7 @@ public class JoinEventTests
         var eventRepositoryMock = new Mock<IEventRepository>();
         var loggerMock = new Mock<ILogger<JoinEventHandler>>();
         var eventBusMock = new Mock<IEventBus>();
+        var notifierMock = new Mock<INotifier>();
         var pubsubConfig = new PubSub
         {
             Topics = new[]
@@ -205,7 +210,7 @@ public class JoinEventTests
 
         var handler = new JoinEventHandler(loggerMock.Object, eventRepositoryMock.Object,
             invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object,
-            Options.Create(pubsubConfig));
+            Options.Create(pubsubConfig), notifierMock.Object);
         var request = new JoinEventRequest(existingUserId, existingEvent.Id);
 
         Assert.ThrowsAsync<MaximumAttendeesReachedException>(() => handler.Handle(request, new CancellationToken()));
@@ -233,6 +238,7 @@ public class JoinEventTests
         var eventRepositoryMock = new Mock<IEventRepository>();
         var loggerMock = new Mock<ILogger<JoinEventHandler>>();
         var eventBusMock = new Mock<IEventBus>();
+        var notifierMock = new Mock<INotifier>();
         var pubsubConfig = new PubSub
         {
             Topics = new[]
@@ -256,7 +262,7 @@ public class JoinEventTests
 
         var handler = new JoinEventHandler(loggerMock.Object, eventRepositoryMock.Object,
             invitationRepositoryMock.Object, userRepositoryMock.Object, eventBusMock.Object,
-            Options.Create(pubsubConfig));
+            Options.Create(pubsubConfig), notifierMock.Object);
         var request = new JoinEventRequest(existingUserId, existingEvent.Id);
 
         Assert.ThrowsAsync<UserIsAlreadyHostOfEventException>(() => handler.Handle(request, new CancellationToken()));
