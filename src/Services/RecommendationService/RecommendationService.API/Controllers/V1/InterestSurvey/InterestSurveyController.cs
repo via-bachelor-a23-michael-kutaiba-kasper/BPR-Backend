@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RecommendationService.API.Controllers.V1.InterestSurvey;
@@ -7,10 +8,10 @@ namespace RecommendationService.API.Controllers.V1.InterestSurvey;
 public class InterestSurveyController: ControllerBase
 {
     private readonly ILogger<InterestSurveyController> _logger;
-    public InterestSurveyController(ILogger<InterestSurveyController> logger)
+    private readonly IMediator _mediator;
+    public InterestSurveyController(ILogger<InterestSurveyController> logger, IMediator mediator)
     {
         _logger = logger;
+        _mediator = mediator;
     }
-    
-    
 }
