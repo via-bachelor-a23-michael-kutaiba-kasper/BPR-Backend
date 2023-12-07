@@ -26,7 +26,7 @@ jobs:
 
             - name: Build image
               run: docker build --build-arg SERVICE_ACCOUNT_KEY="$SERVICE_ACCOUNT_KEY_JSON" -t "$DOCKERHUB_USERNAME"/vibeverse-recommendationservice:latest .
-              working-directory: src/Services/EventManagementService
+              working-directory: src/Services/RecommendationService
               env:
                   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
                   SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}

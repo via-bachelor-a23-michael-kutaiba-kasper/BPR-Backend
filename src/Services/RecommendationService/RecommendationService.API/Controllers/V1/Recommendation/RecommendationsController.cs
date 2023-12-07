@@ -21,6 +21,7 @@ public class RecommendationsController: ControllerBase
     public async Task<ActionResult<object>> GetRecommendations([FromQuery] string userId, [FromQuery] int limit)
     {
         var recommendations = await _mediator.Send(new GetRecommendationsRequest(userId, limit));
+        
         return Ok(RecommendationsMapper.FromDomainToRecommendationsDto(recommendations));
     }
 }
