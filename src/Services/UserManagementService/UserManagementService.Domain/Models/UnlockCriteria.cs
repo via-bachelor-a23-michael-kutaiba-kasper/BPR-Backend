@@ -7,7 +7,6 @@ public abstract class UnlockCriteria
 {
     public IReadOnlyCollection<UnlockableProgress> UnlockableProgresses { get; set; } = new List<UnlockableProgress>();
     public long Goal { get; set; }
-    public long ExpReward { get; set; }
 
     public abstract bool hasBeenMet();
 }
@@ -24,8 +23,6 @@ public class CategoryAttendanceCriteria : UnlockCriteria
 
 public class MonthlyAttendanceCriteria : UnlockCriteria
 {
-    private DateTimeOffset MonthOfYear;
-
     public override bool hasBeenMet()
     {
         var eventAttendentInMonth = 0;
@@ -34,8 +31,9 @@ public class MonthlyAttendanceCriteria : UnlockCriteria
         {
             return false;
         }
+
         var currentMonth = UnlockableProgresses.First().Date.Month;
-        
+
         foreach (var progress in UnlockableProgresses)
         {
             if (progress.Date.Month != currentMonth)
@@ -49,13 +47,13 @@ public class MonthlyAttendanceCriteria : UnlockCriteria
             {
                 return true;
             }
+
             eventAttendentInMonth++;
         }
 
         return false;
     }
 }
-
 
 public class WeeklyAttendanceCriteria : UnlockCriteria
 {
@@ -69,9 +67,10 @@ public class WeeklyAttendanceCriteria : UnlockCriteria
         {
             return false;
         }
+
         var culture = CultureInfo.CurrentCulture;
         var currentWeek = UnlockableProgresses.First().Date.GetIso8601WeekNumber(culture);
-        
+
         foreach (var progress in UnlockableProgresses)
         {
             if (progress.Date.GetIso8601WeekNumber(culture) != currentWeek)
@@ -85,6 +84,7 @@ public class WeeklyAttendanceCriteria : UnlockCriteria
             {
                 return true;
             }
+
             eventAttendentInWeek++;
         }
 
@@ -92,14 +92,11 @@ public class WeeklyAttendanceCriteria : UnlockCriteria
     }
 }
 
-
 public class MonthlyExpGoalUnlockCriteria : UnlockCriteria
 {
-    public long CurrentExp { get; set; }
-    
     public override bool hasBeenMet()
     {
-        return CurrentExp >= Goal;
+        return UnlockableProgresses.Select(x => x.Progress).Sum() >= Goal;
     }
 }
 
