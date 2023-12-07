@@ -32,6 +32,6 @@ jobs:
                   SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.SERVICE_ACCOUNT_KEY_JSON }}
 
             - name: Push image
-              run: docker push "$DOCKERHUB_USERNAME"/vibeverse-eventmanagementservice:latest
+              run: docker push "$DOCKERHUB_USERNAME"/vibeverse-recommendationservice:latest
               env:
                   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
