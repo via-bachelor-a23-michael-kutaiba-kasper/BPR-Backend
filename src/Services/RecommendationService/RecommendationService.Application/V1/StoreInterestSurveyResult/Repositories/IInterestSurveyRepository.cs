@@ -5,6 +5,7 @@ using Google.Cloud.Firestore;
 using Microsoft.Extensions.Logging;
 using RecommendationService.Domain.Events;
 using RecommendationService.Domain.Util;
+using RecommendationService.Infrastructure;
 
 namespace RecommendationService.Application.V1.StoreInterestSurveyResult.Repositories;
 
@@ -22,11 +23,17 @@ public class FirebaseInterestSurveyRepository : IInterestSurveyRepository
     public FirebaseInterestSurveyRepository(ILogger<FirebaseInterestSurveyRepository> logger)
     {
         _logger = logger;
+        _reference = Firestore.Get().Collection("interestSurveys");
     }
 
     public async Task<InterestSurvey?> GetInterestSurvey(string userId)
     {
         var docRef = _reference.Document(userId);
+        if (docRef is null)
+        {
+            return null;
+        }
+        
         var snapshot = await docRef.GetSnapshotAsync();
 
         if (!snapshot.Exists)

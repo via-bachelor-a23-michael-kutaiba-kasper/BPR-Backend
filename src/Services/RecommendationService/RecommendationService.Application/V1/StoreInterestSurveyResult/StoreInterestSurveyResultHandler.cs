@@ -45,6 +45,9 @@ public class StoreInterestSurveyResultHandler : IRequestHandler<StoreInterestSur
         validator.validate(request.survey);
 
         _logger.LogInformation($"Storing interest survey for user {request.userId}");
-        return await _surveyRepository.StoreInterestSurvey(request.userId, request.survey);
+        var storedSurvey = await _surveyRepository.StoreInterestSurvey(request.userId, request.survey);
+        storedSurvey.User = existingUser;
+        
+        return storedSurvey;
     }
 }

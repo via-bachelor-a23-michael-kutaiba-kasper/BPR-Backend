@@ -84,6 +84,18 @@ type Recommendations {
     result: [Recommendation]
 }
 
+type InterestSurvey {
+    user: User
+    keywords: [String]
+    categories: [String]
+}
+
+input InterestSurvey {
+    user: User
+    keywords: [String]
+    categories: [String]
+}
+
 type EventResponse {
     result: Event
     status: Status
@@ -174,4 +186,10 @@ type Mutation {
         eventId: Int!
         reviewDate: String!
     ): ReviewResponse
+
+    storeInterestSurvey(
+        userId: String!
+        keywords: [String]!
+        categories: [String]!
+    )
 }
