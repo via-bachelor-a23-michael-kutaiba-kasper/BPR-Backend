@@ -120,7 +120,7 @@
             ],
             "resolver": {
                 "host": "http://recommendationservice-service",
-                "port": 80,
+                "port": 443,
                 "endpoint": "/api/v1/recommendations",
                 "method": "GET"
             }
