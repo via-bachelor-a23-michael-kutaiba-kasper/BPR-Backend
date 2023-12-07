@@ -1,5 +1,6 @@
 using System.Text.Json;
 using EventManagementService.Domain.Models;
+using EventManagementService.Domain.Models.Events;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.Logging;
 using RecommendationService.Domain.Events;
@@ -23,9 +24,45 @@ public class FirebaseInterestSurveyRepository : IInterestSurveyRepository
         _logger = logger;
     }
 
-    public Task<InterestSurvey?> GetInterestSurvey(string userId)
+    public async Task<InterestSurvey?> GetInterestSurvey(string userId)
     {
-        throw new NotImplementedException();
+        var docRef = _reference.Document(userId);
+        var snapshot = await docRef.GetSnapshotAsync();
+
+        if (!snapshot.Exists)
+        {
+            return null;
+        }
+
+        var data = snapshot.ToDictionary();
+        if (!data.ContainsKey("interestSurvey"))
+        {
+            return null;
+        }
+
+        var surveyObject = data["interestSurvey"];
+        if (surveyObject is null)
+        {
+            return null;
+        }
+
+        var surveyDto = JsonSerializer.Deserialize<InterestSurveyDto>(JsonSerializer.Serialize(surveyObject),
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        if (surveyDto is null)
+        {
+            return null;
+        }
+
+        return new InterestSurvey
+        {
+            User = surveyDto.User,
+            Categories = surveyDto.Categories.Select(EnumExtensions.GetEnumValueFromDescription<Category>).ToList(),
+            Keywords = surveyDto.Keywords.Select(EnumExtensions.GetEnumValueFromDescription<Keyword>).ToList()
+        };
     }
 
     public async Task<InterestSurvey> StoreInterestSurvey(string userId, InterestSurvey survey)
@@ -38,7 +75,7 @@ public class FirebaseInterestSurveyRepository : IInterestSurveyRepository
             Categories = survey.Categories.Select(category => category.GetDescription()).ToList(),
             Keywords= survey.Keywords.Select(kw => kw.GetDescription()).ToList(),
             
-        }
+        };
         var surveyDtoSerialized = JsonSerializer.Serialize(surveyDto, new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase

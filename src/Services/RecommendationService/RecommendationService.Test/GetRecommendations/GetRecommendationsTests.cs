@@ -77,9 +77,9 @@ public class GetRecommendationTests
             })
         };
 
-        userRepositoryMock.Setup(x => x.GetById(userIdToRecommendEventsFor))
+        userRepositoryMock.Setup(x => x.GetByIdAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new User() { UserId = userIdToRecommendEventsFor });
-        eventsRepositoryMock.Setup(x => x.GetAllEvents(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
+        eventsRepositoryMock.Setup(x => x.GetAllEventsAsync(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
         eventsRepositoryMock.Setup(x => x.GetEventsWhereUserHasAttendedAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new List<Event> { attendedEvent });
         reviewRepositoryMock.Setup(x => x.GetReviewsByUserAsync(userIdToRecommendEventsFor))
@@ -151,9 +151,9 @@ public class GetRecommendationTests
             })
         };
 
-        userRepositoryMock.Setup(x => x.GetById(userIdToRecommendEventsFor))
+        userRepositoryMock.Setup(x => x.GetByIdAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new User() { UserId = userIdToRecommendEventsFor });
-        eventsRepositoryMock.Setup(x => x.GetAllEvents(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
+        eventsRepositoryMock.Setup(x => x.GetAllEventsAsync(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
         eventsRepositoryMock.Setup(x => x.GetEventsWhereUserHasAttendedAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new List<Event> { attendedEvent });
         reviewRepositoryMock.Setup(x => x.GetReviewsByUserAsync(userIdToRecommendEventsFor))
@@ -230,9 +230,9 @@ public class GetRecommendationTests
             })
         };
 
-        userRepositoryMock.Setup(x => x.GetById(userIdToRecommendEventsFor))
+        userRepositoryMock.Setup(x => x.GetByIdAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new User() { UserId = userIdToRecommendEventsFor });
-        eventsRepositoryMock.Setup(x => x.GetAllEvents(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
+        eventsRepositoryMock.Setup(x => x.GetAllEventsAsync(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
         eventsRepositoryMock.Setup(x => x.GetEventsWhereUserHasAttendedAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new List<Event> { });
         reviewRepositoryMock.Setup(x => x.GetReviewsByUserAsync(userIdToRecommendEventsFor))
@@ -304,9 +304,9 @@ public class GetRecommendationTests
             })
         };
 
-        userRepositoryMock.Setup(x => x.GetById(userIdToRecommendEventsFor))
+        userRepositoryMock.Setup(x => x.GetByIdAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new User() { UserId = userIdToRecommendEventsFor });
-        eventsRepositoryMock.Setup(x => x.GetAllEvents(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
+        eventsRepositoryMock.Setup(x => x.GetAllEventsAsync(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
         eventsRepositoryMock.Setup(x => x.GetEventsWhereUserHasAttendedAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new List<Event> { attendedEvent });
         reviewRepositoryMock.Setup(x => x.GetReviewsByUserAsync(userIdToRecommendEventsFor))
@@ -383,9 +383,9 @@ public class GetRecommendationTests
             })
         };
 
-        userRepositoryMock.Setup(x => x.GetById(userIdToRecommendEventsFor))
+        userRepositoryMock.Setup(x => x.GetByIdAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new User() { UserId = userIdToRecommendEventsFor });
-        eventsRepositoryMock.Setup(x => x.GetAllEvents(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
+        eventsRepositoryMock.Setup(x => x.GetAllEventsAsync(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
         eventsRepositoryMock.Setup(x => x.GetEventsWhereUserHasAttendedAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new List<Event> { attendedEvent });
         reviewRepositoryMock.Setup(x => x.GetReviewsByUserAsync(userIdToRecommendEventsFor))
@@ -461,9 +461,9 @@ public class GetRecommendationTests
             })
         };
 
-        userRepositoryMock.Setup(x => x.GetById(userIdToRecommendEventsFor))
+        userRepositoryMock.Setup(x => x.GetByIdAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new User() { UserId = userIdToRecommendEventsFor });
-        eventsRepositoryMock.Setup(x => x.GetAllEvents(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
+        eventsRepositoryMock.Setup(x => x.GetAllEventsAsync(It.IsAny<DateTimeOffset>())).ReturnsAsync(futureEvents);
         eventsRepositoryMock.Setup(x => x.GetEventsWhereUserHasAttendedAsync(userIdToRecommendEventsFor))
             .ReturnsAsync(new List<Event> { attendedEvent });
         reviewRepositoryMock.Setup(x => x.GetReviewsByUserAsync(userIdToRecommendEventsFor))
