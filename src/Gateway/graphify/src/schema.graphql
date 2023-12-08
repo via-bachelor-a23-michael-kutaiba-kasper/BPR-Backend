@@ -148,6 +148,7 @@ type Query {
     reviewsByUser(userId: String): ReviewsByUserResponse
     finishedJoinedEvents(userId: String): EventsResponse
     recommendations(userId: String!, limit: Int): RecommendationsResponse
+    interestSurvey(userId: String!): InterestSurveyResponse
 }
 
 type Mutation {
