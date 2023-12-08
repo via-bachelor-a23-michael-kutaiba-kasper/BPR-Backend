@@ -1,75 +1,105 @@
 using System.ComponentModel;
+using UserManagementService.Domain.Util;
 
 namespace UserManagementService.Domain.Models;
 
 public enum Category
 {
     [Description("Un Assigned")] UnAssigned = 0,
-    
-    [Description("Concerts")] Concerts = 1,
 
-    [Description("Festivals")] Festivals = 2,
+    [CategoryGroup("Music and Performing Arts")] [Description("Concerts")]
+    Concerts = 1,
 
-    [Description("Conferences")] Conferences = 3,
+    [CategoryGroup("Music and Performing Arts")] [Description("Festivals")]
+    Festivals = 2,
 
-    [Description("Workshops")] Workshops = 4,
+    [CategoryGroup("Learning and Development")] [Description("Conferences")]
+    Conferences = 3,
 
-    [Description("Seminars")] Seminars = 5,
+    [CategoryGroup("Learning and Development")] [Description("Workshops")]
+    Workshops = 4,
 
-    [Description("Arts and Culture")] ArtsAndCulture = 6,
+    [CategoryGroup("Learning and Development")] [Description("Seminars")]
+    Seminars = 5,
 
-    [Description("Food and Drink")] FoodAndDrink = 7,
+    [CategoryGroup("Cultural and Artistic")] [Description("Arts and Culture")]
+    ArtsAndCulture = 6,
 
-    [Description("Charity and Fundraising")]
+    [CategoryGroup("Culinary and Drinks")] [Description("Food and Drink")]
+    FoodAndDrink = 7,
+
+    [CategoryGroup("Social and Community")] [Description("Charity and Fundraising")]
     CharityAndFundraising = 8,
 
-    [Description("Health and Wellness")] HealthAndWellness = 9,
+    [CategoryGroup("Health and Wellness")] [Description("Health and Wellness")]
+    HealthAndWellness = 9,
 
-    [Description("Technology")] Technology = 10,
+    [CategoryGroup("Learning and Development")] [Description("Technology")]
+    Technology = 10,
 
-    [Description("Business and Entrepreneurship")]
+    [CategoryGroup("Learning and Development")] [Description("Business and Entrepreneurship")]
     BusinessAndEntrepreneurship = 11,
 
-    [Description("Education")] Education = 12,
+    [CategoryGroup("Learning and Development")] [Description("Education")]
+    Education = 12,
 
-    [Description("Family and Kids")] FamilyAndKids = 13,
+    [CategoryGroup("Social and Community")] [Description("Family and Kids")]
+    FamilyAndKids = 13,
 
-    [Description("Outdoor and Adventure")] OutdoorAndAdventure = 14,
+    [CategoryGroup("Social and Community")] [Description("Outdoor and Adventure")]
+    OutdoorAndAdventure = 14,
 
-    [Description("Comedy")] Comedy = 15,
+    [CategoryGroup("Cultural and Artistic")] [Description("Comedy")]
+    Comedy = 15,
 
-    [Description("Film and Cinema")] FilmAndCinema = 16,
+    [CategoryGroup("Cultural and Artistic")] [Description("Film and Cinema")]
+    FilmAndCinema = 16,
 
-    [Description("Music")] Music = 17,
+    [CategoryGroup("Music and Performing Arts")] [Description("Music")]
+    Music = 17,
 
-    [Description("Performing Arts")] PerformingArts = 18,
+    [CategoryGroup("Music and Performing Arts")] [Description("Performing Arts")]
+    PerformingArts = 18,
 
-    [Description("Classic Literature")] ClassicLiterature = 19,
+    [CategoryGroup("Cultural and Artistic")] [Description("Classic Literature")]
+    ClassicLiterature = 19,
 
-    [Description("Drinks")] Drinks = 20,
+    [CategoryGroup("Culinary and Drinks")] [Description("Drinks")]
+    Drinks = 20,
 
-    [Description("Fitness and Workouts")] FitnessAndWorkouts = 21,
+    [CategoryGroup("Health and Wellness")] [Description("Fitness and Workouts")]
+    FitnessAndWorkouts = 21,
 
-    [Description("Foods")] Foods = 22,
+    [CategoryGroup("Culinary and Drinks")] [Description("Foods")]
+    Foods = 22,
 
-    [Description("Games")] Games = 23,
+    [CategoryGroup("Recreation and Hobbies")] [Description("Games")]
+    Games = 23,
 
-    [Description("Gardening")] Gardening = 24,
+    [CategoryGroup("Recreation and Hobbies")] [Description("Gardening")]
+    Gardening = 24,
 
-    [Description("Healthy Living and Self Care")]
+    [CategoryGroup("Health and Wellness")] [Description("Healthy Living and Self Care")]
     HealthyLivingAndSelfCare = 25,
 
-    [Description("Home and Garden")] HomeAndGarden = 26,
+    [CategoryGroup("Recreation and Hobbies")] [Description("Home and Garden")]
+    HomeAndGarden = 26,
 
-    [Description("Parties")] Parties = 27,
+    [CategoryGroup("Social and Community")] [Description("Parties")]
+    Parties = 27,
 
-    [Description("Religions")] Religions = 28,
+    [CategoryGroup("Religious and Spiritual")] [Description("Religions")]
+    Religions = 28,
 
-    [Description("Shopping")] Shopping = 29,
+    [CategoryGroup("Recreation and Hobbies")] [Description("Shopping")]
+    Shopping = 29,
 
-    [Description("Social Issues")] SocialIssues = 30,
+    [CategoryGroup("Social and Community")] [Description("Social Issues")]
+    SocialIssues = 30,
 
-    [Description("Sports")] Sports = 31,
+    [CategoryGroup("Recreation and Hobbies")] [Description("Sports")]
+    Sports = 31,
 
-    [Description("Theater")] Theater = 32
+    [CategoryGroup("Cultural and Artistic")] [Description("Theater")]
+    Theater = 32
 }
