@@ -16,4 +16,6 @@
     <ProjectReference Include="..\RecommendationService.Infrastructure\RecommendationService.Infrastructure.csproj" />
   </ItemGroup>
 
+
+
 </Project>

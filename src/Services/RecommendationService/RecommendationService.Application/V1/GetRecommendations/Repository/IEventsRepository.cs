@@ -11,7 +11,7 @@ namespace RecommendationService.Application.V1.GetRecommendations.Repository;
 public interface IEventsRepository
 {
     public Task<IReadOnlyCollection<Event>> GetEventsWhereUserHasAttendedAsync(string userId);
-    public Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null);
+    public Task<IReadOnlyCollection<Event>> GetAllEventsAsync(DateTimeOffset? from = null);
 }
 
 public class EventsRepository : IEventsRepository
@@ -77,7 +77,7 @@ public class EventsRepository : IEventsRepository
         }).ToList();
     }
 
-    public async Task<IReadOnlyCollection<Event>> GetAllEvents(DateTimeOffset? from = null)
+    public async Task<IReadOnlyCollection<Event>> GetAllEventsAsync(DateTimeOffset? from = null)
     {
         var response = await _apiGateway.QueryAsync<IEnumerable<ReadEventDto>>(new ApiGatewayQuery
         {

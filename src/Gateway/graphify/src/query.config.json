@@ -285,6 +285,35 @@
                 },
                 "method": "POST"
             }
+        },
+        {
+            "name": "storeInterestSurvey",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String!",
+                    "for": "body"
+                },
+                {
+                    "name": "keywords",
+                    "type": "[String]!",
+                    "for": "body"
+                },
+                {
+                    "name": "categories",
+                    "type": "[String]!",
+                    "for": "body"
+                }
+            ],
+            "resolver": {
+                "host": "http://localhost:8080",
+                "endpoint": "/api/v1/interestSurvey",
+                "port": 80,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "method": "POST"
+            }
         }
     ]
 }

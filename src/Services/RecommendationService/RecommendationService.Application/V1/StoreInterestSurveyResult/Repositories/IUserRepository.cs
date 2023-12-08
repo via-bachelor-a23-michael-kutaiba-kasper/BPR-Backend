@@ -1,21 +1,21 @@
 using EventManagementService.Domain.Models;
 using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Logging;
-using RecommendationService.Application.V1.GetRecommendations.Exceptions;
+using RecommendationService.Application.V1.StoreInterestSurveyResult.Exceptions;
 using RecommendationService.Infrastructure;
 
-namespace RecommendationService.Application.V1.GetRecommendations.Repository;
+namespace RecommendationService.Application.V1.StoreInterestSurveyResult.Repositories;
 
 public interface IUserRepository
 {
     Task<User?> GetByIdAsync(string userId);
 }
 
-public class UserRepository : IUserRepository
+public class FirebaseUserRepository : IUserRepository
 {
-    private readonly ILogger<UserRepository> _logger;
+    private readonly ILogger<FirebaseUserRepository> _logger;
 
-    public UserRepository(ILogger<UserRepository> logger)
+    public FirebaseUserRepository(ILogger<FirebaseUserRepository> logger)
     {
         _logger = logger;
     }
