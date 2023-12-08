@@ -1,10 +1,10 @@
 namespace UserManagementService.Application.V1.ProcessExpProgress.Model.ExpGeneratingEvents;
 
-public class JoinEventEvent: ExpGeneratingEventDecorator
+public class EventJoinedEvent: ExpGeneratingEventDecorator
 {
     private const int Reward = 400;
     
-    public JoinEventEvent(IExpGeneratingEvent e) : base(e)
+    public EventJoinedEvent(IExpGeneratingEvent e) : base(e)
     {
     }
 

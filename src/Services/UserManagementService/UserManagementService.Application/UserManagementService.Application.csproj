@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="V1\" />
-    <Folder Include="V1\ProcessExpProgress\Dtos\" />
   </ItemGroup>
 
 </Project>
