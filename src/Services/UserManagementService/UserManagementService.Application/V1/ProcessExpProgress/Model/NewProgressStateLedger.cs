@@ -7,7 +7,7 @@ public class ExperienceGainedLedger
 {
     private readonly IDictionary<string, IExpGeneratingEvent> _ledger = new Dictionary<string, IExpGeneratingEvent>();
 
-    public void RegisterExpGeneratingEvent(string userId, ExpGeneratingEventType type, object arg)
+    public void RegisterExpGeneratingEvent(string userId, ExpGeneratingEventType type, object? arg = null)
     {
         if (!_ledger.ContainsKey(userId))
         {
