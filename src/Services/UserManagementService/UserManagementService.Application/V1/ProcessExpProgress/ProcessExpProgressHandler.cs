@@ -16,10 +16,11 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
     private readonly IAttendeesRepository _attendeesRepository;
     private readonly IReviewRepository _reviewRepository;
     private readonly IInterestSurveyRepository _surveyRepository;
+    private readonly IProgressRepository _progressRepository;
 
     public ProcessExpProgressHandler(ILogger<ProcessExpProgressHandler> logger, IEventsRepository eventsRepository,
         IAttendeesRepository attendeesRepository, IReviewRepository reviewRepository,
-        IInterestSurveyRepository surveyRepository)
+        IInterestSurveyRepository surveyRepository, IProgressRepository _progressRepository)
     {
         _logger = logger;
         _eventsRepository = eventsRepository;
@@ -30,24 +31,27 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
 
     public async Task Handle(ProcessExpProgressRequest request, CancellationToken cancellationToken)
     {
-        var newlyCreatedEvents = await _eventsRepository.GetNewlyCreatedEvents();
-        foreach (var newlyCreatedEvent in newlyCreatedEvents)
+        _logger.LogInformation("Processing experience gains");
+        await RegisterNewlyCreatedEventsInLedger();
+        await RegisterNewAttendeesInLedger();
+        await RegisterNewReviewsInLedger();
+        await RegisterNewCompletedSurveysInLedger();
+        await CommitNewExperienceGains();
+    }
+
+    private async Task RegisterNewCompletedSurveysInLedger()
+    {
+        _logger.LogInformation("Processing newly completed surveys experience gains");
+        var newUsersThatHasCompletedSurveys = await _surveyRepository.GetNewlyCreatedSurveyUserList();
+        foreach (var userId in newUsersThatHasCompletedSurveys)
         {
-            var hostedEvents =
-                (await _eventsRepository.GetHostedEvents(newlyCreatedEvent.Host.UserId))
-                .Where(e => e.Id != newlyCreatedEvent.Id).ToList();
-
-            _ledger.RegisterExpGeneratingEvent(newlyCreatedEvent.Host.UserId, ExpGeneratingEventType.HostEvent,
-                hostedEvents);
+            _ledger.RegisterExpGeneratingEvent(userId, ExpGeneratingEventType.SurveyCompleted);
         }
+    }
 
-        var attendances = await _attendeesRepository.GetNewEventAttendees();
-        foreach (var attendance in attendances)
-        {
-            _ledger.RegisterExpGeneratingEvent(attendance.Event.Host.UserId, ExpGeneratingEventType.EventJoined);
-            _ledger.RegisterExpGeneratingEvent(attendance.UserId, ExpGeneratingEventType.EventJoined);
-        }
-
+    private async Task RegisterNewReviewsInLedger()
+    {
+        _logger.LogInformation("Processing reviews experience gains");
         var newReviews = await _reviewRepository.GetNewReviews();
         foreach (var newReview in newReviews)
         {
@@ -59,13 +63,36 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
             _ledger.RegisterExpGeneratingEvent(reviewedEvent.Host.UserId, ExpGeneratingEventType.EventReviewed,
                 newReview);
         }
+    }
 
-        var newUsersThatHasCompletedSurveys = await _surveyRepository.GetNewlyCreatedSurveyUserList();
-        foreach (var userId in newUsersThatHasCompletedSurveys)
+    private async Task RegisterNewAttendeesInLedger()
+    {
+        _logger.LogInformation("Processing attendees experience gains");
+        var attendances = await _attendeesRepository.GetNewEventAttendees();
+        foreach (var attendance in attendances)
         {
-            _ledger.RegisterExpGeneratingEvent(userId, ExpGeneratingEventType.SurveyCompleted);
+            _ledger.RegisterExpGeneratingEvent(attendance.Event.Host.UserId, ExpGeneratingEventType.EventJoined);
+            _ledger.RegisterExpGeneratingEvent(attendance.UserId, ExpGeneratingEventType.EventJoined);
         }
+    }
 
-        throw new NotImplementedException();
+    private async Task RegisterNewlyCreatedEventsInLedger()
+    {
+        _logger.LogInformation("Processing host event experience gains");
+        var newlyCreatedEvents = await _eventsRepository.GetNewlyCreatedEvents();
+        foreach (var newlyCreatedEvent in newlyCreatedEvents)
+        {
+            var hostedEvents =
+                (await _eventsRepository.GetHostedEvents(newlyCreatedEvent.Host.UserId))
+                .Where(e => e.Id != newlyCreatedEvent.Id).ToList();
+
+            _ledger.RegisterExpGeneratingEvent(newlyCreatedEvent.Host.UserId, ExpGeneratingEventType.HostEvent,
+                hostedEvents);
+        }
+    }
+
+    private async Task CommitNewExperienceGains()
+    {
+        
     }
 }
