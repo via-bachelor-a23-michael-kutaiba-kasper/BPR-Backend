@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <EmbeddedResource Include="Migrations\0001_initial_schema_setup.sql" />
   </ItemGroup>
 
 </Project>

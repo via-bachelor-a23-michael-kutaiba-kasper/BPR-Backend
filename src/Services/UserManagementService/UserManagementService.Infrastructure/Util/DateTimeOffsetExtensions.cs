@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace UserManagementService.Infrastructure.Util;
 
 public static class DateTimeOffsetExtensions

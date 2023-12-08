@@ -1,14 +1,33 @@
 services:
-    usermanagementservice:
-        container_name: usermanagementservice-service
-        build:
-            context: .
-            dockerfile: ./Dockerfile
-        ports:
-            - 8080:80
-        env_file:
-            - ./.env
+  usermanagementservice:
+    container_name: usermanagementservice-service
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:80
+    env_file:
+      - ./.env
+    environment:
+      - DEPLOYMENT_ENVIRONMENT=LOCAL_CONTAINER
+    depends_on:
+      - usermanagement_postgres
+      
+  usermanagement_postgres:
+    container_name: usermanagement_postgres
+    image: postgres:15.4-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
+    driver: local
 networks:
-    default:
-        name: couch-potatoes-network
-        external: true
+  default:
+    name: vibeverse-network
+    external: true
