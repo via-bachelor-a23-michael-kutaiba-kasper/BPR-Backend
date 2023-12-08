@@ -124,6 +124,22 @@
                 "endpoint": "/api/v1/recommendations",
                 "method": "GET"
             }
+        },
+        {
+            "name": "interestSurvey",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String!",
+                    "for": "urlQueryParam"
+                }
+            ],
+            "resolver": {
+                "host": "http://recommendationservice-service",
+                "port": 443,
+                "endpoint": "/api/v1/interestSurvey",
+                "method": "GET"
+            }
         }
     ],
     "mutations": [

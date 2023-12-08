@@ -47,6 +47,7 @@ module "api_gateway" {
     "QUERY_FINISHEDJOINEDEVENTS_HOST" = module.eventmanagement_service.service_url
     "QUERY_RECOMMENDATIONS_HOST"      = module.recommendation_service.service_url
     "QUERY_STOREINTERESTSURVEY_HOST"  = module.recommendation_service.service_url
+    "QUERY_INTERESTSURVEY_HOST"       = module.recommendation_service.service_url
   }
   cloud_sql_instance = google_sql_database_instance.main.connection_name
 }
