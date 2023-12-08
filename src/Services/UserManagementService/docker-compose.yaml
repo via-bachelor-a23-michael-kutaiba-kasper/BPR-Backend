@@ -8,6 +8,11 @@ services:
       - 8080:80
     env_file:
       - ./.env
+    environment:
+      - DEPLOYMENT_ENVIRONMENT=LOCAL_CONTAINER
+    depends_on:
+      - usermanagement_postgres
+      
   usermanagement_postgres:
     container_name: usermanagement_postgres
     image: postgres:15.4-alpine

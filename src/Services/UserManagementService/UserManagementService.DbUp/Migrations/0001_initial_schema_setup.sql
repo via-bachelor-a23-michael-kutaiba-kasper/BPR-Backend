@@ -1,6 +1,3 @@
-CREATE SCHEMA IF NOT EXISTS user_progress;
-SET SCHEMA 'user_progress';
-
 CREATE TABLE IF NOT EXISTS category
 (
     id   INT,
@@ -41,15 +38,9 @@ CREATE TABLE IF NOT EXISTS unlockable_progress
 (
     id       INT GENERATED ALWAYS AS IDENTITY,
     progress BIGINT,
-    date     TIMESTAMPTZ
-);
-
-/*CREATE TABLE IF NOT EXISTS monthly_exp_goal_unlock_criteria
-(
-    id   INT GENERATED ALWAYS AS IDENTITY,
-    goal BIGINT,
+    date     TIMESTAMPTZ,
     PRIMARY KEY (id)
-);*/
+);
 
 CREATE TABLE IF NOT EXISTS category_attendance_criteria
 (

@@ -79,14 +79,21 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         await AcceptInvitationIfInvited(request.UserId, request.EventId);
 
         await _eventRepository.AddAttendeeToEventAsync(request.UserId, request.EventId);
-        
-        var hostNotificationToken = await _userRepository.GetNotificationTokenByUserIdAsync(existingEvent.Host.UserId);
-        await _notifier.SendNotificationAsync(new UserNotification
+
+        try
         {
-            Title = "New attendee",
-            Body = $"A new user has joined your event {existingEvent.Title}!",
-            Token = hostNotificationToken
-        });
+            var hostNotificationToken = await _userRepository.GetNotificationTokenByUserIdAsync(existingEvent.Host.UserId);
+            await _notifier.SendNotificationAsync(new UserNotification
+            {
+                Title = "New attendee",
+                Body = $"A new user has joined your event {existingEvent.Title}!",
+                Token = hostNotificationToken
+            });
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"{e.StackTrace}");
+        }
         
         await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].TopicId,
             _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].ProjectId,
