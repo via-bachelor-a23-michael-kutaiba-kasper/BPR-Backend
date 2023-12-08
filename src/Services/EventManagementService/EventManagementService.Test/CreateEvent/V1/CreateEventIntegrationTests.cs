@@ -4,8 +4,11 @@ using EventManagementService.Application.V1.CreateEvent.Repository;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure;
+using EventManagementService.Infrastructure.AppSettings;
+using EventManagementService.Infrastructure.EventBus;
 using EventManagementService.Test.Shared;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace EventManagementService.Test.CreateEvent.V1;
@@ -15,6 +18,38 @@ public class CreateEventIntegrationTests
 {
     private readonly TestDataContext _context = new();
     private readonly ConnectionStringManager _connectionStringManager = new();
+    private readonly IOptions<PubSub> _pubsubOptions = Options.Create(new PubSub()
+        {
+            SubscriptionName = "eventmanagement",
+            Topics = new[]
+            {
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                }
+            }
+        });
 
     [SetUp]
     public async Task Setup()
@@ -37,6 +72,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -46,8 +82,9 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
-        
+            firebaseMock.Object,
+            eventBusMock.Object, _pubsubOptions);
+
 
         var request = new CreateEventRequest(new Event
         {
@@ -103,6 +140,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -112,7 +150,8 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object,
+            eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -155,7 +194,7 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
         Assert.That(validationException.Message, Is.EqualTo("Event is missing Title"));
@@ -171,6 +210,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -180,7 +220,8 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object,
+            eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -223,7 +264,7 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
         Assert.That(validationException.Message, Is.EqualTo("Event start date is either null or is in the past"));
@@ -237,6 +278,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -246,7 +288,7 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object, eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -289,7 +331,7 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
         Assert.That(validationException.Message,
@@ -304,6 +346,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -313,7 +356,7 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object, eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -356,13 +399,13 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
         Assert.That(validationException.Message,
             Is.EqualTo("Event created date is either null or greater than end or start dates"));
     }
-    
+
     [TestCase("")]
     [TestCase("  ")]
     [TestCase(null)]
@@ -372,6 +415,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -381,7 +425,7 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object, eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -424,7 +468,7 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
         Assert.That(validationException.Message, Is.EqualTo("Event location is either null or empty"));
@@ -440,6 +484,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -449,7 +494,7 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object, eventBusMock.Object, _pubsubOptions);
         var request = new CreateEventRequest(new Event
         {
             Id = 1,
@@ -491,7 +536,7 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
         Assert.That(validationException.Message, Is.EqualTo("Event city is either null or empty"));
@@ -505,6 +550,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -514,7 +560,7 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object, eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -557,7 +603,7 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
         Assert.That(validationException.Message, Is.EqualTo("Event geo location latitude is invalid"));
@@ -571,6 +617,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -580,7 +627,7 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object, eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -623,7 +670,7 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
         Assert.That(validationException.Message, Is.EqualTo("Event geo location longitude is invalid"));
@@ -636,6 +683,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -645,7 +693,7 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object, eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -687,12 +735,13 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
-        Assert.That(validationException.Message, Is.EqualTo("Event keywords are either less or greater that the required"));
+        Assert.That(validationException.Message,
+            Is.EqualTo("Event keywords are either less or greater that the required"));
     }
-    
+
     [Test]
     public async Task CreateNewEvent_WithInvalidMaxNumberOfKeywords_ThorwEventValidationException()
     {
@@ -700,6 +749,7 @@ public class CreateEventIntegrationTests
         var repoLogger = new Mock<ILogger<SqlCreateEvent>>();
         var handlerLogger = new Mock<ILogger<CreateEventHandler>>();
         var firebaseMock = new Mock<IFirebaseUser>();
+        var eventBusMock = new Mock<IEventBus>();
         firebaseMock.Setup(x => x.UserExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
         var handler = new CreateEventHandler
         (
@@ -709,7 +759,7 @@ public class CreateEventIntegrationTests
                 repoLogger.Object
             ),
             handlerLogger.Object,
-            firebaseMock.Object);
+            firebaseMock.Object, eventBusMock.Object, _pubsubOptions);
 
         var request = new CreateEventRequest(new Event
         {
@@ -755,9 +805,10 @@ public class CreateEventIntegrationTests
         // Act
         var act = async () => await handler.Handle(request, new CancellationToken());
         var exception = Assert.ThrowsAsync<CreateEventException>(() => act.Invoke());
-        var validationException = (EventValidationException)exception!.InnerException!;
+        var validationException = (EventValidationException) exception!.InnerException!;
 
         // Assert 
-        Assert.That(validationException.Message, Is.EqualTo("Event keywords are either less or greater that the required"));
+        Assert.That(validationException.Message,
+            Is.EqualTo("Event keywords are either less or greater that the required"));
     }
 }
