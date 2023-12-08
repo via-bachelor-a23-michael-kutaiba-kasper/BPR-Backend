@@ -3,6 +3,7 @@ namespace UserManagementService.Domain.Models;
 public class Progress
 {
     public int Id { get; set; }
+    public long TotalExp{ get; set; }
     public Level Level { get; set; } = new();
     public MonthlyGoal MonthlyGoal { get; set; } = new();
     public IReadOnlyCollection<Unlockable> Unlockables = new List<Unlockable>();
