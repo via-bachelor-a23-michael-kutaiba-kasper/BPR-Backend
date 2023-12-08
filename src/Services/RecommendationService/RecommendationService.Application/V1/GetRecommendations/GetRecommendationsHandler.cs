@@ -39,7 +39,7 @@ public class GetRecommendationsHandler : IRequestHandler<GetRecommendationsReque
 
     public async Task<Recommendations> Handle(GetRecommendationsRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetById(request.UserId);
+        var user = await _userRepository.GetByIdAsync(request.UserId);
         if (user is null)
         {
             throw new UserNotFoundException(request.UserId);
@@ -47,7 +47,7 @@ public class GetRecommendationsHandler : IRequestHandler<GetRecommendationsReque
             
         var reviews = await _reviewRepository.GetReviewsByUserAsync(request.UserId);
         var attendedEvents = await _eventsRepository.GetEventsWhereUserHasAttendedAsync(request.UserId);
-        var futureEvents = await _eventsRepository.GetAllEvents(DateTimeOffset.UtcNow);
+        var futureEvents = await _eventsRepository.GetAllEventsAsync(DateTimeOffset.UtcNow);
         var survey = await _surveyRepository.GetAsync(request.UserId);
 
         _logger.LogInformation($"Processing recommendations for user {request.UserId} based on {reviews.Count} reviews, {attendedEvents.Count} completed events and {futureEvents.Count} future events");

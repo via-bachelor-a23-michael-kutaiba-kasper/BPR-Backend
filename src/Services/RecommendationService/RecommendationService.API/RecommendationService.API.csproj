@@ -18,7 +18,9 @@
     <ProjectReference Include="..\RecommendationService.DbUp\RecommendationService.DbUp.csproj" />
     <ProjectReference Include="..\RecommendationService.Domain\RecommendationService.Domain.csproj" />
     <ProjectReference Include="..\RecommendationService.Infrastructure\RecommendationService.Infrastructure.csproj" />
+
   </ItemGroup>
+
 
 
 
