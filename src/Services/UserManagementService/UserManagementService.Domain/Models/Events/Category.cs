@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using UserManagementService.Domain.Util;
 
-namespace UserManagementService.Domain.Models;
+namespace UserManagementService.Domain.Models.Events;
 
 public enum Category
 {
@@ -88,7 +88,7 @@ public enum Category
     [CategoryGroup("Social and Community")] [Description("Parties")]
     Parties = 27,
 
-    [CategoryGroup("Religious and Spiritual")] [Description("Religions")]
+    [CategoryGroup("Social and Community")] [Description("Religions")]
     Religions = 28,
 
     [CategoryGroup("Recreation and Hobbies")] [Description("Shopping")]

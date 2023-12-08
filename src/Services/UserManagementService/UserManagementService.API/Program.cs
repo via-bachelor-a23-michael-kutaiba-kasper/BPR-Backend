@@ -2,12 +2,20 @@ using System.Text.Json;
 using UserManagementService.API.Settings;
 using UserManagementService.Application;
 using UserManagementService.Infrastructure;
+using UserManagementService.Infrastructure.ApiGateway;
+using UserManagementService.Infrastructure.AppSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddSettingsConfigurations(builder.Configuration);
+
+Gateway gatewayConfig = builder.Configuration.GetSection("Gateway").Get<Gateway>();
+
+// Gateway Abstraction
+// NOTE: Not able to access IOptions from infrastructure project, so this will suffice for now.
+builder.Services.AddScoped<IApiGateway>(_ => new ApiGateway(gatewayConfig));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS achievement
 (
     id          INT,
     name        VARCHAR,
-    unlock_date TIMESTAMPTZ,
     description VARCHAR,
     reward      BIGINT,
     icon        VARCHAR,

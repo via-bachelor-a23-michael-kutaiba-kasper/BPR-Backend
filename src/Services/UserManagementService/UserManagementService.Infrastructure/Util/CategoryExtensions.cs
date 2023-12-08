@@ -1,4 +1,5 @@
 using UserManagementService.Domain.Models;
+using UserManagementService.Domain.Models.Events;
 using UserManagementService.Domain.Util;
 
 namespace UserManagementService.Infrastructure.Util;

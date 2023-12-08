@@ -1,4 +1,5 @@
 using System.Globalization;
+using UserManagementService.Domain.Models.Events;
 using UserManagementService.Domain.Util;
 
 namespace UserManagementService.Domain.Models;
