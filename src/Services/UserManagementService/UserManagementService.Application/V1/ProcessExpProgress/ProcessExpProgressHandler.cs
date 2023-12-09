@@ -20,13 +20,14 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
 
     public ProcessExpProgressHandler(ILogger<ProcessExpProgressHandler> logger, IEventsRepository eventsRepository,
         IAttendeesRepository attendeesRepository, IReviewRepository reviewRepository,
-        IInterestSurveyRepository surveyRepository, IProgressRepository _progressRepository)
+        IInterestSurveyRepository surveyRepository, IProgressRepository progressRepository)
     {
         _logger = logger;
         _eventsRepository = eventsRepository;
         _attendeesRepository = attendeesRepository;
         _reviewRepository = reviewRepository;
         _surveyRepository = surveyRepository;
+        _progressRepository = progressRepository;
     }
 
     public async Task Handle(ProcessExpProgressRequest request, CancellationToken cancellationToken)
@@ -45,7 +46,7 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
         var newUsersThatHasCompletedSurveys = await _surveyRepository.GetNewlyCreatedSurveyUserList();
         foreach (var userId in newUsersThatHasCompletedSurveys)
         {
-            _ledger.RegisterExpGeneratingEvent(userId, ExpGeneratingEventType.SurveyCompleted);
+            _ledger.RegisterExpGeneratingEvent(userId, e => new SurveyCompletedEvent(e));
         }
     }
 
@@ -57,11 +58,10 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
         {
             var previousReviews = (await _reviewRepository.GetReviewsByUser(newReview.ReviewerId))
                 .Where(review => review.EventId != newReview.EventId).ToList();
-            _ledger.RegisterExpGeneratingEvent(newReview.ReviewerId, ExpGeneratingEventType.RateEvent, previousReviews);
+            _ledger.RegisterExpGeneratingEvent(newReview.ReviewerId, e => new RateEventEvent(e, previousReviews));
 
             var reviewedEvent = await _eventsRepository.GetById(newReview.EventId);
-            _ledger.RegisterExpGeneratingEvent(reviewedEvent.Host.UserId, ExpGeneratingEventType.EventReviewed,
-                newReview);
+            _ledger.RegisterExpGeneratingEvent(reviewedEvent.Host.UserId, e => new EventReviewedEvent(e, newReview));
         }
     }
 
@@ -71,8 +71,8 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
         var attendances = await _attendeesRepository.GetNewEventAttendees();
         foreach (var attendance in attendances)
         {
-            _ledger.RegisterExpGeneratingEvent(attendance.Event.Host.UserId, ExpGeneratingEventType.EventJoined);
-            _ledger.RegisterExpGeneratingEvent(attendance.UserId, ExpGeneratingEventType.EventJoined);
+            _ledger.RegisterExpGeneratingEvent(attendance.Event.Host.UserId, e => new EventJoinedEvent(e));
+            _ledger.RegisterExpGeneratingEvent(attendance.UserId, e => new JoinEventEvent(e));
         }
     }
 
@@ -86,13 +86,16 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
                 (await _eventsRepository.GetHostedEvents(newlyCreatedEvent.Host.UserId))
                 .Where(e => e.Id != newlyCreatedEvent.Id).ToList();
 
-            _ledger.RegisterExpGeneratingEvent(newlyCreatedEvent.Host.UserId, ExpGeneratingEventType.HostEvent,
-                hostedEvents);
+            _ledger.RegisterExpGeneratingEvent(newlyCreatedEvent.Host.UserId, e => new HostEventEvent(e, hostedEvents));
         }
     }
 
     private async Task CommitNewExperienceGains()
     {
-        
+        var userIds = _ledger.GetUserIds();
+        foreach (var userId in userIds)
+        {
+            await _progressRepository.AddExpToUserProgressAsync(userId, _ledger.GetExperienceGained(userId));
+        }
     }
 }

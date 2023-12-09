@@ -7,7 +7,7 @@ public class ExperienceGainedLedger
 {
     private readonly IDictionary<string, IExpGeneratingEvent> _ledger = new Dictionary<string, IExpGeneratingEvent>();
 
-    public void RegisterExpGeneratingEvent(string userId, ExpGeneratingEventType type, object? arg = null)
+    public void RegisterExpGeneratingEvent(string userId, Func<IExpGeneratingEvent, IExpGeneratingEvent> eventFactory)
     {
         if (!_ledger.ContainsKey(userId))
         {
@@ -16,22 +16,18 @@ public class ExperienceGainedLedger
         }
 
         var currentDecorator = _ledger[userId];
-        IExpGeneratingEvent updatedDecorator = type switch
-        {
-            ExpGeneratingEventType.EventJoined => new EventJoinedEvent(currentDecorator),
-            ExpGeneratingEventType.EventReviewed => new EventReviewedEvent(currentDecorator, (Review) arg),
-            ExpGeneratingEventType.HostEvent => new HostEventEvent(currentDecorator, (IReadOnlyCollection<Event>) arg),
-            ExpGeneratingEventType.JoinEvent => new JoinEventEvent(currentDecorator),
-            ExpGeneratingEventType.RateEvent => new RateEventEvent(currentDecorator, (IReadOnlyCollection<Review>) arg),
-            ExpGeneratingEventType.SurveyCompleted => new SurveyCompletedEvent(currentDecorator),
-            _ => throw new Exception("Unknown event")
-        };
-
+        var updatedDecorator = eventFactory.Invoke(currentDecorator);
+        
         _ledger[userId] = updatedDecorator;
+    }
+    public IReadOnlyCollection<string> GetUserIds()
+    {
+        return _ledger.Keys.ToList();
     }
 
     public long GetExperienceGained(string userId)
     {
         return _ledger.ContainsKey(userId) ? 0 : _ledger[userId].GetExperienceGained();
     }
+
 }
