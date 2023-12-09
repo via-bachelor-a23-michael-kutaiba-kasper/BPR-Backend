@@ -101,8 +101,9 @@ public class PubSubEventBus : IEventBus
 
         try
         {
-            await subscriber.CreateSubscriptionAsync(subscriptionName, topicName, pushConfig: null,
+           var newSub = await subscriber.CreateSubscriptionAsync(subscription, topic, pushConfig: null,
                 ackDeadlineSeconds: 60);
+           subscription = newSub?.SubscriptionName;
         }
         catch (Exception e)
         {

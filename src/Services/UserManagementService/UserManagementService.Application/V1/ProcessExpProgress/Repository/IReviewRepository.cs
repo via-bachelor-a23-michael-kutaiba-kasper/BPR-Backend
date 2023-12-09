@@ -1,4 +1,5 @@
 using Dapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using UserManagementService.Application.V1.ProcessExpProgress.Data;
@@ -20,21 +21,38 @@ public class ReviewRepository : IReviewRepository
     private readonly IEventBus _eventBus;
     private readonly IOptions<PubSub> _pubsubConfig;
     private readonly IConnectionStringManager _connectionStringManager;
+    private readonly ILogger<ReviewRepository> _logger;
 
-    public ReviewRepository(IEventBus eventBus, IOptions<PubSub> pubsubConfig, IConnectionStringManager connectionStringManager)
+    public ReviewRepository(IEventBus eventBus, IOptions<PubSub> pubsubConfig,
+        IConnectionStringManager connectionStringManager, ILogger<ReviewRepository> logger)
     {
         _eventBus = eventBus;
         _pubsubConfig = pubsubConfig;
         _connectionStringManager = connectionStringManager;
+        _logger = logger;
     }
 
     public async Task<IReadOnlyCollection<Review>> GetNewReviews()
     {
-        var topic = _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewReview];
-        var newReviews = await _eventBus.PullAsync<Review>(topic.TopicId, topic.ProjectId,
-            _pubsubConfig.Value.SubscriptionName, 1000, new CancellationToken());
+        try
+        {
+            _logger.LogInformation("Retrieving new reviews from PubSub");
 
-        return newReviews.ToList();
+            var topic = _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewReview];
+            var newReviews = (await _eventBus.PullAsync<Review>(topic.TopicId, topic.ProjectId,
+                topic.SubscriptionNames[PubSubSubscriptionNames.Exp], 1000, new CancellationToken())).ToList();
+
+            _logger.LogInformation($"Retrieved {newReviews.Count} new reviews from PubSub");
+
+            return newReviews.ToList();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Failed to fetch new reviews from PubSub");
+            _logger.LogError(e.Message);
+            _logger.LogError(e.StackTrace);
+            return new List<Review>();
+        }
     }
 
     public async Task<int> GetReviewsCountByUser(string userId)

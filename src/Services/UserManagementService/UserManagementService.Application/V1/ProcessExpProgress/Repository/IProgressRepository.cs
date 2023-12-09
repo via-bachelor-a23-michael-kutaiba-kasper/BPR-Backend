@@ -26,6 +26,8 @@ public class ProgressRepository : IProgressRepository
     public async Task EnsureUserHasProgress(string userId)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
+        await connection.OpenAsync();
+
         var getProgressQuery = "SELECT * FROM user_progress.progress WHERE user_id = @userId";
         var existingEntity = await connection.QueryFirstOrDefaultAsync<ProgressEntity>(getProgressQuery, new
         {
@@ -41,11 +43,39 @@ public class ProgressRepository : IProgressRepository
                 @userId = userId
             });
         }
+
+        await connection.CloseAsync();
     }
 
-    public Task AddExpToUserProgressAsync(string userId, long exp)
+    public async Task AddExpToUserProgressAsync(string userId, long exp)
     {
-        throw new NotImplementedException();
+        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
+        await connection.OpenAsync();
+
+        var insertProgressStatement =
+            "INSERT INTO user_progress.user_exp_progress(user_id, exp_gained, datetime) VALUES (@userId, @expGained, @datetime)";
+        await connection.ExecuteAsync(insertProgressStatement, new
+        {
+            @userId = userId,
+            @expGained = exp,
+            @datetime = DateTimeOffset.UtcNow.ToFormattedUtcString()
+        });
+
+        var selectProgressQuery = "SELECT * FROM user_progress.progress WHERE user_id = @userId";
+        var progressEntity = await connection.QueryFirstAsync<ProgressEntity>(selectProgressQuery, new
+        {
+            @userId = userId
+        });
+
+        var updateProgressStatement =
+            "UPDATE user_progress.progress SET total_exp = @totalExp WHERE user_id = @userId ";
+        await connection.ExecuteAsync(updateProgressStatement, new
+        {
+            @totalExp = progressEntity.total_exp + exp,
+            @userId = userId
+        });
+
+        await connection.CloseAsync();
     }
 
     public async Task RegisterNewEventsHostedCount(string userId, int newEventsCount)
@@ -80,6 +110,8 @@ public class ProgressRepository : IProgressRepository
             @eventsHosted = newEventsHostedCount,
             @datetime = DateTimeOffset.UtcNow.ToFormattedUtcString()
         });
+
+        await connection.CloseAsync();
     }
 
     public async Task RegisterNewReviewCount(string userId, int newReviewCount)
@@ -114,5 +146,7 @@ public class ProgressRepository : IProgressRepository
             @eventsHosted = latestStatsEntry.events_hosted,
             @datetime = DateTimeOffset.UtcNow.ToFormattedUtcString()
         });
+
+        await connection.CloseAsync();
     }
 }

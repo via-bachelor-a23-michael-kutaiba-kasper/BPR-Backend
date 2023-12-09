@@ -1,4 +1,5 @@
 using Dapper;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using UserManagementService.Application.V1.ProcessExpProgress.Data;
@@ -20,28 +21,45 @@ public interface IEventsRepository
 
 public class EventsRepository : IEventsRepository
 {
+    private readonly ILogger<EventsRepository> _logger;
     private readonly IEventBus _eventBus;
     private readonly IApiGateway _apiGateway;
     private readonly IConnectionStringManager _connectionStringManager;
     private readonly IOptions<PubSub> _pubsubConfig;
 
     public EventsRepository(IEventBus eventBus, IApiGateway apiGateway,
-        IConnectionStringManager connectionStringManager, IOptions<PubSub> pubsubConfig)
+        IConnectionStringManager connectionStringManager, IOptions<PubSub> pubsubConfig,
+        ILogger<EventsRepository> logger)
     {
         _eventBus = eventBus;
         _apiGateway = apiGateway;
         _connectionStringManager = connectionStringManager;
         _pubsubConfig = pubsubConfig;
+        _logger = logger;
     }
 
     public async Task<IReadOnlyCollection<Event>> GetNewlyCreatedEvents()
     {
-        var topic = _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent];
-        var newEvents = await _eventBus.PullAsync<Event>(topic.TopicId, topic.ProjectId,
-            _pubsubConfig.Value.SubscriptionName,
-            1000, new CancellationToken());
+        try
+        {
+            _logger.LogInformation("Pulling new events from Pub Sub");
+            
+            var topic = _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent];
+            var newEvents = (await _eventBus.PullAsync<Event>(topic.TopicId, topic.ProjectId,
+                topic.SubscriptionNames[PubSubSubscriptionNames.Exp],
+                1000, new CancellationToken())).ToList();
+            
+            _logger.LogInformation($"Retrieved {newEvents.Count} newly created events");
 
-        return newEvents.ToList();
+            return newEvents;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Failed to pull event created messages from PubSub");
+            _logger.LogError(e.Message);
+            _logger.LogError(e.StackTrace);
+            return new List<Event>();
+        }
     }
 
     public async Task<Event> GetById(int eventId)

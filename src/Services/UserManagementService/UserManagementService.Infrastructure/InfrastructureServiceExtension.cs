@@ -14,7 +14,6 @@ public static class InfrastructureServiceExtension
         collection.AddScoped<ISendNotificationStrategyFactory, FcmSendNotificationSendNotificationStrategyFactory>();
         collection.AddScoped<INotifier, FcmNotifier>();
         collection.AddScoped<IConnectionStringManager, ConnectionStringManager>();
-        collection.AddScoped<IApiGateway, ApiGateway.ApiGateway>();
         
         return collection;
     }
