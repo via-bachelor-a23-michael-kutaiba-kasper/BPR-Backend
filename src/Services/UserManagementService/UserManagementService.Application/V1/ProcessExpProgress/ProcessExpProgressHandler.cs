@@ -7,28 +7,28 @@ using UserManagementService.Application.V1.ProcessExpProgress.Repository;
 
 namespace UserManagementService.Application.V1.ProcessExpProgress;
 
-public record ProcessExpProgressRequest() : IRequest;
+public record ProcessExpProgressRequest(IEnumerable<IExpStrategy> strategies) : IRequest;
 
 public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressRequest>
 {
     private readonly ExperienceGainedLedger _ledger = new ExperienceGainedLedger();
     private readonly ILogger<ProcessExpProgressHandler> _logger;
-    private readonly IEnumerable<IExpStrategy> _expStrategies;
     private readonly IProgressRepository _progressRepository;
-    public ProcessExpProgressHandler(ILogger<ProcessExpProgressHandler> logger, IEnumerable<IExpStrategy> expStrategies, IProgressRepository progressRepository)
+
+    public ProcessExpProgressHandler(ILogger<ProcessExpProgressHandler> logger, IProgressRepository progressRepository)
     {
         _logger = logger;
-        _expStrategies = expStrategies;
         _progressRepository = progressRepository;
     }
 
     public async Task Handle(ProcessExpProgressRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Processing experience gains");
-        foreach (var expStrategy in _expStrategies)
+        foreach (var expStrategy in request.strategies)
         {
             await expStrategy.Register(_ledger, _logger);
         }
+
         await CommitNewExperienceGains();
     }
 

@@ -23,8 +23,7 @@ public class NewReviewsStrategy: IExpStrategy
         var newReviews = await _reviewRepository.GetNewReviews();
         foreach (var newReview in newReviews)
         {
-            // minus 1, because we don't want to provide bonus for the new review / new review should nto be counted as old review.
-            var previousReviewsCount = await _reviewRepository.GetReviewsCountByUser(newReview.ReviewerId) - 1;
+            var previousReviewsCount = await _reviewRepository.GetReviewsCountByUser(newReview.ReviewerId);
             ledger.RegisterExpGeneratingEvent(newReview.ReviewerId, e => new RateEventEvent(e, previousReviewsCount));
             await _progressRepository.RegisterNewReviewCount(newReview.ReviewerId, 1);
 

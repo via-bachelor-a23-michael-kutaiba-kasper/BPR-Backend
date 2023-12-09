@@ -23,7 +23,7 @@ public class NewlyCreatedEventsStrategy: IExpStrategy
         foreach (var newlyCreatedEvent in newlyCreatedEvents)
         {
             var hostedEventsCount =
-                await _eventsRepository.GetHostedEventsCount(newlyCreatedEvent.Host.UserId) - 1;
+                await _eventsRepository.GetHostedEventsCount(newlyCreatedEvent.Host.UserId);
             ledger.RegisterExpGeneratingEvent(newlyCreatedEvent.Host.UserId, e => new HostEventEvent(e, hostedEventsCount));
             await _progressRepository.RegisterNewEventsHostedCount(newlyCreatedEvent.Host.UserId, 1);
         }

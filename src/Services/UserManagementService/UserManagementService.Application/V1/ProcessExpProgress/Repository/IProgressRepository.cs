@@ -50,17 +50,24 @@ public class ProgressRepository : IProgressRepository
 
     public async Task RegisterNewEventsHostedCount(string userId, int newEventsCount)
     {
-        var latestStatsEntryQuery = """
-        SELECT * FROM user_progress.user_stats_history WHERE user_id=@userId ORDER BY datetime DESC LIMIT 1; 
-        """;
-
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
 
-        var latestStatsEntry = await connection.QueryFirstAsync<UserStatsHistoryEntity>(latestStatsEntryQuery, new
+        var latestStatsEntryQuery = """
+        SELECT * FROM user_progress.user_stats_history WHERE user_id=@userId ORDER BY datetime DESC LIMIT 1; 
+        """;
+        var latestStatsEntry = await connection.QueryFirstOrDefaultAsync<UserStatsHistoryEntity>(latestStatsEntryQuery,
+            new
+            {
+                @userId = userId
+            }) ?? new UserStatsHistoryEntity
         {
-            @userId = userId
-        });
+            user_id = userId,
+            events_hosted = 0,
+            reviews_created = 0,
+            datetime = DateTimeOffset.UtcNow,
+            id = -1
+        };
         var newEventsHostedCount = latestStatsEntry.events_hosted + newEventsCount;
 
         var updateQuery = """
@@ -77,17 +84,24 @@ public class ProgressRepository : IProgressRepository
 
     public async Task RegisterNewReviewCount(string userId, int newReviewCount)
     {
-        var latestStatsEntryQuery = """
-        SELECT * FROM user_progress.user_stats_history WHERE user_id=@userId ORDER BY datetime DESC LIMIT 1; 
-        """;
-
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
 
-        var latestStatsEntry = await connection.QueryFirstAsync<UserStatsHistoryEntity>(latestStatsEntryQuery, new
+        var latestStatsEntryQuery = """
+        SELECT * FROM user_progress.user_stats_history WHERE user_id=@userId ORDER BY datetime DESC LIMIT 1; 
+        """;
+        var latestStatsEntry = await connection.QueryFirstOrDefaultAsync<UserStatsHistoryEntity>(latestStatsEntryQuery,
+            new
+            {
+                @userId = userId
+            }) ?? new UserStatsHistoryEntity
         {
-            @userId = userId
-        });
+            user_id = userId,
+            events_hosted = 0,
+            datetime = DateTimeOffset.UtcNow,
+            id = -1,
+            reviews_created = 0
+        };
         var newReviewsCount = latestStatsEntry.reviews_created + newReviewCount;
 
         var updateQuery = """
