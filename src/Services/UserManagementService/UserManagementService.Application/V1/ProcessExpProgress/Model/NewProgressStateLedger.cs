@@ -20,7 +20,7 @@ public class ExperienceGainedLedger
         
         _ledger[userId] = updatedDecorator;
     }
-    public IReadOnlyCollection<string> GetUserIds()
+    public IEnumerable<string> GetUserIds()
     {
         return _ledger.Keys.ToList();
     }
