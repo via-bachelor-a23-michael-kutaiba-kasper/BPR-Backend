@@ -6,15 +6,15 @@ public class RateEventEvent: ExpGeneratingEventDecorator
 {
     private const int ExpPerPreviousReview = 10;
     private const int BaseReward = 100;
-    private readonly IReadOnlyCollection<Review> _reviews;
+    private readonly int _previousReviewsCount;
 
-    public RateEventEvent(IExpGeneratingEvent e, IReadOnlyCollection<Review> reviews) : base(e)
+    public RateEventEvent(IExpGeneratingEvent e, int previousReviewsCount ) : base(e)
     {
-        _reviews = reviews;
+        _previousReviewsCount = previousReviewsCount;
     }
 
     public override long GetExperienceGained()
     {
-        return base.GetExperienceGained() + BaseReward + ExpPerPreviousReview * _reviews.Count;
+        return base.GetExperienceGained() + BaseReward + ExpPerPreviousReview * _previousReviewsCount;
     }
 }

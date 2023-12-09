@@ -6,15 +6,15 @@ public class HostEventEvent : ExpGeneratingEventDecorator
 {
     private const int ExpPerPreviousHostedEvent = 25;
     private const int BaseReward = 50;
-    private readonly IReadOnlyCollection<Event> _events;
+    private readonly int _hostedEventsCount;
 
-    public HostEventEvent(IExpGeneratingEvent e, IReadOnlyCollection<Event> events) : base(e)
+    public HostEventEvent(IExpGeneratingEvent e, int hostedEventsCount) : base(e)
     {
-        _events = events;
+        _hostedEventsCount = hostedEventsCount;
     }
 
     public override long GetExperienceGained()
     {
-        return base.GetExperienceGained()  + BaseReward + ExpPerPreviousHostedEvent * _events.Count;
+        return base.GetExperienceGained() + BaseReward + ExpPerPreviousHostedEvent * _hostedEventsCount;
     }
 }

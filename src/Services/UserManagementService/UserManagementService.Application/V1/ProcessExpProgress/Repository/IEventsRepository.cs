@@ -6,5 +6,5 @@ public interface IEventsRepository
 {
     public Task<IReadOnlyCollection<Event>> GetNewlyCreatedEvents();
     public Task<Event> GetById(int eventId);
-    public Task<IReadOnlyCollection<Event>> GetHostedEvents(string userId);
+    public Task<int> GetHostedEventsCount(string userId);
 }

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using UserManagementService.Application.V1.ProcessExpProgress.Model.ExpGeneratingEvents;
 using UserManagementService.Domain.Models;
 
@@ -5,7 +6,7 @@ namespace UserManagementService.Application.V1.ProcessExpProgress.Model;
 
 public class ExperienceGainedLedger
 {
-    private readonly IDictionary<string, IExpGeneratingEvent> _ledger = new Dictionary<string, IExpGeneratingEvent>();
+    private readonly IDictionary<string, IExpGeneratingEvent> _ledger = new ConcurrentDictionary<string, IExpGeneratingEvent>();
 
     public void RegisterExpGeneratingEvent(string userId, Func<IExpGeneratingEvent, IExpGeneratingEvent> eventFactory)
     {
