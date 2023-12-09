@@ -43,7 +43,7 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
         (
             _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].TopicId,
             _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].ProjectId,
-            _pubsubConfig.Value.SubscriptionName,
+            $"{_pubsubConfig.Value.SubscriptionName}_achievements",
             10,
             new CancellationToken()
         );
