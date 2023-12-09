@@ -6,14 +6,12 @@ namespace UserManagementService.Application.V1.ProcessUserAchievements.Model.Str
 
 public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
 {
-    public abstract IReadOnlyCollection<UserAchievement> CheckAchievement
-    (
-        IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
-        Dictionary<Category, int> categoryCounts
-    );
+    public abstract IDictionary<string, IReadOnlyCollection<UserAchievement>> CheckAchievement
+    (IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
+        Dictionary<Category, int> categoryCounts);
 
 
-    protected static IReadOnlyCollection<UserAchievement>? DoCheckAchievement
+    protected static IDictionary<string, IReadOnlyCollection<UserAchievement>> DoCheckAchievement
     (
         IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
         UserAchievement achievement,
@@ -21,23 +19,52 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
         int requiredCount
     )
     {
-        if (unlockedAchievements == null && unlockedAchievements!.Any(a => a.achievement_id == (int)achievement))
-            return null;
-        var newAchievements = new List<UserAchievement>();
-        var categoryAttribute = EnumCategoryGroupHelper.GetCategoryGroupAttribute(achievement);
+        var results = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
+        var alreadyUnlocked = new List<UserAchievement>();
+        var unlocked = new List<UserAchievement>();
+        var inProgress = new List<UserAchievement>();
 
-        if (categoryAttribute == null) return null;
-        var category = (Category)Enum.Parse(typeof(Category), achievement.ToString());
-
-        if (!categoryCounts.TryGetValue(category, out var userCount) || userCount < requiredCount) return null;
-        var lowerTierAchievements = UnlockLowerTierAchievements(achievement, categoryCounts);
-        if (lowerTierAchievements != null)
+        if (unlockedAchievements != null)
         {
-            newAchievements.AddRange(lowerTierAchievements);
+            alreadyUnlocked.AddRange
+            (
+                from ac in unlockedAchievements
+                where ac.achievement_id == (int)achievement
+                select (UserAchievement)ac.achievement_id
+            );
         }
 
-        newAchievements.Add(achievement);
-        return newAchievements;
+        var categoryAttribute = EnumCategoryGroupHelper.GetCategoryGroupAttribute(achievement);
+
+        foreach
+        (
+            var e in from e in categoryCounts
+            let achGroup = EnumCategoryGroupHelper.AreEnumsInSameCategoryGroup(achievement, e.Key)
+            where achGroup
+            select e
+        )
+        {
+            if (e.Value < requiredCount)
+            {
+                inProgress.Add(achievement);
+            }
+
+            if (e.Value >= requiredCount)
+            {
+                unlocked.Add(achievement);
+            }
+        }
+
+        var lowerTierAchievements =
+            UnlockLowerTierAchievements(achievement, categoryCounts) ?? new List<UserAchievement>();
+
+        unlocked.AddRange(lowerTierAchievements);
+
+        results.Add(AchievementsTypes.AlreadyUnlocked, alreadyUnlocked);
+        results.Add(AchievementsTypes.Unlocked, unlocked);
+        results.Add(AchievementsTypes.InProgress, inProgress);
+
+        return results;
     }
 
 

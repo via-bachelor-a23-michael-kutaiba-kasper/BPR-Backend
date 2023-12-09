@@ -1,13 +1,16 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using UserManagementService.Application.V1.ProcessUserAchievements.Exceptions;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model.Strategy;
 using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
 using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
+using UserManagementService.Infrastructure.AppSettings;
 using UserManagementService.Infrastructure.Notifications;
 using UserManagementService.Infrastructure.Notifications.Models;
+using UserManagementService.Infrastructure.PubSub;
 using UserManagementService.Infrastructure.Util;
 
 namespace UserManagementService.Application.V1.ProcessUserAchievements;
@@ -22,6 +25,8 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
     private readonly ILogger<ProcessUserAchievementsHandle> _logger;
     private readonly IReadOnlyCollection<CheckAchievementBaseStrategy> _strategies;
     private readonly INotifier _notifier;
+    private readonly IEventBus _eventBus;
+    private readonly IOptions<PubSub> _pubsubConfig;
 
     public ProcessUserAchievementsHandle
     (
@@ -30,7 +35,9 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         IUserRepository userRepository,
         ILogger<ProcessUserAchievementsHandle> logger,
         IReadOnlyCollection<CheckAchievementBaseStrategy> strategies,
-        INotifier notifier
+        INotifier notifier,
+        IEventBus eventBus,
+        IOptions<PubSub> pubsubConfig
     )
     {
         _eventRepository = eventRepository;
@@ -39,6 +46,8 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         _logger = logger;
         _strategies = strategies;
         _notifier = notifier;
+        _eventBus = eventBus;
+        _pubsubConfig = pubsubConfig;
     }
 
     public async Task Handle
@@ -55,7 +64,7 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
                 throw new UserNotFoundException($"No user with id {request.UserId} have been found");
             }
 
-            var events = await JoinedFinishedEvents(request.UserId);
+            var events = await NewJoinedEvent();
 
             await Process(events, request);
         }
@@ -79,21 +88,56 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         var categoryCounts = events
             .GroupBy(e => e.Category)
             .ToDictionary(g => g.Key, g => g.Count());
-        var newAchievements = CollectAchievements(unlockedAchievements, categoryCounts) ?? new List<UserAchievement>();
+        var newAchievements = CollectAchievements(unlockedAchievements, categoryCounts);
+        var inProgressAchievements = new List<UserAchievement>();
+        var newUnlockedAchievements = new List<UserAchievement>();
 
-        var userAch = new List<UserAchievementTable>();
-
-        userAch.AddRange(newAchievements.Select(achievement => new UserAchievementTable
+        foreach (var achievement in newAchievements)
         {
-            user_id = request.UserId, unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime(),
-            achievement_id = (int)achievement
-        }));
+            if (achievement.Key == AchievementsTypes.AlreadyUnlocked) continue;
+            if (achievement.Key == AchievementsTypes.InProgress)
+            {
+                inProgressAchievements = achievement.Value.ToList();
+            }
 
-        await _sqlAchievementRepository.InsertUserAchievement(userAch);
+            if (achievement.Key == AchievementsTypes.Unlocked)
+            {
+                newUnlockedAchievements = achievement.Value.ToList();
+            }
+        }
+
+        var prog = new List<UnlockableAchievementProgressTable>();
+
+        foreach (var ia in inProgressAchievements)
+        {
+            var curentProgress =
+                await _sqlAchievementRepository.GetCountOFCurrentAchievementProgress(request.UserId, (int)ia);
+            prog.Add(new UnlockableAchievementProgressTable
+            {
+                achievement_id = (int)ia,
+                progress = curentProgress + inProgressAchievements.Count,
+                date = DateTimeOffset.UtcNow.ToUniversalTime(),
+                user_id = request.UserId
+            });
+        }
+
+        var nw = new List<UserAchievementTable>();
+        foreach (var na in newUnlockedAchievements)
+        {
+            nw.Add(new UserAchievementTable
+            {
+                user_id = request.UserId,
+                unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime(),
+                achievement_id = (int)na
+            });
+        }
+
+        await _sqlAchievementRepository.UpsertAchievementProgress(prog);
+        await _sqlAchievementRepository.InsertUserAchievement(nw);
 
         try
         {
-            foreach (var ac in userAch)
+            foreach (var ac in nw)
             {
                 var hostNotificationToken =
                     await _userRepository.GetNotificationTokenByUserIdAsync(request.UserId);
@@ -111,33 +155,38 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         }
     }
 
-    private IReadOnlyCollection<UserAchievement>? CollectAchievements
+    private Dictionary<string, IReadOnlyCollection<UserAchievement>> CollectAchievements
     (
         IReadOnlyCollection<UserAchievementJoinTable> unlockedAchievements,
         Dictionary<Category, int> categoryCounts
     )
     {
+        var results = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
         var achievements = new List<UserAchievement>();
         foreach (var strategy in _strategies)
         {
-            achievements.AddRange(strategy.CheckAchievement(unlockedAchievements, categoryCounts));
+            var stratResult = strategy.CheckAchievement(unlockedAchievements, categoryCounts);
+            results.Concat(stratResult).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
-        return achievements;
+        return results;
     }
 
-    private async Task<IReadOnlyCollection<Event>> JoinedFinishedEvents(string userId)
+    private async Task<IReadOnlyCollection<Event>> NewJoinedEvent()
     {
-        return await _eventRepository.FetchJoinedFinishedEventsByUserId(userId);
+        var ev = await _eventBus.PullAsync<Event>
+        (
+            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].TopicId,
+            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].ProjectId,
+            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].SubscriptionNames[TopicSubs.UserManagementAchievements],
+            10,
+            new CancellationToken()
+        );
+        return ev.ToList();
     }
 
     private async Task<IReadOnlyCollection<UserAchievementJoinTable>?> GetUserAchievements(string userId)
     {
         return await _sqlAchievementRepository.GetUserAchievement(userId);
-    }
-
-    private async Task<IReadOnlyCollection<AchievementTable>> GetSystemAchievements()
-    {
-        return await _sqlAchievementRepository.GetAchievements();
     }
 }

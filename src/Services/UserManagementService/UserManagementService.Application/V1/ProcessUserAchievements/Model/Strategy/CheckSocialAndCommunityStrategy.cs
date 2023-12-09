@@ -5,38 +5,35 @@ namespace UserManagementService.Application.V1.ProcessUserAchievements.Model.Str
 
 public class CheckSocialAndCommunityStrategy : CheckAchievementBaseStrategy
 {
-    public override IReadOnlyCollection<UserAchievement> CheckAchievement
+    public override IDictionary<string, IReadOnlyCollection<UserAchievement>> CheckAchievement
     (
         IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
         Dictionary<Category, int> categoryCounts
     )
     {
-        var newAchievements = new List<UserAchievement>();
         var c1 = DoCheckAchievement
         (
             unlockedAchievements,
             UserAchievement.Butterfly1,
             categoryCounts,
             AchievementsRequirements.Tier1
-        ) ?? new List<UserAchievement>();
+        );
         var c2 = DoCheckAchievement
         (
             unlockedAchievements,
             UserAchievement.Butterfly2,
             categoryCounts,
             AchievementsRequirements.Tier2
-        ) ?? new List<UserAchievement>();
+        );
         var c3 = DoCheckAchievement
         (
             unlockedAchievements,
             UserAchievement.Butterfly3,
             categoryCounts,
             AchievementsRequirements.Tier3
-        ) ?? new List<UserAchievement>();
+        );
 
-        newAchievements.AddRange(c1);
-        newAchievements.AddRange(c2);
-        newAchievements.AddRange(c3);
-        return newAchievements;
+        var results = c1.Concat(c2).Concat(c3).ToDictionary(pair => pair.Key, pair => pair.Value);
+        return results;
     }
 }

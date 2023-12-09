@@ -3,9 +3,7 @@ using Dapper;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using UserManagementService.Application.V1.ProcessUserAchievements.Exceptions;
-using UserManagementService.Application.V1.ProcessUserAchievements.Mapper;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model;
-using UserManagementService.Domain.Models;
 using UserManagementService.Infrastructure;
 
 namespace UserManagementService.Application.V1.ProcessUserAchievements.Repository;
@@ -13,6 +11,11 @@ namespace UserManagementService.Application.V1.ProcessUserAchievements.Repositor
 public interface ISqlAchievementRepository
 {
     Task InsertUserAchievement(IReadOnlyCollection<UserAchievementTable> userAchievements);
+
+    Task UpsertAchievementProgress(
+        IReadOnlyCollection<UnlockableAchievementProgressTable> unlockableAchievementProgressTable);
+
+    Task<int> GetCountOFCurrentAchievementProgress(string userId, int achievementId);
     Task<IReadOnlyCollection<UserAchievementJoinTable>?> GetUserAchievement(string userId);
     Task<IReadOnlyCollection<AchievementTable>> GetAchievements();
 }
@@ -59,6 +62,44 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         }
     }
 
+    public async Task UpsertAchievementProgress(
+        IReadOnlyCollection<UnlockableAchievementProgressTable> unlockableAchievementProgressTable)
+    {
+        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
+        await connection.OpenAsync();
+        await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            await connection.ExecuteAsync(UpsertUserAchievementProgressSql, unlockableAchievementProgressTable);
+            await transaction.CommitAsync();
+        }
+        catch (Exception e)
+        {
+            try
+            {
+                await transaction.RollbackAsync();
+                _logger.LogInformation(e, "Inserting user achievement progress transaction successfully rolled back");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex,
+                    "Something went wrong while rolling back user achievement progress transaction");
+                throw new TransactionException("Cannot role back insert user achievement progress transaction");
+            }
+
+            throw new InsertUserAchievementException("Cannot insert user achievement progress", e);
+        }
+    }
+
+    public async Task<int> GetCountOFCurrentAchievementProgress(string userId, int achievementId)
+    {
+        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
+        await connection.OpenAsync();
+        var count = await connection.ExecuteScalarAsync<int>(GetCountProgressForAchievementSql,
+            new { user_id = userId, achievement_id = achievementId });
+        return count;
+    }
+
     public async Task<IReadOnlyCollection<UserAchievementJoinTable>?> GetUserAchievement(string userId)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
@@ -89,7 +130,7 @@ public class SqlAchievementRepository : ISqlAchievementRepository
                 await connection.QueryAsync<AchievementTable>(GetAchievementsSql);
 
             var achievements = query.ToList();
-            
+
             _logger.LogInformation($"{achievements.Count()} achievements retrieved form database");
             return achievements;
         }
@@ -109,9 +150,22 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         """
         SELECT * FROM user_achievement ua JOIN achievement a on a.id = ua.achievement_id WHERE user_id = @user_id;
         """;
-    
-    private const string GetAchievementsSql = 
+
+    private const string GetAchievementsSql =
         """
         SELECT * FROM achievement
+        """;
+
+    private const string UpsertUserAchievementProgressSql =
+        """
+        INSERT INTO unlockable_achievement_progress(achievement_id, user_id, progress, date)
+        VALUES (@achievementId, @userId, @progress, @date)
+        ON CONFLICT (achievement_id, user_id)
+            DO UPDATE SET progress = EXCLUDED.progress, date = EXCLUDED.date;
+        """;
+
+    private const string GetCountProgressForAchievementSql =
+        """
+        SELECT count(*) FROM unlockable_achievement_progress WHERE user_id = @user_id AND achievement_id = @achievement_id
         """;
 }

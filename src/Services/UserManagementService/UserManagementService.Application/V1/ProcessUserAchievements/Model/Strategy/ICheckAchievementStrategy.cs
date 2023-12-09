@@ -5,7 +5,7 @@ namespace UserManagementService.Application.V1.ProcessUserAchievements.Model.Str
 
 public interface ICheckAchievementStrategy
 {
-    IReadOnlyCollection<UserAchievement> CheckAchievement
+    IDictionary<string, IReadOnlyCollection<UserAchievement>> CheckAchievement
     (
         IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
         Dictionary<Category, int> categoryCounts

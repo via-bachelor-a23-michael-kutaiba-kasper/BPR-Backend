@@ -17,33 +17,35 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
         _pubsubConfig = pubsubConfig;
     }
 
-    public override IReadOnlyCollection<UserAchievement> CheckAchievement
+    public override IDictionary<string, IReadOnlyCollection<UserAchievement>> CheckAchievement
     (
         IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
         Dictionary<Category, int> categoryCounts
     )
     {
+        var results = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
         var achievements = new List<UserAchievement>();
 
         var ids = GetUserIdFromPubSub().Result;
-        
+
         if (unlockedAchievements != null)
         {
             foreach (var ac in unlockedAchievements)
             {
                 if (ac.achievement_id == (int)UserAchievement.NewComer || ids.Any(id => id != ac.user_id))
                 {
-                    return achievements;
+                    results.Add("alreadyUnlocked", achievements); 
                 }
 
                 if (ids.Any(id => id == ac.user_id))
                 {
                     achievements.Add(UserAchievement.NewComer);
+                    results.Add("unlocked", achievements); 
                 }
             }
         }
 
-        return achievements;
+        return results;
     }
 
     private async Task<IReadOnlyCollection<string>> GetUserIdFromPubSub()
@@ -52,7 +54,7 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
         (
             _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].TopicId,
             _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].ProjectId,
-            $"{_pubsubConfig.Value.SubscriptionName}_achievements",
+            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].SubscriptionNames[TopicSubs.UserManagementAchievements],
             10,
             new CancellationToken()
         );
