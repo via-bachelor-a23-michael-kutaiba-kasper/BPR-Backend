@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using UserManagementService.Application.V1.ProcessExpProgress.Model.ExpGeneratingEvents;
-using UserManagementService.Domain.Models;
 
 namespace UserManagementService.Application.V1.ProcessExpProgress.Model;
 
