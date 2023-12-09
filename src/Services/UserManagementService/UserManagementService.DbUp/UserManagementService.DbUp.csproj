@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Migrations\0001_initial_schema_setup.sql" />
-    <None Remove="Migrations\0002_populate_achievement_enum_table.sql" />
     <EmbeddedResource Include="Migrations\0002_populate_achievement_enum_table.sql" />
   </ItemGroup>
 
