@@ -22,3 +22,8 @@ CREATE INDEX date_index ON user_stats_history USING btree -- default is btree
     user_id,
     datetime DESC
 ); -- Optimizes for the common scenario where we look up latest stats for a specific user
+
+CREATE INDEX userid_index ON user_progress.progress
+(
+    user_id
+);
