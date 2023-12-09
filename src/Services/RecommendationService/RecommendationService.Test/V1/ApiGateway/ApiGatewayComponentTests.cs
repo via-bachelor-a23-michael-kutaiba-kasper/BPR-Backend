@@ -5,7 +5,7 @@ using RecommendationService.Infrastructure.ApiGateway;
 using RecommendationService.Infrastructure.AppSettings;
 using RecommendationService.Test.Shared;
 
-namespace RecommendationService.Test.ApiGateway;
+namespace RecommendationService.Test.V1.ApiGateway;
 
 public class ApiGatewayComponentTests
 {

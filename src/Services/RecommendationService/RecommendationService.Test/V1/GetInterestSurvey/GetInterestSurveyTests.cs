@@ -7,7 +7,7 @@ using RecommendationService.Application.V1.GetInterestSurvey.Exceptions;
 using RecommendationService.Application.V1.GetInterestSurvey.Repositories;
 using RecommendationService.Domain.Events;
 
-namespace RecommendationService.Test.GetInterestSurvey;
+namespace RecommendationService.Test.V1.GetInterestSurvey;
 
 public class GetInterestSurveyTests
 {

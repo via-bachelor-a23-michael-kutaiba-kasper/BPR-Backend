@@ -28,9 +28,10 @@
    
     <ItemGroup>
         <None Remove="ApiGateway\Fakes\ApiGatewayEventsQueryResponse.json" />
-        <Content Include="ApiGateway\Fakes\ApiGatewayEventsQueryResponse.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
+    </ItemGroup>
+   
+    <ItemGroup>
+      <Folder Include="V1\" />
     </ItemGroup>
 
 

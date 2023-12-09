@@ -2,13 +2,12 @@ using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework.Internal;
 using RecommendationService.Application.V1.StoreInterestSurveyResult;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Exceptions;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Repositories;
 using RecommendationService.Domain.Events;
 
-namespace RecommendationService.Test.StoreInterestSurveyResult;
+namespace RecommendationService.Test.V1.StoreInterestSurveyResult;
 
 [TestFixture]
 public class StoreInterestSurveyResultTests
