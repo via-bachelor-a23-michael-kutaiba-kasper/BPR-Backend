@@ -1,9 +1,13 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Exceptions;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Repositories;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Validation;
 using RecommendationService.Domain.Events;
+using RecommendationService.Infrastructure;
+using RecommendationService.Infrastructure.AppSettings;
+using RecommendationService.Infrastructure.EventBus;
 
 namespace RecommendationService.Application.V1.StoreInterestSurveyResult;
 
@@ -14,15 +18,21 @@ public class StoreInterestSurveyResultHandler : IRequestHandler<StoreInterestSur
     private readonly ILogger<StoreInterestSurveyResultHandler> _logger;
     private readonly IInterestSurveyRepository _surveyRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IEventBus _eventBus;
+    private readonly IOptions<PubSub> _pubsubConfig;
 
     public StoreInterestSurveyResultHandler(
         ILogger<StoreInterestSurveyResultHandler> logger,
         IInterestSurveyRepository surveyRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        IEventBus eventBus,
+        IOptions<PubSub> pubsubConfig)
     {
         _logger = logger;
         _surveyRepository = surveyRepository;
         _userRepository = userRepository;
+        _eventBus = eventBus;
+        _pubsubConfig = pubsubConfig;
     }
 
     public async Task<InterestSurvey> Handle(StoreInterestSurveyRequest request, CancellationToken cancellationToken)
@@ -47,6 +57,16 @@ public class StoreInterestSurveyResultHandler : IRequestHandler<StoreInterestSur
         _logger.LogInformation($"Storing interest survey for user {request.userId}");
         var storedSurvey = await _surveyRepository.StoreInterestSurvey(request.userId, request.survey);
         storedSurvey.User = existingUser;
+
+        try
+        {
+            var topic = _pubsubConfig.Value.Topics[PubSubTopics.NewInterestSurvey];
+            await _eventBus.PublishAsync(topic.TopicId, topic.ProjectId, existingUser.UserId);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Failed to publish new interest survey message to Event Bus");
+        }
         
         return storedSurvey;
     }
