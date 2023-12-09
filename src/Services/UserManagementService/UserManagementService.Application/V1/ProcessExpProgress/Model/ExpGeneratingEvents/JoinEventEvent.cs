@@ -10,6 +10,6 @@ public class JoinEventEvent: ExpGeneratingEventDecorator
 
     public override long GetExperienceGained()
     {
-        return base.GetExperienceGained() + Reward;
+        return (_event?.GetExperienceGained() ?? 0) + Reward;
     }
 }

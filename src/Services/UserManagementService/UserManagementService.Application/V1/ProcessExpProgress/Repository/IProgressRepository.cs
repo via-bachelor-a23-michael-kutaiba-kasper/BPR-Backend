@@ -58,7 +58,7 @@ public class ProgressRepository : IProgressRepository
         {
             @userId = userId,
             @expGained = exp,
-            @datetime = DateTimeOffset.UtcNow.ToFormattedUtcString()
+            @datetime = DateTimeOffset.UtcNow
         });
 
         var selectProgressQuery = "SELECT * FROM user_progress.progress WHERE user_id = @userId";
@@ -108,7 +108,7 @@ public class ProgressRepository : IProgressRepository
             @userId = userId,
             @reviewsCreated = latestStatsEntry.reviews_created,
             @eventsHosted = newEventsHostedCount,
-            @datetime = DateTimeOffset.UtcNow.ToFormattedUtcString()
+            @datetime = DateTimeOffset.UtcNow
         });
 
         await connection.CloseAsync();
@@ -144,7 +144,7 @@ public class ProgressRepository : IProgressRepository
             @userId = userId,
             @reviewsCreated = newReviewsCount,
             @eventsHosted = latestStatsEntry.events_hosted,
-            @datetime = DateTimeOffset.UtcNow.ToFormattedUtcString()
+            @datetime = DateTimeOffset.UtcNow
         });
 
         await connection.CloseAsync();

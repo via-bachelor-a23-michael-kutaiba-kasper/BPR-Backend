@@ -24,6 +24,6 @@ public class EventReviewedEvent : ExpGeneratingEventDecorator
             _ => 0
         };
 
-        return base.GetExperienceGained() + reward;
+        return (_event?.GetExperienceGained()?? 0) + reward;
     }
 }

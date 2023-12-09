@@ -11,8 +11,8 @@ public class ExperienceGainedLedger
     {
         if (!_ledger.ContainsKey(userId))
         {
-            // Start experience gain at 0
-            _ledger.Add(userId, new IdentityDecorator(null!, 0));
+            _ledger.Add(userId, eventFactory.Invoke(null));
+            return;
         }
 
         var currentDecorator = _ledger[userId];
@@ -27,7 +27,7 @@ public class ExperienceGainedLedger
 
     public long GetExperienceGained(string userId)
     {
-        return _ledger.ContainsKey(userId) ? 0 : _ledger[userId].GetExperienceGained();
+        return !_ledger.ContainsKey(userId) ? 0 : _ledger[userId].GetExperienceGained();
     }
 
 }

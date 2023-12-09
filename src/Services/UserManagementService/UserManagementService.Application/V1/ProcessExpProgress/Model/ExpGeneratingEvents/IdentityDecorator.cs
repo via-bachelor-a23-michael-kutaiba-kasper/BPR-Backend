@@ -11,11 +11,6 @@ public class IdentityDecorator : ExpGeneratingEventDecorator
 
     public override long GetExperienceGained()
     {
-        if (base._event is null)
-        {
-            return _identity;
-        }
-
-        return _identity + base.GetExperienceGained();
+        return _identity + _event?.GetExperienceGained() ?? 0;
     }
 }

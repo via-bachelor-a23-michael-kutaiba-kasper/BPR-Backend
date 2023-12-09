@@ -15,6 +15,6 @@ public class HostEventEvent : ExpGeneratingEventDecorator
 
     public override long GetExperienceGained()
     {
-        return base.GetExperienceGained() + BaseReward + ExpPerPreviousHostedEvent * _hostedEventsCount;
+        return (_event?.GetExperienceGained() ?? 0  + BaseReward) + (ExpPerPreviousHostedEvent * _hostedEventsCount);
     }
 }

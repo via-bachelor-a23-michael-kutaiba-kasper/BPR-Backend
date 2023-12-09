@@ -41,9 +41,10 @@ public class PubSubEventBus : IEventBus
             }.BuildAsync();
         }
 
+        TopicName topic = new TopicName(projectName, topicName);
         try
         {
-            await publisherService.CreateTopicAsync(topicName);
+            await publisherService.CreateTopicAsync(topic);
         }
         catch (Exception e)
         {
@@ -63,7 +64,6 @@ public class PubSubEventBus : IEventBus
             Data = ByteString.CopyFromUtf8(dataAsJson)
         };
         
-        TopicName topic = new TopicName(projectName, topicName);
         await publisherService.PublishAsync(topic, new[] { message });
     }
 }

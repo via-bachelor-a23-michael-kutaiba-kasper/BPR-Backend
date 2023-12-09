@@ -2,7 +2,7 @@ namespace UserManagementService.Application.V1.ProcessExpProgress.Model.ExpGener
 
 public class ExpGeneratingEventDecorator : IExpGeneratingEvent
 {
-    protected IExpGeneratingEvent _event;
+    protected IExpGeneratingEvent? _event;
     protected ExpGeneratingEventDecorator(IExpGeneratingEvent e)
     {
         _event = e;
@@ -11,6 +11,6 @@ public class ExpGeneratingEventDecorator : IExpGeneratingEvent
 
     public virtual long GetExperienceGained()
     {
-        return _event.GetExperienceGained();
+        return _event?.GetExperienceGained() ?? 0;
     }
 }

@@ -11,14 +11,15 @@ public record ProcessExpProgressRequest(IEnumerable<IExpStrategy> strategies) : 
 
 public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressRequest>
 {
-    private readonly ExperienceGainedLedger _ledger = new ExperienceGainedLedger();
+    private readonly ExperienceGainedLedger _ledger;
     private readonly ILogger<ProcessExpProgressHandler> _logger;
     private readonly IProgressRepository _progressRepository;
 
-    public ProcessExpProgressHandler(ILogger<ProcessExpProgressHandler> logger, IProgressRepository progressRepository)
+    public ProcessExpProgressHandler(ILogger<ProcessExpProgressHandler> logger, IProgressRepository progressRepository, ExperienceGainedLedger? ledger = null)
     {
         _logger = logger;
         _progressRepository = progressRepository;
+        _ledger = ledger ?? new ExperienceGainedLedger();
     }
 
     public async Task Handle(ProcessExpProgressRequest request, CancellationToken cancellationToken)
@@ -40,5 +41,6 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
             await _progressRepository.EnsureUserHasProgress(userId);
             await _progressRepository.AddExpToUserProgressAsync(userId, _ledger.GetExperienceGained(userId));
         }
+        _logger.LogInformation("Updated exp progress for all relevant users!");
     }
 }
