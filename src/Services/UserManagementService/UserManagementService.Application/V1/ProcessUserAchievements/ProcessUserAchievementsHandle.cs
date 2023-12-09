@@ -6,6 +6,9 @@ using UserManagementService.Application.V1.ProcessUserAchievements.Model.Strateg
 using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
 using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
+using UserManagementService.Infrastructure.Notifications;
+using UserManagementService.Infrastructure.Notifications.Models;
+using UserManagementService.Infrastructure.Util;
 
 namespace UserManagementService.Application.V1.ProcessUserAchievements;
 
@@ -18,6 +21,7 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
     private readonly IUserRepository _userRepository;
     private readonly ILogger<ProcessUserAchievementsHandle> _logger;
     private readonly IReadOnlyCollection<CheckAchievementBaseStrategy> _strategies;
+    private readonly INotifier _notifier;
 
     public ProcessUserAchievementsHandle
     (
@@ -25,7 +29,8 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         ISqlAchievementRepository sqlAchievementRepository,
         IUserRepository userRepository,
         ILogger<ProcessUserAchievementsHandle> logger,
-        IReadOnlyCollection<CheckAchievementBaseStrategy> strategies
+        IReadOnlyCollection<CheckAchievementBaseStrategy> strategies,
+        INotifier notifier
     )
     {
         _eventRepository = eventRepository;
@@ -33,6 +38,7 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         _userRepository = userRepository;
         _logger = logger;
         _strategies = strategies;
+        _notifier = notifier;
     }
 
     public async Task Handle
@@ -58,8 +64,6 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
             _logger.LogError($"Something went wrong while processing user achievement, {e.StackTrace}");
             throw new ProcessUserAchievementException("Unable to process user achievement", e);
         }
-
-        ;
     }
 
     private async Task Process
@@ -69,7 +73,6 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
     )
     {
         if (events == null) return;
-        var achievementMap = new Dictionary<Category, int>();
 
         var unlockedAchievements = await GetUserAchievements(request.UserId) ?? new List<UserAchievementJoinTable>();
 
@@ -85,7 +88,27 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
             user_id = request.UserId, unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime(),
             achievement_id = (int)achievement
         }));
+
         await _sqlAchievementRepository.InsertUserAchievement(userAch);
+
+        try
+        {
+            foreach (var ac in userAch)
+            {
+                var hostNotificationToken =
+                    await _userRepository.GetNotificationTokenByUserIdAsync(request.UserId);
+                await _notifier.SendNotificationAsync(new UserNotification
+                {
+                    Title = "You got a new achievements!!",
+                    Body = $"Congratulations you gained: {((UserAchievement)ac.achievement_id).GetDescription()}",
+                    Token = hostNotificationToken
+                });
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"{e.StackTrace}");
+        }
     }
 
     private IReadOnlyCollection<UserAchievement>? CollectAchievements

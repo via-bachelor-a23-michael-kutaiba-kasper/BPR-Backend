@@ -21,5 +21,5 @@ VALUES (0, 'Un Assigned', 'Default value', 0, ''),
        (19, 'Monkey 1', 'Join in 5 recreational or hobby based events', 100, ''),
        (20, 'Monkey 2', 'Join in 20 recreational or hobby based events', 200, ''),
        (21, 'Monkey 3', 'Join in 50 recreational or hobby based related events', 270, ''),
-       (22, 'New comer', 'Fill out the interest survey', 0, '');
+       (22, 'New comer', 'Fill out the interest survey', 0, '') ON CONFLICT DO NOTHING ;
       
