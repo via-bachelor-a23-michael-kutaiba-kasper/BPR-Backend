@@ -26,14 +26,23 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
         var achievements = new List<UserAchievement>();
 
         var ids = GetUserIdFromPubSub().Result;
+        
+        if (unlockedAchievements != null)
+        {
+            foreach (var ac in unlockedAchievements)
+            {
+                if (ac.achievement_id == (int)UserAchievement.NewComer || ids.Any(id => id != ac.user_id))
+                {
+                    return achievements;
+                }
 
-        if
-        (
-            unlockedAchievements == null || (unlockedAchievements.Any(ac =>
-                ac.achievement_id == (int)UserAchievement.NewComer || ids.Any(id => id != ac.user_id)))
-        ) return achievements;
+                if (ids.Any(id => id == ac.user_id))
+                {
+                    achievements.Add(UserAchievement.NewComer);
+                }
+            }
+        }
 
-        achievements.Add(UserAchievement.NewComer);
         return achievements;
     }
 
