@@ -37,6 +37,7 @@ public class ProcessExpProgressHandler : IRequestHandler<ProcessExpProgressReque
         var userIds = _ledger.GetUserIds();
         foreach (var userId in userIds)
         {
+            await _progressRepository.EnsureUserHasProgress(userId);
             await _progressRepository.AddExpToUserProgressAsync(userId, _ledger.GetExperienceGained(userId));
         }
     }
