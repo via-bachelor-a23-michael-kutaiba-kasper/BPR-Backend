@@ -3,9 +3,12 @@ using EventManagementService.Application.V1.CreateEvent.Repository;
 using EventManagementService.Application.V1.CreateEvent.Validators;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure.AppSettings;
+using EventManagementService.Infrastructure.EventBus;
 using EventManagementService.Infrastructure.Util;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EventManagementService.Application.V1.CreateEvent;
 
@@ -16,17 +19,22 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest, Event>
     private readonly ISqlCreateEvent _sqlCreateEvent;
     private readonly IFirebaseUser _firebaseUser;
     private readonly ILogger<CreateEventHandler> _logger;
+    private readonly IEventBus _eventBus;
+    private readonly IOptions<PubSub> _pubsubOptions;
 
     public CreateEventHandler
     (
         ISqlCreateEvent sqlCreateEvent,
         ILogger<CreateEventHandler> logger,
-        IFirebaseUser firebaseUser
-    )
+        IFirebaseUser firebaseUser,
+        IEventBus eventBus,
+        IOptions<PubSub> pubsubOptions)
     {
         _sqlCreateEvent = sqlCreateEvent;
         _logger = logger;
         _firebaseUser = firebaseUser;
+        _eventBus = eventBus;
+        _pubsubOptions = pubsubOptions;
     }
 
     public async Task<Event> Handle(CreateEventRequest request, CancellationToken cancellationToken)
@@ -39,9 +47,13 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest, Event>
             EventValidator.ValidateEvents(mappedEvent);
 
             var insertedEventId = await _sqlCreateEvent.InsertEvent(mappedEvent);
-            
+
             mappedEvent.Id = insertedEventId;
             _logger.LogInformation($"Event has been successfully created at: {DateTimeOffset.UtcNow}");
+
+            await _eventBus.PublishAsync(_pubsubOptions.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].TopicId,
+                _pubsubOptions.Value.SubscriptionName, mappedEvent);
+            
             return mappedEvent;
         }
         catch (Exception e)

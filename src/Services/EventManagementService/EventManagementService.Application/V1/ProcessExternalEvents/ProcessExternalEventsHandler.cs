@@ -2,9 +2,13 @@ using EventManagementService.Application.V1.ProcessExternalEvents.Exceptions;
 using EventManagementService.Application.V1.ProcessExternalEvents.Repository;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
+using EventManagementService.Infrastructure.AppSettings;
+using EventManagementService.Infrastructure.EventBus;
 using EventManagementService.Infrastructure.Util;
+using Google.Cloud.PubSub.V1;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EventManagementService.Application.V1.ProcessExternalEvents;
 
@@ -16,19 +20,21 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
     private readonly IPubSubExternalEvents _pubSubExternalEvents;
     private readonly ISqlExternalEvents _sqlExternalEvents;
     private readonly ILogger<ProcessExternalEventsHandler> _logger;
+    private readonly IOptions<PubSub> _pubsubConfig;
 
     public ProcessExternalEventsHandler
     (
         IGeoCoding geoCoding,
         IPubSubExternalEvents pubSubExternalEvents,
         ISqlExternalEvents sqlExternalEvents,
-        ILogger<ProcessExternalEventsHandler> logger
-    )
+        ILogger<ProcessExternalEventsHandler> logger,
+        IOptions<PubSub> pubsubConfig)
     {
         _geoCoding = geoCoding;
         _pubSubExternalEvents = pubSubExternalEvents;
         _sqlExternalEvents = sqlExternalEvents;
         _logger = logger;
+        _pubsubConfig = pubsubConfig;
     }
 
     public async Task<IReadOnlyCollection<Event>> Handle
@@ -44,6 +50,9 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
             await _sqlExternalEvents.BulkUpsertEvents(pubSubEvents);
             _logger.LogInformation(
                 $"{pubSubEvents.Count} events have been successfully created at: {DateTimeOffset.UtcNow}");
+            await _pubSubExternalEvents.PublishEvents(
+                new TopicName(_pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].ProjectId,
+                    _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].TopicId), pubSubEvents);
             return pubSubEvents;
         }
         catch (Exception e)
@@ -85,7 +94,9 @@ public class ProcessExternalEventsHandler : IRequestHandler<ProcessExternalEvent
                 StartDate = createdDate,
                 LastUpdateDate = new DateTimeOffset().ToUniversalTime(),
                 MaxNumberOfAttendees = e.MaxNumberOfAttendees,
-                AccessCode = UniqueEventAccessCodeGenerator.GenerateUniqueStringForExternal(e.Title, e.Description!, e.Host.UserId),
+                AccessCode =
+                    UniqueEventAccessCodeGenerator.GenerateUniqueStringForExternal(e.Title, e.Description!,
+                        e.Host.UserId),
                 City = e.City,
                 GeoLocation = await FetchGeoLocation(e.Location)
             });

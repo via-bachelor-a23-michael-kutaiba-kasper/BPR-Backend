@@ -1,11 +1,18 @@
 using System.Text.Json;
+using RecommendationService.Infrastructure.AppSettings;
 using UserManagementService.API.Settings;
 using UserManagementService.Application;
 using UserManagementService.Infrastructure;
+using UserManagementService.Infrastructure.ApiGateway;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+Gateway gatewayConfig = builder.Configuration.GetSection("Gateway").Get<Gateway>();
+
+// Gateway Abstraction
+// NOTE: Not able to access IOptions from infrastructure project, so this will suffice for now.
+builder.Services.AddScoped<IApiGateway>(_ => new ApiGateway(gatewayConfig));
 
 builder.Services.AddSettingsConfigurations(builder.Configuration);
 

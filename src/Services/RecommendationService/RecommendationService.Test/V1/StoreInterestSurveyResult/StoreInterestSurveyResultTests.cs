@@ -1,18 +1,32 @@
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
-using NUnit.Framework.Internal;
 using RecommendationService.Application.V1.StoreInterestSurveyResult;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Exceptions;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Repositories;
 using RecommendationService.Domain.Events;
+using RecommendationService.Infrastructure.AppSettings;
+using RecommendationService.Infrastructure.EventBus;
 
-namespace RecommendationService.Test.StoreInterestSurveyResult;
+namespace RecommendationService.Test.V1.StoreInterestSurveyResult;
 
 [TestFixture]
 public class StoreInterestSurveyResultTests
 {
+    private IOptions<PubSub> _pubsubConfig = Options.Create(new PubSub
+        {
+            Topics = new []
+            {
+                new Topic
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                }
+            },
+            SubscriptionName = "recommendation"
+        });
 
     [Test]
     public void StoreInterestSurveyResult_UserDoesNotExist_ThrowsUserNotFoundException()
@@ -21,6 +35,7 @@ public class StoreInterestSurveyResultTests
         var loggerMock = new Mock<ILogger<StoreInterestSurveyResultHandler>>();
         var surveyRepositoryMock= new Mock<IInterestSurveyRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
+        var eventBusMock = new Mock<IEventBus>();
 
         userRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<string>())).ReturnsAsync((User) null!);
 
@@ -35,7 +50,7 @@ public class StoreInterestSurveyResultTests
         };
         var request = new StoreInterestSurveyRequest("test", testSurvey);
         var handler = new StoreInterestSurveyResultHandler(loggerMock.Object, surveyRepositoryMock.Object,
-            userRepositoryMock.Object);
+            userRepositoryMock.Object, eventBusMock.Object, _pubsubConfig);
         
         // Act & Assert 
         Assert.ThrowsAsync<UserNotFoundException>(() => handler.Handle(request, new CancellationToken()));
@@ -62,13 +77,14 @@ public class StoreInterestSurveyResultTests
         var loggerMock = new Mock<ILogger<StoreInterestSurveyResultHandler>>();
         var surveyRepositoryMock= new Mock<IInterestSurveyRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
+        var eventBusMock = new Mock<IEventBus>();
 
         userRepositoryMock.Setup(x => x.GetByIdAsync(testUser.UserId)).ReturnsAsync(testUser);
         surveyRepositoryMock.Setup(x => x.GetInterestSurvey(testUser.UserId)).ReturnsAsync(testSurvey);
 
         var request = new StoreInterestSurveyRequest(testUser.UserId, testSurvey);
         var handler = new StoreInterestSurveyResultHandler(loggerMock.Object, surveyRepositoryMock.Object,
-            userRepositoryMock.Object);
+            userRepositoryMock.Object, eventBusMock.Object, _pubsubConfig);
         
         // Act & Assert 
         Assert.ThrowsAsync<InterestSurveyAlreadyCompletedException>(() => handler.Handle(request, new CancellationToken()));
@@ -94,6 +110,7 @@ public class StoreInterestSurveyResultTests
         var loggerMock = new Mock<ILogger<StoreInterestSurveyResultHandler>>();
         var surveyRepositoryMock= new Mock<IInterestSurveyRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
+        var eventBusMock = new Mock<IEventBus>();
 
         userRepositoryMock.Setup(x => x.GetByIdAsync(testUser.UserId)).ReturnsAsync(testUser);
         surveyRepositoryMock.Setup(x => x.GetInterestSurvey(testUser.UserId)).ReturnsAsync((InterestSurvey) null!);
@@ -101,7 +118,7 @@ public class StoreInterestSurveyResultTests
 
         var request = new StoreInterestSurveyRequest(testUser.UserId, testSurvey);
         var handler = new StoreInterestSurveyResultHandler(loggerMock.Object, surveyRepositoryMock.Object,
-            userRepositoryMock.Object);
+            userRepositoryMock.Object, eventBusMock.Object, _pubsubConfig);
         
         // Act 
         var storedSurvey = await handler.Handle(request, new CancellationToken());
@@ -136,6 +153,7 @@ public class StoreInterestSurveyResultTests
         var loggerMock = new Mock<ILogger<StoreInterestSurveyResultHandler>>();
         var surveyRepositoryMock= new Mock<IInterestSurveyRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
+        var eventBusMock = new Mock<IEventBus>();
 
         userRepositoryMock.Setup(x => x.GetByIdAsync(testUser.UserId)).ReturnsAsync(testUser);
         surveyRepositoryMock.Setup(x => x.GetInterestSurvey(testUser.UserId)).ReturnsAsync((InterestSurvey) null!);
@@ -143,7 +161,7 @@ public class StoreInterestSurveyResultTests
 
         var request = new StoreInterestSurveyRequest(testUser.UserId, testSurvey);
         var handler = new StoreInterestSurveyResultHandler(loggerMock.Object, surveyRepositoryMock.Object,
-            userRepositoryMock.Object);
+            userRepositoryMock.Object, eventBusMock.Object, _pubsubConfig);
         
         // Act 
         Assert.ThrowsAsync<InterestSurveyValidationError>(() => handler.Handle(request, new CancellationToken()));
@@ -173,6 +191,7 @@ public class StoreInterestSurveyResultTests
         var loggerMock = new Mock<ILogger<StoreInterestSurveyResultHandler>>();
         var surveyRepositoryMock= new Mock<IInterestSurveyRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
+        var eventBusMock = new Mock<IEventBus>();
 
         userRepositoryMock.Setup(x => x.GetByIdAsync(testUser.UserId)).ReturnsAsync(testUser);
         surveyRepositoryMock.Setup(x => x.GetInterestSurvey(testUser.UserId)).ReturnsAsync((InterestSurvey) null!);
@@ -180,7 +199,7 @@ public class StoreInterestSurveyResultTests
 
         var request = new StoreInterestSurveyRequest(testUser.UserId, testSurvey);
         var handler = new StoreInterestSurveyResultHandler(loggerMock.Object, surveyRepositoryMock.Object,
-            userRepositoryMock.Object);
+            userRepositoryMock.Object, eventBusMock.Object, _pubsubConfig);
         
         // Act 
         Assert.ThrowsAsync<InterestSurveyValidationError>(() => handler.Handle(request, new CancellationToken()));
@@ -207,6 +226,7 @@ public class StoreInterestSurveyResultTests
         var loggerMock = new Mock<ILogger<StoreInterestSurveyResultHandler>>();
         var surveyRepositoryMock= new Mock<IInterestSurveyRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
+        var eventBusMock = new Mock<IEventBus>();
 
         userRepositoryMock.Setup(x => x.GetByIdAsync(testUser.UserId)).ReturnsAsync(testUser);
         surveyRepositoryMock.Setup(x => x.GetInterestSurvey(testUser.UserId)).ReturnsAsync((InterestSurvey) null!);
@@ -214,7 +234,7 @@ public class StoreInterestSurveyResultTests
 
         var request = new StoreInterestSurveyRequest(testUser.UserId, testSurvey);
         var handler = new StoreInterestSurveyResultHandler(loggerMock.Object, surveyRepositoryMock.Object,
-            userRepositoryMock.Object);
+            userRepositoryMock.Object, eventBusMock.Object, _pubsubConfig);
         
         // Act 
         Assert.ThrowsAsync<InterestSurveyValidationError>(() => handler.Handle(request, new CancellationToken()));

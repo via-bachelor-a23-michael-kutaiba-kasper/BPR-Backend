@@ -10,7 +10,7 @@ using RecommendationService.Infrastructure;
 using RecommendationService.Test.Shared;
 using RecommendationService.Test.Shared.Builders;
 
-namespace RecommendationService.Test.GetRecommendations;
+namespace RecommendationService.Test.V1.GetRecommendations;
 
 [TestFixture]
 public class GetRecommendationTests

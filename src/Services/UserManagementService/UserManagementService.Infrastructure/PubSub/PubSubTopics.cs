@@ -1,8 +1,8 @@
 namespace UserManagementService.Infrastructure.PubSub;
-
-public class PubSubTopics
+public static class PubSubTopics
 {
-    // Insert topics here
-    // TODO: set the topic from Name to the first topic in appsettings.json
-    public const int Name = 0;
+    public const int VibeVerseEventsScraped = 0;
+    public const int VibeVerseEventsNewAttendee = 1;
+    public const int VibeVerseEventsNewReview = 2;
+    public const int VibeVerseEventsNewEvent = 3;
 }
