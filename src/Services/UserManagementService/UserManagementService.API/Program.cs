@@ -4,8 +4,6 @@ using UserManagementService.API.Settings;
 using UserManagementService.Application;
 using UserManagementService.Infrastructure;
 using UserManagementService.Infrastructure.ApiGateway;
-using UserManagementService.Infrastructure.AppSettings;
-using UserManagementService.Infrastructure.ApiGateway;
 
 var builder = WebApplication.CreateBuilder(args);
 

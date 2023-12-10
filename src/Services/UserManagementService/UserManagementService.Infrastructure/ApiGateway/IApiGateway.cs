@@ -2,6 +2,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using RecommendationService.Infrastructure.AppSettings;
 using UserManagementService.Infrastructure.AppSettings;
 using UserManagementService.Infrastructure.Exceptions;
 

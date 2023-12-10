@@ -8,7 +8,9 @@ using UserManagementService.Application.V1.ProcessExpProgress.Model;
 using UserManagementService.Application.V1.ProcessExpProgress.Model.Strategy;
 using UserManagementService.Application.V1.ProcessExpProgress.Repository;
 using UserManagementService.Domain.Models;
+using UserManagementService.Domain.Models.Events;
 using UserManagementService.Infrastructure.AppSettings;
+using Review = UserManagementService.Domain.Models.Review;
 
 namespace UserManagementServcie.Test.V1.ProcessExpProgress;
 

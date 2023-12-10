@@ -91,9 +91,9 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
     {
         var ev = await _eventBus.PullAsync<Event>
         (
-            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].TopicId,
-            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].ProjectId,
-            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].SubscriptionNames[TopicSubs.UserManagementAchievements],
+            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].TopicId,
+            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].ProjectId,
+            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].SubscriptionNames[TopicSubs.UserManagementAchievements],
             10,
             cancellationToken
         );
