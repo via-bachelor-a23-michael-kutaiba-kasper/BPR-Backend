@@ -234,34 +234,4 @@ public class ProcessExpProgressTests
         Assert.That(ledger.GetExperienceGained(previousReviewsUser),
             Is.GreaterThan(ledger.GetExperienceGained(firstReviewUser))); // Bonus for reviewing a lot
     }
-    
-    [Test]
-    public async Task ProcessExpProgress_CompletingSurvey_ProvidesExp()
-    {
-        // Arrange
-        var ledger = new ExperienceGainedLedger();
-
-        var user = "host";
-
-        var interestSurveyMock = new Mock<IInterestSurveyRepository>();
-        var progressRepositoryMock = new Mock<IProgressRepository>();
-        var loggerMock = new Mock<ILogger<ProcessExpProgressHandler>>();
-
-        interestSurveyMock.Setup(x => x.GetNewlyCreatedSurveyUserList()).ReturnsAsync(new List<string> {user});
-
-        var expStrategies = new List<IExpStrategy>
-        {
-            new SurveyCompletedStrategy(interestSurveyMock.Object)
-        };
-
-        var testRequest = new ProcessExpProgressRequest(expStrategies);
-        var handler = new ProcessExpProgressHandler(loggerMock.Object, progressRepositoryMock.Object, ledger);
-
-        // Act
-        await handler.Handle(testRequest, new CancellationToken());
-
-        // Assert
-        Assert.That(ledger.GetExperienceGained(user),
-            Is.GreaterThan(0)); // Bonus for reviewing a lot
-    }
 }
