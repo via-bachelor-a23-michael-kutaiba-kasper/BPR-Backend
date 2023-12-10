@@ -40,6 +40,7 @@ public class GetUserExpProgressHandler: IRequestHandler<GetUserExpProgressReques
             throw new UnableToResolveLevelException(progress.TotalExp);
         }
         progress.Level = level;
+        progress.Stage = ResolveStage(progress.Level);
         
         return progress;
     }
@@ -47,5 +48,17 @@ public class GetUserExpProgressHandler: IRequestHandler<GetUserExpProgressReques
     private Level? ResolveLevel(IEnumerable<Level> allLevels, long totalExp)
     {
         return allLevels.First(level => totalExp.IsBetween(level.MinExp, level.MaxExp));
+    }
+
+    private int ResolveStage(Level level)
+    {
+        return level.Value switch
+        {
+            >= 1 and <= 5 => 1,
+            > 5 and <= 10 => 2,
+            > 10 and <= 15 => 3,
+            > 15 => 4,
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 }

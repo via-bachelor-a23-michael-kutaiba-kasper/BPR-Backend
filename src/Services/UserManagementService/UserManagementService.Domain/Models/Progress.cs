@@ -5,6 +5,7 @@ public class Progress
     public int Id { get; set; }
     public long TotalExp { get; set; }
     public Level Level { get; set; } = new();
+    public int Stage { get; set; }
     public IReadOnlyCollection<ExpProgressEntry> ExpProgressHistory = new List<ExpProgressEntry>();
     public MonthlyGoal MonthlyGoal { get; set; } = new();
     public IReadOnlyCollection<Unlockable> Unlockables = new List<Unlockable>();
