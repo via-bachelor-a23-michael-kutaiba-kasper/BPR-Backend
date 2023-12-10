@@ -42,7 +42,14 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
         var categoryGroup = categoryGroupAttribute?.Group;
 
         var oldProgress = await _sqlAchievementRepository.GetProgressForAnAchievement(userId, (int)achievement);
-        
+        /*if (!string.IsNullOrEmpty(categoryGroup)) //Todo: not sure about this part
+        {
+            // Calculate the new progress
+            /*newProgress++;
+            newProgress += oldProgress;#1#
+            oldProgress++;
+        }*/
+
 
         return oldProgress;
     }
