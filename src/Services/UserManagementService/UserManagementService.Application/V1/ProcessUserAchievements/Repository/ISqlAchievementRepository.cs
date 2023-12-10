@@ -4,20 +4,22 @@ using Microsoft.Extensions.Logging;
 using Npgsql;
 using UserManagementService.Application.V1.ProcessUserAchievements.Exceptions;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model;
+using UserManagementService.Domain.Models.Events;
+using UserManagementService.Domain.Util;
 using UserManagementService.Infrastructure;
 
 namespace UserManagementService.Application.V1.ProcessUserAchievements.Repository;
 
 public interface ISqlAchievementRepository
 {
-    Task InsertUserAchievement(IReadOnlyCollection<UserAchievementTable> userAchievements);
+    Task InsertUserAchievement(UserAchievementTable userAchievements);
 
-    Task UpsertAchievementProgress(
-        IReadOnlyCollection<UnlockableAchievementProgressTable> unlockableAchievementProgressTable);
+    Task UpsertAchievementProgress(UnlockableAchievementProgressTable unlockableAchievementProgressTable);
 
-    Task<int> GetCountOFCurrentAchievementProgress(string userId, int achievementId);
+    Task<IReadOnlyCollection<int>> GetUserProgress(string userId, int achievementId, Category eventCategory);
     Task<IReadOnlyCollection<UserAchievementJoinTable>?> GetUserAchievement(string userId);
     Task<IReadOnlyCollection<AchievementTable>> GetAchievements();
+    Task<int> GetProgressForAnAchievement(string userId, int achievement);
 }
 
 public class SqlAchievementRepository : ISqlAchievementRepository
@@ -35,20 +37,19 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         _logger = logger;
     }
 
-    public async Task InsertUserAchievement(IReadOnlyCollection<UserAchievementTable> userAchievements)
+    public async Task InsertUserAchievement(UserAchievementTable userAchievements)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
         try
         {
-            foreach (var ua in userAchievements)
+            await connection.ExecuteAsync(InsertNewUserAchievementSql, new
             {
-                await connection.ExecuteAsync(InsertNewUserAchievementSql, new
-                {
-                    achievement_id = ua.achievement_id, user_id = ua.user_id, unlocked_date = ua.unlocked_date
-                });
-            }
+                achievement_id = userAchievements.achievement_id, user_id = userAchievements.user_id,
+                unlocked_date = userAchievements.unlocked_date
+            });
+
             await transaction.CommitAsync();
         }
         catch (Exception e)
@@ -68,21 +69,21 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         }
     }
 
-    public async Task UpsertAchievementProgress(
-        IReadOnlyCollection<UnlockableAchievementProgressTable> unlockableAchievementProgressTable)
+    public async Task UpsertAchievementProgress(UnlockableAchievementProgressTable unlockableAchievementProgressTable)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
         try
         {
-            foreach (var at in unlockableAchievementProgressTable)
+            await connection.ExecuteAsync(UpsertUserAchievementProgressSql, new
             {
-                await connection.ExecuteAsync(UpsertUserAchievementProgressSql, new
-                {
-                    achievementId = at.achievement_id, userId = at.user_id, progress = at.progress, date = at.date
-                });
-            }
+                achievementId = unlockableAchievementProgressTable.achievement_id,
+                userId = unlockableAchievementProgressTable.user_id,
+                progress = unlockableAchievementProgressTable.progress, date = unlockableAchievementProgressTable.date
+            });
+
+
             await transaction.CommitAsync();
         }
         catch (Exception e)
@@ -103,13 +104,33 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         }
     }
 
-    public async Task<int> GetCountOFCurrentAchievementProgress(string userId, int achievementId)
+    public async Task<IReadOnlyCollection<int>> GetUserProgress(string userId, int achievementId,
+        Category eventCategory)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
-        var count = await connection.ExecuteScalarAsync<int>(GetCountProgressForAchievementSql,
+        var currentProgress = await connection.QueryAsync<int>(GetUserAchievementSql,
             new { user_id = userId, achievement_id = achievementId });
-        return count;
+
+        var categoryGroup = EnumCategoryGroupHelper.GetCategoryGroupAttribute(eventCategory);
+
+        var achievementsToInsert = EnumCategoryGroupHelper.GetAchievementsForCategoryGroup(categoryGroup!.Group)
+            .Where(achievement => !currentProgress.Contains((int)achievement))
+            .ToList();
+
+        if (!achievementsToInsert.Any())
+        {
+            // Insert initial records for achievements without existing progress
+            foreach (var achievement in achievementsToInsert)
+            {
+                await connection.ExecuteAsync(
+                    InsertInitialProgressSql,
+                    new { UserId = userId, AchievementId = achievement, Progress = 0, Date = DateTimeOffset.UtcNow }
+                );
+            }
+        }
+
+        return currentProgress.ToList();
     }
 
     public async Task<IReadOnlyCollection<UserAchievementJoinTable>?> GetUserAchievement(string userId)
@@ -153,6 +174,23 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         }
     }
 
+    public async Task<int> GetProgressForAnAchievement(string userId, int achievement)
+    {
+        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
+        await connection.OpenAsync();
+        try
+        {
+            var achievementProgerss = await connection.QueryFirstOrDefaultAsync<int>(GetPreogressForAnAchievementSql,
+                new { UserId = userId, AchievementId = achievement });
+            return achievementProgerss == default(int) ? 0 : achievementProgerss;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Unable to query achievement progress, {e.StackTrace}");
+            throw new QueryUserAchievementsException("Something went wrong while querying achievement progress", e);
+        }
+    }
+
     private const string InsertNewUserAchievementSql =
         """
         INSERT INTO user_achievement(achievement_id, user_id, unlocked_date) VALUES (@achievement_id, @user_id, @unlocked_date);
@@ -176,8 +214,21 @@ public class SqlAchievementRepository : ISqlAchievementRepository
             DO UPDATE SET progress = EXCLUDED.progress, date = EXCLUDED.date;
         """;
 
-    private const string GetCountProgressForAchievementSql =
+    private const string GetUSerProgressSql =
         """
-        SELECT count(*) FROM unlockable_achievement_progress WHERE user_id = @user_id AND achievement_id = @achievement_id
+        SELECT progress FROM unlockable_achievement_progress
+        WHERE user_id = @UserId AND achievement_id IN @Achievements
+        """;
+
+    private const string InsertInitialProgressSql =
+        """
+        INSERT INTO unlockable_achievement_progress (user_id, achievement_id, progress, date)
+        VALUES (@UserId, @AchievementId, @Progress, @Date)
+        """;
+
+    private const string GetPreogressForAnAchievementSql =
+        """
+        SELECT progress FROM unlockable_achievement_progress
+        WHERE user_id = @UserId AND achievement_id = @AchievementId
         """;
 }

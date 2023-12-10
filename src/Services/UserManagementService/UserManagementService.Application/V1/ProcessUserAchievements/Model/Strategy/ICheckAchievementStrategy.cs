@@ -5,9 +5,5 @@ namespace UserManagementService.Application.V1.ProcessUserAchievements.Model.Str
 
 public interface ICheckAchievementStrategy
 {
-    IDictionary<string, IReadOnlyCollection<UserAchievement>> CheckAchievement
-    (
-        IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
-        Dictionary<Category, int> categoryCounts
-    );
+    Task ProcessAchievement(string userId, Category category);
 }

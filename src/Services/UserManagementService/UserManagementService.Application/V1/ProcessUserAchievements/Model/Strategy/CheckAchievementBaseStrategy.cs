@@ -1,101 +1,143 @@
+using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
 using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
 using UserManagementService.Domain.Util;
+using UserManagementService.Infrastructure.Util;
 
 namespace UserManagementService.Application.V1.ProcessUserAchievements.Model.Strategy;
 
 public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
 {
-    public abstract IDictionary<string, IReadOnlyCollection<UserAchievement>> CheckAchievement
-    (IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
-        Dictionary<Category, int> categoryCounts);
+    private readonly ISqlAchievementRepository _sqlAchievementRepository;
 
-
-    protected static IDictionary<string, IReadOnlyCollection<UserAchievement>> DoCheckAchievement
-    (
-        IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
-        UserAchievement achievement,
-        Dictionary<Category, int> categoryCounts,
-        int requiredCount
-    )
+    protected CheckAchievementBaseStrategy(ISqlAchievementRepository sqlAchievementRepository)
     {
-        var results = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
-        var alreadyUnlocked = new List<UserAchievement>();
-        var unlocked = new List<UserAchievement>();
-        var inProgress = new List<UserAchievement>();
-
-        if (unlockedAchievements != null)
-        {
-            alreadyUnlocked.AddRange
-            (
-                from ac in unlockedAchievements
-                where ac.achievement_id == (int)achievement
-                select (UserAchievement)ac.achievement_id
-            );
-        }
-
-        foreach
-        (
-            var e in from e in categoryCounts
-            let achGroup = EnumCategoryGroupHelper.AreEnumsInSameCategoryGroup(achievement, e.Key)
-            where achGroup
-            select e
-        )
-        {
-            if (e.Value < requiredCount)
-            {
-                inProgress.Add(achievement);
-            }
-
-            if (e.Value >= requiredCount)
-            {
-                unlocked.Add(achievement);
-            }
-        }
-
-        var lowerTierAchievements =
-            UnlockLowerTierAchievements(achievement, categoryCounts) ?? new List<UserAchievement>();
-
-        unlocked.AddRange(lowerTierAchievements);
-
-        results.Add(AchievementsTypes.AlreadyUnlocked, alreadyUnlocked);
-        results.Add(AchievementsTypes.Unlocked, unlocked);
-        results.Add(AchievementsTypes.InProgress, inProgress);
-
-        return results;
+        _sqlAchievementRepository = sqlAchievementRepository;
     }
 
+    public abstract Task ProcessAchievement
+    (string userId,
+        Category category);
 
-    private static IReadOnlyCollection<UserAchievement>? UnlockLowerTierAchievements
+
+    private async Task<int> CheckAchievement
     (
+        string userId,
         UserAchievement achievement,
-        Dictionary<Category, int> categoryCounts
+        Category eventCategory
     )
     {
-        var achievements = new List<UserAchievement>();
-        for (var i = 1; i < (int)achievement; i++)
-        {
-            var lowerTierAchievement = (UserAchievement)i;
-            var lowerTierRequiredCount = GetRequiredCountForAchievement(lowerTierAchievement);
+        var newProgress = 0;
 
-            if (categoryCounts.All(pair => pair.Value >= lowerTierRequiredCount))
-            {
-                achievements.Add((UserAchievement)i);
-            }
+        var currentProgress =
+            await _sqlAchievementRepository.GetUserProgress(userId, (int)achievement, eventCategory);
+        if (currentProgress.Contains((int)achievement))
+        {
+            return -1;
         }
 
-        return achievements;
+        var categoryGroupAttribute =
+            Attribute.GetCustomAttribute(eventCategory.GetType().GetField(eventCategory.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var categoryGroup = categoryGroupAttribute?.Group;
+
+        var oldProgress = await _sqlAchievementRepository.GetProgressForAnAchievement(userId, (int)achievement);
+        
+
+        return oldProgress;
     }
 
-    private static int GetRequiredCountForAchievement(UserAchievement achievement)
+    protected async Task UpdateProgress(string userId, IReadOnlyCollection<UserAchievement> achievements,
+        Category category)
     {
-        // all achievement have the same tier so the use of canary here is valid for each achievement
-        return achievement switch
+        foreach (var achievement in achievements)
         {
-            UserAchievement.Canary1 => AchievementsRequirements.Tier1,
-            UserAchievement.Canary2 => AchievementsRequirements.Tier2,
-            UserAchievement.Canary3 => AchievementsRequirements.Tier3,
-            _ => 0
-        };
+            var result = await CheckAchievement(userId, achievement, category);
+            if (result < 0)
+            {
+                return;
+            }
+
+
+            var currentProgress =
+                await _sqlAchievementRepository.GetProgressForAnAchievement(userId, (int)achievement) + result;
+            if (achievement.GetDescription().Contains('1'))
+            {
+                if (currentProgress >= 5)
+                {
+                    await _sqlAchievementRepository.InsertUserAchievement(new UserAchievementTable
+                    {
+                        achievement_id = (int)achievement,
+                        user_id = userId,
+                        unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime()
+                    });
+                }
+
+                await _sqlAchievementRepository.UpsertAchievementProgress(new UnlockableAchievementProgressTable
+                {
+                    achievement_id = (int)achievement,
+                    user_id = userId,
+                    date = DateTimeOffset.UtcNow.ToUniversalTime(),
+                    progress = currentProgress
+                });
+            }
+
+            if (achievement.GetDescription().Contains('2'))
+            {
+                if (currentProgress >= 20)
+                {
+                    await _sqlAchievementRepository.InsertUserAchievement(new UserAchievementTable
+                    {
+                        achievement_id = (int)achievement,
+                        user_id = userId,
+                        unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime()
+                    });
+                }
+
+                await _sqlAchievementRepository.UpsertAchievementProgress(new UnlockableAchievementProgressTable
+                {
+                    achievement_id = (int)achievement,
+                    user_id = userId,
+                    date = DateTimeOffset.UtcNow.ToUniversalTime(),
+                    progress = currentProgress
+                });
+            }
+
+            if (achievement.GetDescription().Contains('3'))
+            {
+                if (currentProgress >= 50)
+                {
+                    await _sqlAchievementRepository.InsertUserAchievement(new UserAchievementTable
+                    {
+                        achievement_id = (int)achievement,
+                        user_id = userId,
+                        unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime()
+                    });
+                }
+
+                await _sqlAchievementRepository.UpsertAchievementProgress(new UnlockableAchievementProgressTable
+                {
+                    achievement_id = (int)achievement,
+                    user_id = userId,
+                    date = DateTimeOffset.UtcNow.ToUniversalTime(),
+                    progress = currentProgress
+                });
+            }
+
+            if (achievement == UserAchievement.NewComer)
+            {
+                if (currentProgress == 0)
+                {
+                    return;
+                }
+
+                await _sqlAchievementRepository.InsertUserAchievement(new UserAchievementTable
+                {
+                    achievement_id = (int)achievement,
+                    user_id = userId,
+                    unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime()
+                });
+            }
+        }
     }
 }

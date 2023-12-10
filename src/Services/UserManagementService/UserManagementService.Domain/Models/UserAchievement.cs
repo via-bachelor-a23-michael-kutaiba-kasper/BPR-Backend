@@ -69,6 +69,6 @@ public enum UserAchievement
 
     [CategoryGroup("Recreation and Hobbies")] [Description("Monkey 3")]
     Monkey3 = 21,
-    [Description("New comer")]
+    [CategoryGroup("New comer")][Description("New comer")]
     NewComer = 22
 }

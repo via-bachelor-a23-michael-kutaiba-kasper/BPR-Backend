@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
 using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
 using UserManagementService.Infrastructure.AppSettings;
@@ -11,49 +12,31 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
     private readonly IEventBus _eventBus;
     private readonly IOptions<PubSub> _pubsubConfig;
 
-    public CheckUserSurveyAchievement(IEventBus eventBus, IOptions<PubSub> pubsubConfig)
+    public CheckUserSurveyAchievement
+    (
+        ISqlAchievementRepository sqlAchievementRepository,
+        IEventBus eventBus,
+        IOptions<PubSub> pubsubConfig
+    ) : base(sqlAchievementRepository)
     {
         _eventBus = eventBus;
         _pubsubConfig = pubsubConfig;
     }
 
-    public override IDictionary<string, IReadOnlyCollection<UserAchievement>> CheckAchievement
-    (
-        IReadOnlyCollection<UserAchievementJoinTable>? unlockedAchievements,
-        Dictionary<Category, int> categoryCounts
-    )
+    public override async Task ProcessAchievement(string userId, Category category)
     {
-        var results = new Dictionary<string, List<UserAchievement>>();
-        results.Add(AchievementsTypes.AlreadyUnlocked, new List<UserAchievement>());
-        results.Add(AchievementsTypes.InProgress, new List<UserAchievement>());
-        results.Add(AchievementsTypes.Unlocked, new List<UserAchievement>());
-        var achievements = new List<UserAchievement>();
-
-        var ids = GetUserIdFromPubSub().Result;
-
-        if (unlockedAchievements != null)
+        var userIds = await GetUserIdFromPubSub();
+        if (!userIds.Contains(userId))
         {
-            foreach (var ac in unlockedAchievements)
-            {
-                if (ac.achievement_id == (int)UserAchievement.NewComer || ids.Any(id => id != ac.user_id))
-                {
-                    results[AchievementsTypes.AlreadyUnlocked].AddRange(achievements); 
-                }
-
-                if (ids.Any(id => id == ac.user_id))
-                {
-                    achievements.Add(UserAchievement.NewComer);
-                    results[AchievementsTypes.Unlocked].AddRange(achievements); 
-                }
-            }
+            return;
         }
-
-        var di = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
-        di.Add(AchievementsTypes.AlreadyUnlocked, results[AchievementsTypes.AlreadyUnlocked]);
-        di.Add(AchievementsTypes.InProgress, results[AchievementsTypes.InProgress]);
-        di.Add(AchievementsTypes.Unlocked, results[AchievementsTypes.Unlocked]);
-        return di;
+        var userAchievement = new List<UserAchievement>
+        {
+            UserAchievement.NewComer
+        };
+        await UpdateProgress(userId, userAchievement, category);
     }
+
 
     private async Task<IReadOnlyCollection<string>> GetUserIdFromPubSub()
     {
