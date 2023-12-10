@@ -19,7 +19,6 @@ public record ProcessUserAchievementsRequest(string UserId) : IRequest;
 
 public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievementsRequest>
 {
-    private readonly IEventRepository _eventRepository;
     private readonly ISqlAchievementRepository _sqlAchievementRepository;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<ProcessUserAchievementsHandle> _logger;
@@ -30,7 +29,6 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
 
     public ProcessUserAchievementsHandle
     (
-        IEventRepository eventRepository,
         ISqlAchievementRepository sqlAchievementRepository,
         IUserRepository userRepository,
         ILogger<ProcessUserAchievementsHandle> logger,
@@ -40,7 +38,6 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         IOptions<PubSub> pubsubConfig
     )
     {
-        _eventRepository = eventRepository;
         _sqlAchievementRepository = sqlAchievementRepository;
         _userRepository = userRepository;
         _logger = logger;
@@ -64,7 +61,7 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
                 throw new UserNotFoundException($"No user with id {request.UserId} have been found");
             }
 
-            var events = await NewJoinedEvent();
+            var events = await NewJoinedEvent(cancellationToken);
 
             await Process(events, request);
         }
@@ -155,24 +152,29 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         }
     }
 
-    private Dictionary<string, IReadOnlyCollection<UserAchievement>> CollectAchievements
+    private Dictionary<string, List<UserAchievement>> CollectAchievements
     (
         IReadOnlyCollection<UserAchievementJoinTable> unlockedAchievements,
         Dictionary<Category, int> categoryCounts
     )
     {
-        var results = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
-        var achievements = new List<UserAchievement>();
+        var results = new Dictionary<string, List<UserAchievement>>();
+        results.Add(AchievementsTypes.AlreadyUnlocked, new List<UserAchievement>());
+        results.Add(AchievementsTypes.InProgress, new List<UserAchievement>());
+        results.Add(AchievementsTypes.Unlocked, new List<UserAchievement>());
         foreach (var strategy in _strategies)
         {
             var stratResult = strategy.CheckAchievement(unlockedAchievements, categoryCounts);
-            results.Concat(stratResult).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            results[AchievementsTypes.AlreadyUnlocked].AddRange(stratResult[AchievementsTypes.AlreadyUnlocked]);
+            results[AchievementsTypes.InProgress].AddRange(stratResult[AchievementsTypes.InProgress]);
+            results[AchievementsTypes.Unlocked].AddRange(stratResult[AchievementsTypes.Unlocked]);
         }
 
         return results;
     }
 
-    private async Task<IReadOnlyCollection<Event>> NewJoinedEvent()
+    private async Task<IReadOnlyCollection<Event>> NewJoinedEvent(CancellationToken cancellationToken)
     {
         var ev = await _eventBus.PullAsync<Event>
         (
@@ -180,7 +182,7 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
             _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].ProjectId,
             _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].SubscriptionNames[TopicSubs.UserManagementAchievements],
             10,
-            new CancellationToken()
+            cancellationToken
         );
         return ev.ToList();
     }

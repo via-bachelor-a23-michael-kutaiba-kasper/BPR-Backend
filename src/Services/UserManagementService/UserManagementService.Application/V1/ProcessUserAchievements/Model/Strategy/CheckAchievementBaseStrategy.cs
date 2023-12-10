@@ -34,8 +34,6 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
             );
         }
 
-        var categoryAttribute = EnumCategoryGroupHelper.GetCategoryGroupAttribute(achievement);
-
         foreach
         (
             var e in from e in categoryCounts

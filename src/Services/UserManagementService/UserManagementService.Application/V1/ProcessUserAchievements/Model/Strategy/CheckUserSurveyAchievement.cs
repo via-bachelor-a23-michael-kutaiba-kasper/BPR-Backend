@@ -23,7 +23,10 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
         Dictionary<Category, int> categoryCounts
     )
     {
-        var results = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
+        var results = new Dictionary<string, List<UserAchievement>>();
+        results.Add(AchievementsTypes.AlreadyUnlocked, new List<UserAchievement>());
+        results.Add(AchievementsTypes.InProgress, new List<UserAchievement>());
+        results.Add(AchievementsTypes.Unlocked, new List<UserAchievement>());
         var achievements = new List<UserAchievement>();
 
         var ids = GetUserIdFromPubSub().Result;
@@ -34,18 +37,22 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
             {
                 if (ac.achievement_id == (int)UserAchievement.NewComer || ids.Any(id => id != ac.user_id))
                 {
-                    results.Add("alreadyUnlocked", achievements); 
+                    results[AchievementsTypes.AlreadyUnlocked].AddRange(achievements); 
                 }
 
                 if (ids.Any(id => id == ac.user_id))
                 {
                     achievements.Add(UserAchievement.NewComer);
-                    results.Add("unlocked", achievements); 
+                    results[AchievementsTypes.Unlocked].AddRange(achievements); 
                 }
             }
         }
 
-        return results;
+        var di = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
+        di.Add(AchievementsTypes.AlreadyUnlocked, results[AchievementsTypes.AlreadyUnlocked]);
+        di.Add(AchievementsTypes.InProgress, results[AchievementsTypes.InProgress]);
+        di.Add(AchievementsTypes.Unlocked, results[AchievementsTypes.Unlocked]);
+        return di;
     }
 
     private async Task<IReadOnlyCollection<string>> GetUserIdFromPubSub()

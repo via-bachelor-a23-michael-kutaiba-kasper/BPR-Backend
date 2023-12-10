@@ -42,7 +42,13 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
         try
         {
-            await connection.ExecuteAsync(InsertNewUserAchievementSql, userAchievements);
+            foreach (var ua in userAchievements)
+            {
+                await connection.ExecuteAsync(InsertNewUserAchievementSql, new
+                {
+                    achievement_id = ua.achievement_id, user_id = ua.user_id, unlocked_date = ua.unlocked_date
+                });
+            }
             await transaction.CommitAsync();
         }
         catch (Exception e)
@@ -70,7 +76,13 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         await using NpgsqlTransaction transaction = await connection.BeginTransactionAsync();
         try
         {
-            await connection.ExecuteAsync(UpsertUserAchievementProgressSql, unlockableAchievementProgressTable);
+            foreach (var at in unlockableAchievementProgressTable)
+            {
+                await connection.ExecuteAsync(UpsertUserAchievementProgressSql, new
+                {
+                    achievementId = at.achievement_id, userId = at.user_id, progress = at.progress, date = at.date
+                });
+            }
             await transaction.CommitAsync();
         }
         catch (Exception e)

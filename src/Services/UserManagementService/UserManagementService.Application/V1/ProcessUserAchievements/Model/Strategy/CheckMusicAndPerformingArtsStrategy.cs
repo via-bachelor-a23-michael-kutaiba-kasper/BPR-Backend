@@ -33,7 +33,16 @@ public class CheckMusicAndPerformingArtsStrategy : CheckAchievementBaseStrategy
             AchievementsRequirements.Tier3
         );
         
-        var results = c1.Concat(c2).Concat(c3).ToDictionary(pair => pair.Key, pair => pair.Value);
+        var alreadyUnlocked = c1[AchievementsTypes.AlreadyUnlocked].Concat(c2[AchievementsTypes.AlreadyUnlocked])
+            .Concat(c3[AchievementsTypes.AlreadyUnlocked]).ToList();
+        var inProgress = c1[AchievementsTypes.InProgress].Concat(c2[AchievementsTypes.InProgress])
+            .Concat(c3[AchievementsTypes.InProgress]).ToList();
+        var unlocked = c1[AchievementsTypes.Unlocked].Concat(c2[AchievementsTypes.Unlocked])
+            .Concat(c3[AchievementsTypes.Unlocked]).ToList();
+        var results = new Dictionary<string, IReadOnlyCollection<UserAchievement>>();
+        results.Add(AchievementsTypes.AlreadyUnlocked, alreadyUnlocked.ToList());
+        results.Add(AchievementsTypes.InProgress, inProgress.ToList());
+        results.Add(AchievementsTypes.Unlocked, unlocked.ToList());
         return results;
     }
 }
