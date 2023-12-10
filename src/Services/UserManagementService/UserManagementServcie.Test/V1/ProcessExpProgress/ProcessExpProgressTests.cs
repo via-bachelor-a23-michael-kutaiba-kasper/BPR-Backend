@@ -168,10 +168,100 @@ public class ProcessExpProgressTests
         await handler.Handle(testRequest, new CancellationToken());
         Assert.Multiple(() =>
         {
-
             // Assert
-            Assert.That(ledger.GetExperienceGained(goodReviewHost), Is.GreaterThan(ledger.GetExperienceGained(badReviewHost))); // Good events are rewarded better than bad events
-            Assert.That(ledger.GetExperienceGained(goodReviewUser), Is.EqualTo(ledger.GetExperienceGained(badReviewUser))); // Good reviews and bad reviews should reward same exp
+            Assert.That(ledger.GetExperienceGained(goodReviewHost),
+                Is.GreaterThan(
+                    ledger.GetExperienceGained(badReviewHost))); // Good events are rewarded better than bad events
+            Assert.That(ledger.GetExperienceGained(goodReviewUser),
+                Is.EqualTo(ledger
+                    .GetExperienceGained(badReviewUser))); // Good reviews and bad reviews should reward same exp
         });
+    }
+
+    [Test]
+    public async Task ProcessExpProgress_CreatingReview_PreviousExpShouldGiveBonusExp()
+    {
+        // Arrange
+        var ledger = new ExperienceGainedLedger();
+        var dataBuilder = new TestEventObjectBuilder();
+
+        var previousReviewsUser = "previousReviews";
+        var firstReviewUser = "badUser1";
+        var host = "host";
+
+        var eventToReview = dataBuilder.NewTestEvent(e => { e.Host.UserId = host; });
+
+        var newReview1 = new Review
+        {
+            Id = 1,
+            Rate = 5,
+            EventId = eventToReview.Id,
+            ReviewDate = DateTimeOffset.UtcNow,
+            ReviewerId = previousReviewsUser
+        };
+        var newReview2 = new Review
+        {
+            Id = 1,
+            Rate = 2,
+            EventId = eventToReview.Id,
+            ReviewDate = DateTimeOffset.UtcNow,
+            ReviewerId = firstReviewUser
+        };
+
+        var reviewRepositoryMock = new Mock<IReviewRepository>();
+        var progressRepositoryMock = new Mock<IProgressRepository>();
+        var eventsRepositoryMock = new Mock<IEventsRepository>();
+        var loggerMock = new Mock<ILogger<ProcessExpProgressHandler>>();
+
+        reviewRepositoryMock.Setup(x => x.GetNewReviews()).ReturnsAsync(new List<Review> {newReview2, newReview1});
+        reviewRepositoryMock.Setup(x => x.GetReviewsCountByUser(firstReviewUser)).ReturnsAsync(0);
+        reviewRepositoryMock.Setup(x => x.GetReviewsCountByUser(previousReviewsUser)).ReturnsAsync(1);
+        eventsRepositoryMock.Setup(x => x.GetById(eventToReview.Id)).ReturnsAsync(eventToReview);
+
+        var expStrategies = new List<IExpStrategy>
+        {
+            new NewReviewsStrategy(reviewRepositoryMock.Object, eventsRepositoryMock.Object,
+                progressRepositoryMock.Object)
+        };
+
+        var testRequest = new ProcessExpProgressRequest(expStrategies);
+        var handler = new ProcessExpProgressHandler(loggerMock.Object, progressRepositoryMock.Object, ledger);
+
+        // Act
+        await handler.Handle(testRequest, new CancellationToken());
+
+        // Assert
+        Assert.That(ledger.GetExperienceGained(previousReviewsUser),
+            Is.GreaterThan(ledger.GetExperienceGained(firstReviewUser))); // Bonus for reviewing a lot
+    }
+    
+    [Test]
+    public async Task ProcessExpProgress_CompletingSurvey_ProvidesExp()
+    {
+        // Arrange
+        var ledger = new ExperienceGainedLedger();
+
+        var user = "host";
+
+        var interestSurveyMock = new Mock<IInterestSurveyRepository>();
+        var progressRepositoryMock = new Mock<IProgressRepository>();
+        var loggerMock = new Mock<ILogger<ProcessExpProgressHandler>>();
+
+        interestSurveyMock.Setup(x => x.GetNewlyCreatedSurveyUserList()).ReturnsAsync(new List<string> {user});
+
+        var expStrategies = new List<IExpStrategy>
+        {
+            new SurveyCompletedStrategy(interestSurveyMock.Object)
+        };
+
+        var testRequest = new ProcessExpProgressRequest(expStrategies);
+        var handler = new ProcessExpProgressHandler(loggerMock.Object, progressRepositoryMock.Object, ledger);
+
+        // Act
+        await handler.Handle(testRequest, new CancellationToken());
+
+        // Assert
+        Assert.That(ledger.GetExperienceGained(user),
+            Is.GreaterThan(0)); // Bonus for reviewing a lot
     }
 }
