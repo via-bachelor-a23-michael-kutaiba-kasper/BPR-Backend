@@ -8,7 +8,8 @@ internal static class Configurations
         ConfigurationManager configurationManager)
     {
         collection.Configure<Gateway>(configurationManager.GetSection("Gateway"));
-        
+        collection.Configure<PubSub>(configurationManager.GetSection("PubSub"));
+
         return collection;
     }
 }

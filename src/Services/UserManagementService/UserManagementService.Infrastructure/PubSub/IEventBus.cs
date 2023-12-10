@@ -13,10 +13,9 @@ namespace UserManagementService.Infrastructure.PubSub;
 
 public interface IEventBus
 {
-    Task PublishAsync<T>(string topicName,string projectName, T data);
+    Task PublishAsync<T>(string topicName, string projectName, T data);
 
-    Task<IEnumerable<T>> PullAsync<T>(string topicName, string projectName, string subscriptionName,
-        int maxMessages,
+    Task<IEnumerable<T>> PullAsync<T>(string topicName, string projectName, string subscriptionName, int maxMessages,
         CancellationToken cancellationToken);
 }
 
@@ -65,16 +64,16 @@ public class PubSubEventBus : IEventBus
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         });
-        
+
         PubsubMessage message = new()
         {
             Data = ByteString.CopyFromUtf8(dataAsJson)
         };
-        
+
         TopicName topic = new TopicName(projectName, topicName);
-        await publisherService.PublishAsync(topic, new[] { message });
+        await publisherService.PublishAsync(topic, new[] {message});
     }
-    
+
     public async Task<IEnumerable<T>> PullAsync<T>(string topicName, string projectName, string subscriptionName,
         int maxMessages,
         CancellationToken cancellationToken)
@@ -102,8 +101,9 @@ public class PubSubEventBus : IEventBus
 
         try
         {
-            await subscriber.CreateSubscriptionAsync(subscriptionName, topicName, pushConfig: null,
+           var newSub = await subscriber.CreateSubscriptionAsync(subscription, topic, pushConfig: null,
                 ackDeadlineSeconds: 60);
+           subscription = newSub?.SubscriptionName;
         }
         catch (Exception e)
         {

@@ -6,8 +6,10 @@ using EventManagementService.Application.V1.ProcessExternalEvents.Repository;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Domain.Models.Google;
 using EventManagementService.Infrastructure;
+using EventManagementService.Infrastructure.AppSettings;
 using EventManagementService.Test.Shared;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace EventManagementService.Test.ProcessExternalEvents.V1.IntegrationTests;
@@ -17,6 +19,38 @@ public class ProcessExternalEventsTests
 {
     private readonly TestDataContext _context = new();
     private readonly ConnectionStringManager _connectionStringManager = new();
+    private readonly IOptions<PubSub> _pubsubOptions = Options.Create(new PubSub()
+        {
+            SubscriptionName = "eventmanagement",
+            Topics = new[]
+            {
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                },
+                new Topic()
+                {
+                    ProjectId = "test",
+                    TopicId = "test"
+                }
+            }
+        });
 
     [SetUp]
     public async Task Setup()
@@ -92,7 +126,8 @@ public class ProcessExternalEventsTests
             geoCodingRepoMock.Object,
             pubSubRepoMock.Object,
             sqlRepoMock.Object,
-            loggerMock.Object
+            loggerMock.Object,
+            _pubsubOptions
         );
         // Act
         var act = async () => await handler.Handle(
@@ -164,7 +199,8 @@ public class ProcessExternalEventsTests
             geoCodingRepoMock.Object,
             pubSubRepoMock.Object,
             sqlRepoMock.Object,
-            loggerMock.Object
+            loggerMock.Object,
+            _pubsubOptions
         );
         // Act
         var act = async () => await handler.Handle(

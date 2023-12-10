@@ -5,7 +5,7 @@ using RecommendationService.Infrastructure.ApiGateway;
 using RecommendationService.Infrastructure.AppSettings;
 using RecommendationService.Test.Shared;
 
-namespace RecommendationService.Test.ApiGateway;
+namespace RecommendationService.Test.V1.ApiGateway;
 
 public class ApiGatewayComponentTests
 {
@@ -30,7 +30,7 @@ public class ApiGatewayComponentTests
     public async Task QueryAsync_QueryEvents_ParsesResponseCorrectly()
     {
         // Arrange
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ApiGateway", "Fakes",
+        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"V1", "ApiGateway", "Fakes",
             "ApiGatewayEventsQueryResponse.json");
 
         var eventsQueryResponse= await File.ReadAllTextAsync(path);

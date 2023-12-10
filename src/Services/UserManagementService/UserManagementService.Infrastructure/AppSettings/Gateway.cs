@@ -1,4 +1,4 @@
-namespace UserManagementService.Infrastructure.AppSettings;
+namespace RecommendationService.Infrastructure.AppSettings;
 
 public class Gateway
 {

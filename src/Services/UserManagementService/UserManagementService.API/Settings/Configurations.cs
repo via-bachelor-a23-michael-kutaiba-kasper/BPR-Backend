@@ -1,3 +1,4 @@
+using RecommendationService.Infrastructure.AppSettings;
 using UserManagementService.Infrastructure.AppSettings;
 
 namespace UserManagementService.API.Settings;
@@ -12,6 +13,7 @@ internal static class Configurations
     {
         services.Configure<ConnectionStrings>(configuration.GetSection("ConnectionStrings"));
         services.Configure<PubSub>(configuration.GetSection("PubSub"));
+        services.Configure<Gateway>(configuration.GetSection("Gateway"));
         return services;
     }
 }

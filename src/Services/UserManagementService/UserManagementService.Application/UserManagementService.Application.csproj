@@ -18,4 +18,8 @@
     <ProjectReference Include="..\UserManagementService.Infrastructure\UserManagementService.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="V1\" />
+  </ItemGroup>
+
 </Project>
