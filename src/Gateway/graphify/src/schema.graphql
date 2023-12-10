@@ -90,6 +90,29 @@ type InterestSurvey {
     categories: [String]
 }
 
+type Level {
+    value: Int
+    maxExp: Int
+    minExp: Int
+    name: String
+}
+
+type ExpProgressHistoryEntry {
+    timestamp: String
+    expGained: Int
+}
+
+type ExpProgress {
+    totalExp: Int
+    level: Level
+    expProgressHistory: [ExpProgressHistoryEntry]
+}
+
+type ExpProgressResponse {
+    result: ExpProgress
+    status: Status
+}
+
 type EventResponse {
     result: Event
     status: Status
@@ -149,6 +172,7 @@ type Query {
     finishedJoinedEvents(userId: String): EventsResponse
     recommendations(userId: String!, limit: Int): RecommendationsResponse
     interestSurvey(userId: String!): InterestSurveyResponse
+    expProgress(userId: String!): ExpProgressResponse
 }
 
 type Mutation {
