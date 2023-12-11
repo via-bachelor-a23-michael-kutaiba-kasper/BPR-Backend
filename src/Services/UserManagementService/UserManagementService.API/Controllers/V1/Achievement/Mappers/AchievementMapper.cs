@@ -89,7 +89,7 @@ internal static class AchievementMapper
                 Icon = ac.icon,
                 Name = ac.name,
                 Requirement = requirement,
-                Reward = ac.reward
+                ExpReward = ac.reward
             });
         }
 

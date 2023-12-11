@@ -46,6 +46,6 @@ public class SqlAchievementsRepository : ISqlAchievementsRepository
     
     private const string GetAllAchievementsSql = 
         """
-        SELECT * FROM user_progress.achievement;
+        SELECT id,name,description,icon,reward FROM user_progress.achievement;
         """;
 }
