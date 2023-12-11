@@ -34,7 +34,7 @@ public class ApiGateway : IApiGateway
         HttpResponseMessage responseFromGateway = await _client.PostAsync(_gatewayConfig.Url, payload);
         if (!responseFromGateway.IsSuccessStatusCode)
         {
-            throw new HttpException($"Unable to query api gateway, status code: {responseFromGateway.StatusCode}");
+            throw new HttpException($"Unable to query api gateway, status code: {responseFromGateway.StatusCode}, content: {await responseFromGateway.Content.ReadAsStringAsync()}");
         }
         string responseBodyJsonString = await responseFromGateway.Content.ReadAsStringAsync();
 

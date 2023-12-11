@@ -9,7 +9,7 @@ resource "google_project_service" "iam_api" {
   disable_on_destroy = false
 }
 
-# #Jobs handler
+#Jobs handler
 module "periodic_jobs" {
   source                       = "./modules/container-service"
   service_name                 = "periodic-jobs"
