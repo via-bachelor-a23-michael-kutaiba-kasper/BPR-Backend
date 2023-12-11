@@ -33,7 +33,7 @@ module "api_gateway" {
   image                        = "docker.io/${var.DOCKER_USERNAME}/vibeverse-gateway"
   port                         = 4242
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
-  max_instances                = 1
+  max_instances                = 3
   container_envs = {
     "QUERY_EVENTS_HOST"               = module.eventmanagement_service.service_url
     "QUERY_EVENT_HOST"                = module.eventmanagement_service.service_url
@@ -60,7 +60,7 @@ module "eventmanagement_service" {
   image                        = "docker.io/${var.DOCKER_USERNAME}/vibeverse-eventmanagementservice"
   port                         = 80
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
-  max_instances                = 1
+  max_instances                = 3
   cloud_sql_instance           = google_sql_database_instance.main.connection_name
 
   container_envs = {
@@ -77,7 +77,7 @@ module "recommendation_service" {
   image                        = "docker.io/${var.DOCKER_USERNAME}/vibeverse-recommendationservice"
   port                         = 80
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
-  max_instances                = 1
+  max_instances                = 3
   cloud_sql_instance           = google_sql_database_instance.main.connection_name
 
   container_envs = {
@@ -94,7 +94,7 @@ module "usermanagement_service" {
   image                        = "docker.io/${var.DOCKER_USERNAME}/vibeverse-usermanagementservice"
   port                         = 80
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
-  max_instances                = 1
+  max_instances                = 3
   cloud_sql_instance           = google_sql_database_instance.main.connection_name
 
   container_envs = {
@@ -111,7 +111,7 @@ module "scraper_service" {
   image                        = "docker.io/${var.DOCKER_USERNAME}/vibeverse-scraperservice"
   port                         = 80
   gcp_service_account_key_json = var.GCP_SERVICE_ACCOUNT_KEY_JSON
-  max_instances                = 1
+  max_instances                = 3
   cloud_sql_instance           = google_sql_database_instance.main.connection_name
 
   container_envs = {
