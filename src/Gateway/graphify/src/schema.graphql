@@ -127,7 +127,6 @@ type UserAchievement {
 type AllAchievements {
     icon: String
     name: String
-    unlockDate: String
     description: String
     expReward: Int
     requirement: Int
