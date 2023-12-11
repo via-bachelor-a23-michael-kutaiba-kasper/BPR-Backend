@@ -21,6 +21,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\0001_initial_schema_setup.sql" />
     <EmbeddedResource Include="Migrations\0002_exp_progress_history.sql" />
+    <None Remove="Migrations\0004_populate_levels.sql" />
+    <EmbeddedResource Include="Migrations\0004_populate_levels.sql" />
   </ItemGroup>
 
 </Project>
