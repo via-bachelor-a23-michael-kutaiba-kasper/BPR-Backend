@@ -31,7 +31,7 @@ public class InterestSurveyRepository : IInterestSurveyRepository
         {
             _logger.LogInformation("Retrieving newly completed interest surveys from PubSub");
 
-            var topic = _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee];
+            var topic = _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey];
             var userIds = (await _eventBus.PullAsync<object>(topic.TopicId, topic.ProjectId,
                     topic.SubscriptionNames[PubSubSubscriptionNames.Exp], 1000, new CancellationToken()))
                 .Select(o => JsonSerializer.Serialize(o)).ToList();
