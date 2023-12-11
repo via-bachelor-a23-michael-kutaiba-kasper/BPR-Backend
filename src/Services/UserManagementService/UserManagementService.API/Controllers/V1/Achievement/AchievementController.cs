@@ -57,6 +57,7 @@ public class AchievementController : ControllerBase
         catch (Exception e)
         {
             return StatusCode((int)HttpStatusCode.InternalServerError);
+            
         }
     }
 
