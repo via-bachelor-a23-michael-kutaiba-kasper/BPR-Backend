@@ -1,22 +1,19 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using UserManagementService.Application.V1.ProcessUserAchievements.Dto;
 using UserManagementService.Application.V1.ProcessUserAchievements.Exceptions;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model.Strategy;
 using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
-using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
-using UserManagementService.Domain.Util;
 using UserManagementService.Infrastructure.AppSettings;
 using UserManagementService.Infrastructure.Notifications;
-using UserManagementService.Infrastructure.Notifications.Models;
 using UserManagementService.Infrastructure.PubSub;
-using UserManagementService.Infrastructure.Util;
 
 namespace UserManagementService.Application.V1.ProcessUserAchievements;
 
-public record ProcessUserAchievementsRequest(string UserId) : IRequest;
+public record ProcessUserAchievementsRequest() : IRequest;
 
 public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievementsRequest>
 {
@@ -56,16 +53,16 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
     {
         try
         {
-            var userExists = await _userRepository.UserExists(request.UserId);
-            if (!userExists)
+            var newJoinedEvents = await NewJoinedEvent(cancellationToken);
+            foreach (var newJoined in newJoinedEvents)
             {
-                throw new UserNotFoundException($"No user with id {request.UserId} have been found");
-            }
+                var userExists = await _userRepository.UserExists(newJoined.UserId);
+                if (!userExists)
+                {
+                    throw new UserNotFoundException($"No user with id {newJoined.UserId} have been found");
+                }
 
-            var events = await NewJoinedEvent(cancellationToken);
-            foreach (var eEvent in events)
-            {
-                await ProcessAchievements(request.UserId, eEvent.Category);
+                await ProcessAchievements(newJoined.UserId, newJoined.Event.Category);
             }
         }
         catch (Exception e)
@@ -87,13 +84,14 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         }
     }
 
-    private async Task<IReadOnlyCollection<Event>> NewJoinedEvent(CancellationToken cancellationToken)
+    private async Task<IReadOnlyCollection<Attendance>> NewJoinedEvent(CancellationToken cancellationToken)
     {
-        var ev = await _eventBus.PullAsync<Event>
+        var ev = await _eventBus.PullAsync<Attendance>
         (
-            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].TopicId,
-            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].ProjectId,
-            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].SubscriptionNames[TopicSubs.UserManagementAchievements],
+            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].TopicId,
+            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].ProjectId,
+            _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee]
+                .SubscriptionNames[TopicSubs.UserManagementAchievements],
             10,
             cancellationToken
         );

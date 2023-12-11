@@ -19,12 +19,12 @@ public class AchievementController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("{userId}/achievements/processUserAchievements")]
-    public async Task<ActionResult> ProcessUserAchievements([FromRoute] string userId)
+    [HttpPost("achievements/processUserAchievements")]
+    public async Task<ActionResult> ProcessUserAchievements()
     {
         try
         {
-            await _mediator.Send(new ProcessUserAchievementsRequest(userId));
+            await _mediator.Send(new ProcessUserAchievementsRequest());
             return Ok();
         }
         catch (Exception e) when (e is UserNotFoundException)

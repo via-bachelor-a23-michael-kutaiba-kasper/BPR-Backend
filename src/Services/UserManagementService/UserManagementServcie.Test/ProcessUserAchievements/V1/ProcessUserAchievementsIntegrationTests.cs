@@ -6,6 +6,7 @@ using Npgsql;
 using UserManagementServcie.Test.Shared;
 using UserManagementServcie.Test.Shared.Builders;
 using UserManagementService.Application.V1.ProcessUserAchievements;
+using UserManagementService.Application.V1.ProcessUserAchievements.Dto;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model.Strategy;
 using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
@@ -121,13 +122,20 @@ public class ProcessUserAchievementsIntegrationTests
         joinedEvents.Add(ev);
 
         var ct = new CancellationToken();
-        eventBussMock.Setup(x => x.PullAsync<Event>
+        eventBussMock.Setup(x => x.PullAsync<Attendance>
         (
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<string>(), It.IsAny<int>(),
             ct
-        )).ReturnsAsync(joinedEvents);
+        )).ReturnsAsync(new List<Attendance>
+        {
+            new Attendance
+            {
+                Event = ev,
+                UserId = userId
+            }
+        });
 
         eventBussMockStrategy.Setup(x => x.PullAsync<string>
         (
@@ -174,7 +182,7 @@ public class ProcessUserAchievementsIntegrationTests
         );
 
         // Act
-        var act = async () => await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
+        var act = async () => await handler.Handle(new ProcessUserAchievementsRequest(), ct);
 
         // Assert
         Assert.DoesNotThrowAsync(() => act.Invoke());
@@ -232,13 +240,20 @@ public class ProcessUserAchievementsIntegrationTests
         joinedEvents.Add(ev);
 
         var ct = new CancellationToken();
-        eventBussMock.Setup(x => x.PullAsync<Event>
+        eventBussMock.Setup(x => x.PullAsync<Attendance>
         (
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<string>(), It.IsAny<int>(),
             ct
-        )).ReturnsAsync(joinedEvents);
+        )).ReturnsAsync(new List<Attendance>
+        {
+            new Attendance
+            {
+                Event = ev,
+                UserId = userId
+            }
+        });
 
         eventBussMockStrategy.Setup(x => x.PullAsync<string>
         (
@@ -293,7 +308,7 @@ public class ProcessUserAchievementsIntegrationTests
         var achievementGroup = achievementGroupAttribute?.Group;
 
         // Act
-        await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
+        await handler.Handle(new ProcessUserAchievementsRequest(), ct);
         var unlocked = await GetUnlockedAchievements(userId, (int)achievement);
 
         // Assert
@@ -360,13 +375,20 @@ public class ProcessUserAchievementsIntegrationTests
         joinedEvents.Add(ev);
 
         var ct = new CancellationToken();
-        eventBussMock.Setup(x => x.PullAsync<Event>
+        eventBussMock.Setup(x => x.PullAsync<Attendance>
         (
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<string>(), It.IsAny<int>(),
             ct
-        )).ReturnsAsync(joinedEvents);
+        )).ReturnsAsync(new List<Attendance>
+        {
+            new Attendance
+            {
+                Event = ev,
+                UserId = userId
+            }
+        });
 
         eventBussMockStrategy.Setup(x => x.PullAsync<string>
         (
@@ -413,7 +435,7 @@ public class ProcessUserAchievementsIntegrationTests
         );
 
         // Act
-        await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
+        await handler.Handle(new ProcessUserAchievementsRequest(), ct);
         var unlocked = await GetUnlockedAchievements(userId, (int)achievement);
         var categoryGroupAttribute =
             Attribute.GetCustomAttribute(cat.GetType().GetField(cat.ToString())!,
@@ -491,13 +513,20 @@ public class ProcessUserAchievementsIntegrationTests
         joinedEvents.Add(ev);
 
         var ct = new CancellationToken();
-        eventBussMock.Setup(x => x.PullAsync<Event>
+        eventBussMock.Setup(x => x.PullAsync<Attendance>
         (
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<string>(), It.IsAny<int>(),
             ct
-        )).ReturnsAsync(joinedEvents);
+        )).ReturnsAsync(new List<Attendance>
+        {
+            new Attendance
+            {
+                Event = ev,
+                UserId = userId
+            }
+        });
 
         eventBussMockStrategy.Setup(x => x.PullAsync<string>
         (
@@ -544,7 +573,7 @@ public class ProcessUserAchievementsIntegrationTests
         );
 
         // Act
-        await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
+        await handler.Handle(new ProcessUserAchievementsRequest(), ct);
         var unlocked = await GetUnlockedAchievements(userId, (int)achievement);
         var categoryGroupAttribute =
             Attribute.GetCustomAttribute(cat.GetType().GetField(cat.ToString())!,
@@ -616,13 +645,20 @@ public class ProcessUserAchievementsIntegrationTests
         joinedEvents.Add(ev);
 
         var ct = new CancellationToken();
-        eventBussMock.Setup(x => x.PullAsync<Event>
+        eventBussMock.Setup(x => x.PullAsync<Attendance>
         (
             It.IsAny<string>(),
             It.IsAny<string>(),
             It.IsAny<string>(), It.IsAny<int>(),
             ct
-        )).ReturnsAsync(joinedEvents);
+        )).ReturnsAsync(new List<Attendance>
+        {
+            new Attendance
+            {
+                Event = ev,
+                UserId = userId
+            }
+        });
 
         eventBussMockStrategy.Setup(x => x.PullAsync<string>
         (
@@ -669,7 +705,7 @@ public class ProcessUserAchievementsIntegrationTests
         );
 
         // Act
-        await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
+        await handler.Handle(new ProcessUserAchievementsRequest(), ct);
         var progressedAchievement = await GetProgressedAchievements(userId, (int)achievement);
         var progress = await GetProgressForAchievements(userId, (int)achievement);
         var categoryGroupAttribute =
