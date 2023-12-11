@@ -118,7 +118,7 @@ public class FetchUserAchievementsIntegrationTest
         await connection.OpenAsync();
         const string sql =
             """
-            INSERT INTO user_achievement(achievement_id, user_id, unlocked_date)
+            INSERT INTO user_progress.user_achievement(achievement_id, user_id, unlocked_date)
             VALUES(@AchievementId, @UserId, @UnlocedDate)
             """;
         foreach (var table in tables)

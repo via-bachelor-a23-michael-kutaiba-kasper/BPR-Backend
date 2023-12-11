@@ -19,7 +19,6 @@ public interface ISqlAchievementRepository
     Task<IReadOnlyCollection<int>> GetUserProgress(string userId, int achievementId, Category eventCategory);
     Task<IReadOnlyCollection<UserAchievementJoinTable>?> GetUserAchievement(string userId);
     Task<int> GetUserAchievementsProgress(string userId, int achievementid);
-    Task<int> GetProgressForAnAchievement(string userId, int achievement);
 }
 
 public class SqlAchievementRepository : ISqlAchievementRepository
@@ -180,61 +179,32 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         }
     }
 
-    public async Task<int> GetProgressForAnAchievement(string userId, int achievement)
-    {
-        await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
-        await connection.OpenAsync();
-        try
-        {
-            var achievementProgerss = await connection.QueryFirstOrDefaultAsync<int>(GetPreogressForAnAchievementSql,
-                new { UserId = userId, AchievementId = achievement });
-            return achievementProgerss == default(int) ? 0 : achievementProgerss;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError($"Unable to query achievement progress, {e.StackTrace}");
-            throw new QueryUserAchievementsException("Something went wrong while querying achievement progress", e);
-        }
-    }
-
     private const string InsertNewUserAchievementSql =
         """
-        INSERT INTO user_achievement(achievement_id, user_id, unlocked_date) VALUES (@achievement_id, @user_id, @unlocked_date);
+        INSERT INTO user_progress.user_achievement(achievement_id, user_id, unlocked_date) VALUES (@achievement_id, @user_id, @unlocked_date);
         """;
 
     private const string GetUserAchievementSql =
         """
-        SELECT * FROM user_achievement ua JOIN achievement a on a.id = ua.achievement_id WHERE user_id = @user_id;
+        SELECT * FROM user_progress.user_achievement ua JOIN user_progress.achievement a on a.id = ua.achievement_id WHERE user_id = @user_id;
         """;
 
     private const string GetAchievementsProgressSql =
         """
-        SELECT progress FROM unlockable_achievement_progress WHERE user_id = @UserId AND achievement_id = @Achievementid
+        SELECT progress FROM user_progress.unlockable_achievement_progress WHERE user_id = @UserId AND achievement_id = @Achievementid
         """;
 
     private const string UpsertUserAchievementProgressSql =
         """
-        INSERT INTO unlockable_achievement_progress(achievement_id, user_id, progress, date)
+        INSERT INTO user_progress.unlockable_achievement_progress(achievement_id, user_id, progress, date)
         VALUES (@achievementId, @userId, @progress, @date)
         ON CONFLICT (achievement_id, user_id)
             DO UPDATE SET progress = EXCLUDED.progress, date = EXCLUDED.date;
         """;
 
-    private const string GetUSerProgressSql =
-        """
-        SELECT progress FROM unlockable_achievement_progress
-        WHERE user_id = @UserId AND achievement_id IN @Achievements
-        """;
-
     private const string InsertInitialProgressSql =
         """
-        INSERT INTO unlockable_achievement_progress (user_id, achievement_id, progress, date)
+        INSERT INTO user_progress.unlockable_achievement_progress (user_id, achievement_id, progress, date)
         VALUES (@UserId, @AchievementId, @Progress, @Date)
-        """;
-
-    private const string GetPreogressForAnAchievementSql =
-        """
-        SELECT progress FROM unlockable_achievement_progress
-        WHERE user_id = @UserId AND achievement_id = @AchievementId
         """;
 }

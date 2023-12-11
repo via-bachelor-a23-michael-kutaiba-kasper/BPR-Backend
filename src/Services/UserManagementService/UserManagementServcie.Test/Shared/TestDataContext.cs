@@ -12,7 +12,17 @@ public class TestDataContext
     {
         // Insert names of tables you want to clean after test
         var dropStatement = """
-                            TRUNCATE timed_criteria, category_attendance_criteria, monthly_exp_goal, progress, user_achievement, unlockable_achievement_progress, unlockable_monthly_goal_progress RESTART IDENTITY CASCADE;
+                            TRUNCATE
+                                user_progress.timed_criteria,
+                                user_progress.category_attendance_criteria,
+                                user_progress.monthly_exp_goal,
+                                user_progress.progress,
+                                user_progress.user_achievement,
+                                user_progress.unlockable_achievement_progress,
+                                user_progress.unlockable_monthly_goal_progress,
+                                user_progress.user_exp_progress,
+                                user_progress.user_stats_history
+                                RESTART IDENTITY CASCADE;
                             """;
 
 
