@@ -17,7 +17,7 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
         ISqlAchievementRepository sqlAchievementRepository,
         IEventBus eventBus,
         IOptions<PubSub> pubsubConfig
-    ) : base(sqlAchievementRepository)
+    ) : base(sqlAchievementRepository, pubsubConfig)
     {
         _eventBus = eventBus;
         _pubsubConfig = pubsubConfig;

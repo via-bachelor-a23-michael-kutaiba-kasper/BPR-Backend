@@ -14,7 +14,7 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
     private readonly ISqlAchievementRepository _sqlAchievementRepository;
     private readonly IOptions<PubSub> _pubsubConfig;
 
-    protected CheckAchievementBaseStrategy(ISqlAchievementRepository sqlAchievementRepository, IOptions<PubSub> pubsubConfig)
+    protected CheckAchievementBaseStrategy(ISqlAchievementRepository sqlAchievementRepository, IOptions<PubSub>? pubsubConfig=null)
     {
         _sqlAchievementRepository = sqlAchievementRepository;
         _pubsubConfig = pubsubConfig;
@@ -100,7 +100,8 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
                         await eventBus.PublishAsync(topic.TopicId, topic.ProjectId, new
                         {
                             Name=achievement.GetDescription(),
-                            Reward = AchievementReward.Tier1
+                            Reward = AchievementReward.Tier1,
+                            UserId = userId
                         });
                     }
                 }
@@ -131,7 +132,8 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
                         await eventBus.PublishAsync(topic.TopicId, topic.ProjectId, new
                         {
                             Name=achievement.GetDescription(),
-                            Reward = AchievementReward.Tier2
+                            Reward = AchievementReward.Tier2,
+                            UserId = userId
                         });
                     }
                 }
@@ -162,7 +164,8 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
                         await eventBus.PublishAsync(topic.TopicId, topic.ProjectId, new
                         {
                             Name=achievement.GetDescription(),
-                            Reward = AchievementReward.Tier3
+                            Reward = AchievementReward.Tier3,
+                            UserId = userId
                         });
                     }
                 }

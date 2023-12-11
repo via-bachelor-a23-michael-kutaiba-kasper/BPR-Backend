@@ -1,7 +1,9 @@
+using Microsoft.Extensions.Options;
 using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
 using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
 using UserManagementService.Domain.Util;
+using UserManagementService.Infrastructure.AppSettings;
 using UserManagementService.Infrastructure.PubSub;
 using UserManagementService.Infrastructure.Util;
 
@@ -9,7 +11,7 @@ namespace UserManagementService.Application.V1.ProcessUserAchievements.Model.Str
 
 public class CheckHealthAndWellness : CheckAchievementBaseStrategy
 {
-    public CheckHealthAndWellness(ISqlAchievementRepository sqlAchievementRepository) : base(sqlAchievementRepository)
+    public CheckHealthAndWellness(ISqlAchievementRepository sqlAchievementRepository, IOptions<PubSub>? pubsubConfig = null) : base(sqlAchievementRepository, pubsubConfig)
     {
     }
 
