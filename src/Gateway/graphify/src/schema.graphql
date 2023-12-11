@@ -171,6 +171,17 @@ type InterestSurveyResponse {
     status: Status
 }
 
+type UserAchievementResponse {
+    result: [UserAchievement]
+    status: Status
+}
+
+
+type AllAchievementsResponse {
+    result: [AllAchievements]
+    status: Status
+}
+
 type Query {
     """
     All arguments are optional filters to apply.
@@ -191,8 +202,8 @@ type Query {
     recommendations(userId: String!, limit: Int): RecommendationsResponse
     interestSurvey(userId: String!): InterestSurveyResponse
     expProgress(userId: String!): ExpProgressResponse
-    userAchievements(userId: String!): [UserAchievement]
-    allAchievements: [AllAchievements]
+    userAchievements(userId: String!): UserAchievementResponse
+    allAchievements: AllAchievementsResponse
 }
 
 type Mutation {
