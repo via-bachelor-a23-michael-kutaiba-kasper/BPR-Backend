@@ -119,7 +119,9 @@ type UserAchievement {
     name: String
     unlockDate: String
     description: String
-    expReward: Int
+    expReward: Int,
+    progress: Int,
+    requirement: Int
 }
 
 type AllAchievements {
