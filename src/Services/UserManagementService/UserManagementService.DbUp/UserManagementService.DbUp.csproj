@@ -21,7 +21,16 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\0001_initial_schema_setup.sql" />
     <EmbeddedResource Include="Migrations\0003_populate_achievement_enum_table.sql" />
+    <EmbeddedResource Include="Migrations\0003_populate_achievement_enum_table.sql" />
     <EmbeddedResource Include="Migrations\0002_exp_progress_history.sql" />
+<<<<<<< HEAD
+
+=======
+    <None Remove="Migrations\0004_populate_levels.sql" />
+    <EmbeddedResource Include="Migrations\0004_populate_levels.sql" />
+>>>>>>> main
+    <None Remove="Migrations\0004_populate_levels.sql" />
+    <EmbeddedResource Include="Migrations\0004_populate_levels.sql" />
 
   </ItemGroup>
 

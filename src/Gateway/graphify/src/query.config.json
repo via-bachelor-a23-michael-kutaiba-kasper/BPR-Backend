@@ -140,6 +140,22 @@
                 "endpoint": "/api/v1/interestSurvey",
                 "method": "GET"
             }
+        },
+        {
+            "name": "expProgress",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String",
+                    "for": "urlPath"
+                }
+            ],
+            "resolver": {
+                "host": "http://usermanagementservice-service",
+                "endpoint": "/api/v1/progress/{userId}/exp",
+                "port": "443",
+                "method": "GET"
+            }
         }
     ],
     "mutations": [
