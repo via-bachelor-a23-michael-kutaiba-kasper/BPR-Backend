@@ -76,6 +76,11 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
             throw new UserIsAlreadyHostOfEventException(request.UserId, existingEvent.Id);
         }
 
+        if (DateTimeOffset.UtcNow.ToUniversalTime() > existingEvent.EndDate.ToUniversalTime())
+        {
+            throw new EventHasEndedException(existingEvent.Id);
+        }
+
         await AcceptInvitationIfInvited(request.UserId, request.EventId);
 
         await _eventRepository.AddAttendeeToEventAsync(request.UserId, request.EventId);
