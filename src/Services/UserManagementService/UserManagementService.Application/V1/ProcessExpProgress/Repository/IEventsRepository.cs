@@ -143,8 +143,8 @@ public class EventsRepository : IEventsRepository
     }
 
     private string EventQuery => """
-      query Event($event_id: Int) {
-        event(event_id: $event_id) {
+      query Event($eventId: Int) {
+        event(eventId: $eventId) {
           result {
             id
             title
