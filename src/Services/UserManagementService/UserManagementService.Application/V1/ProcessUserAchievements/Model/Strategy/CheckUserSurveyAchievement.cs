@@ -23,7 +23,7 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
         _pubsubConfig = pubsubConfig;
     }
 
-    public override async Task ProcessAchievement(string userId, Category category)
+    public override async Task ProcessAchievement(string userId, Category category, IEventBus? eventBus = null)
     {
         var userIds = await GetUserIdFromPubSub();
         if (!userIds.Contains(userId))
@@ -34,7 +34,7 @@ public class CheckUserSurveyAchievement : CheckAchievementBaseStrategy
         {
             UserAchievement.NewComer
         };
-        await UpdateProgress(userId, userAchievement, category);
+        await UpdateProgress(userId, userAchievement, category, eventBus);
     }
 
 

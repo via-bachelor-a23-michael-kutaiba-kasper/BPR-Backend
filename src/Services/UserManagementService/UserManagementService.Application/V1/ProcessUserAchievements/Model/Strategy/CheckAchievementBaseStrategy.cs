@@ -1,7 +1,10 @@
+using Microsoft.Extensions.Options;
 using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
 using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
 using UserManagementService.Domain.Util;
+using UserManagementService.Infrastructure.AppSettings;
+using UserManagementService.Infrastructure.PubSub;
 using UserManagementService.Infrastructure.Util;
 
 namespace UserManagementService.Application.V1.ProcessUserAchievements.Model.Strategy;
@@ -9,15 +12,17 @@ namespace UserManagementService.Application.V1.ProcessUserAchievements.Model.Str
 public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
 {
     private readonly ISqlAchievementRepository _sqlAchievementRepository;
+    private readonly IOptions<PubSub> _pubsubConfig;
 
-    protected CheckAchievementBaseStrategy(ISqlAchievementRepository sqlAchievementRepository)
+    protected CheckAchievementBaseStrategy(ISqlAchievementRepository sqlAchievementRepository, IOptions<PubSub> pubsubConfig)
     {
         _sqlAchievementRepository = sqlAchievementRepository;
+        _pubsubConfig = pubsubConfig;
     }
 
     public abstract Task ProcessAchievement
     (string userId,
-        Category category);
+        Category category, IEventBus? eventBus = null);
 
 
     private async Task<int> CheckAchievement
@@ -67,7 +72,7 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
     }
 
     protected async Task UpdateProgress(string userId, IReadOnlyCollection<UserAchievement> achievements,
-        Category category)
+        Category category, IEventBus? eventBus = null)
     {
         foreach (var achievement in achievements)
         {
@@ -88,6 +93,16 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
                         user_id = userId,
                         unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime()
                     });
+
+                    if (eventBus is not null)
+                    {
+                        var topic = _pubsubConfig.Value.Topics[PubSubTopics.VibeverseAchievementsNewAchievement];
+                        await eventBus.PublishAsync(topic.TopicId, topic.ProjectId, new
+                        {
+                            Name=achievement.GetDescription(),
+                            Reward = AchievementReward.Tier1
+                        });
+                    }
                 }
 
                 await _sqlAchievementRepository.UpsertAchievementProgress(new UnlockableAchievementProgressTable
@@ -109,6 +124,16 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
                         user_id = userId,
                         unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime()
                     });
+                    
+                    if (eventBus is not null)
+                    {
+                        var topic = _pubsubConfig.Value.Topics[PubSubTopics.VibeverseAchievementsNewAchievement];
+                        await eventBus.PublishAsync(topic.TopicId, topic.ProjectId, new
+                        {
+                            Name=achievement.GetDescription(),
+                            Reward = AchievementReward.Tier2
+                        });
+                    }
                 }
 
                 await _sqlAchievementRepository.UpsertAchievementProgress(new UnlockableAchievementProgressTable
