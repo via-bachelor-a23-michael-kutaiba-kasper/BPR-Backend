@@ -37,7 +37,8 @@ public class ProcessUserAchievementsIntegrationTests
                 ProjectId = "Test",
                 SubscriptionNames = new[]
                 {
-                    "Test"
+                    "Test",
+                    "Test2"
                 }
             },
             new Topic
@@ -46,7 +47,8 @@ public class ProcessUserAchievementsIntegrationTests
                 ProjectId = "Test",
                 SubscriptionNames = new[]
                 {
-                    "Test"
+                    "Test",
+                    "Test2"
                 }
             },
             new Topic
@@ -55,7 +57,8 @@ public class ProcessUserAchievementsIntegrationTests
                 ProjectId = "Test",
                 SubscriptionNames = new[]
                 {
-                    "Test"
+                    "Test",
+                    "Test2"
                 }
             },
             new Topic
@@ -64,7 +67,8 @@ public class ProcessUserAchievementsIntegrationTests
                 ProjectId = "Test",
                 SubscriptionNames = new[]
                 {
-                    "Test"
+                    "Test",
+                    "Test2"
                 }
             },
             new Topic
@@ -73,7 +77,8 @@ public class ProcessUserAchievementsIntegrationTests
                 ProjectId = "Test",
                 SubscriptionNames = new[]
                 {
-                    "Test"
+                    "Test",
+                    "Test2"
                 }
             }
         }
