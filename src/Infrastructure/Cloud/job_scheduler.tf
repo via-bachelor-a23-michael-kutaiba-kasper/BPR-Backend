@@ -47,11 +47,11 @@ resource "google_cloud_scheduler_job" "job" {
         method = "GET"
       },
       {
-        url    = "${module.eventmanagement_service.service_url}/api/v1/progress/exp"
+        url    = "${module.usermanagement_service.service_url}/api/v1/progress/exp"
         method = "POST"
       },
       {
-        url    = "${module.eventmanagement_service.service_url}/api/v1/progress/achievements/processUserAchievements"
+        url    = "${module.usermanagement_service.service_url}/api/v1/progress/achievements/processUserAchievements"
         method = "POST"
       }
     ]))
