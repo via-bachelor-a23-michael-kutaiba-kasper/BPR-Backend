@@ -7,6 +7,7 @@ public static class PubSubTopics
     public const int VibeVerseEventsNewReview = 2;
     public const int VibeVerseEventsNewEvent = 3;
     public const int NewSurvey = 4;
+    public const int VibeverseAchievementsNewAchievement = 5;
 }
 public static class TopicSubs
 {
