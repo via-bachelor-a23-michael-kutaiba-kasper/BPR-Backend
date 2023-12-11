@@ -66,9 +66,10 @@ public class SqlUserAchievementsRepository : ISqlUserAchievementsRepository
     private const string GetUserAchievementsSql =
         """
         SELECT ua.*, a.*, uap.progress
-        FROM user_progress.user_achievement ua
-                 LEFT JOIN user_progress.achievement a on a.id = ua.achievement_id
-                 LEFT JOIN user_progress.unlockable_achievement_progress uap on a.id = uap.achievement_id
-        WHERE ua.user_id = @UserId
+        FROM
+            user_progress.achievement a
+            LEFT JOIN user_progress.user_achievement ua on a.id = ua.achievement_id
+            LEFT JOIN user_progress.unlockable_achievement_progress uap on a.id = uap.achievement_id
+        WHERE uap.user_id = @UserId OR ua.user_id = @UserId
         """;
 }
