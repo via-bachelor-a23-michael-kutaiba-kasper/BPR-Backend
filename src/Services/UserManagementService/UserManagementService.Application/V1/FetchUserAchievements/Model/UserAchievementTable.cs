@@ -10,4 +10,5 @@ public class UserAchievementTable
     public string description { get; set; }
     public long reward { get; set; }
     public string icon { get; set; }
+    public int progress { get; set; }
 }

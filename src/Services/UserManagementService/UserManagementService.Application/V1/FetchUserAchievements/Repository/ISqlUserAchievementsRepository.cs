@@ -47,7 +47,8 @@ public class SqlUserAchievementsRepository : ISqlUserAchievementsRepository
                     Description = ac.description,
                     Icon = ac.icon,
                     ExpReward = ac.reward,
-                    UnlockDate = ac.unlocked_date
+                    UnlockDate = ac.unlocked_date,
+                    Progress = ac.progress
                 })
                 .ToList();
             _logger.LogInformation(
@@ -64,8 +65,10 @@ public class SqlUserAchievementsRepository : ISqlUserAchievementsRepository
 
     private const string GetUserAchievementsSql =
         """
-        SELECT * FROM user_progress.user_achievement ua
-            JOIN user_progress.achievement a on a.id = ua.achievement_id
-                 WHERE user_id = @UserId;
+        SELECT ua.*, a.*, uap.progress
+        FROM user_progress.user_achievement ua
+                 JOIN user_progress.achievement a on a.id = ua.achievement_id
+                 JOIN user_progress.unlockable_achievement_progress uap on a.id = uap.achievement_id
+        WHERE ua.user_id = @UserId
         """;
 }

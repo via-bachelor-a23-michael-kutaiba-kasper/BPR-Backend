@@ -6,4 +6,5 @@ public class Unlockable
     public DateTimeOffset UnlockDate { get; set; }
     public string Description { get; set; }
     public long ExpReward { get; set; }
+    public int Progress { get; set; }
 }
