@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using UserManagementService.Application.V1.ProcessExpProgress.Data;
 using UserManagementService.Domain.Models;
+using UserManagementService.Domain.Models.Events;
 using UserManagementService.Infrastructure;
 using UserManagementService.Infrastructure.ApiGateway;
 using UserManagementService.Infrastructure.AppSettings;

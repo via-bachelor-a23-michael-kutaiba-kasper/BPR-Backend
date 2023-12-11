@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace UserManagementService.Infrastructure.ApiGateway;
 
@@ -10,8 +10,8 @@ public class ResponseStatus
 
 public class GatewayResponse<T>
 {
-    [JsonProperty("status")]
+    [property: JsonPropertyName(("status"))]
     public ResponseStatus Status { get; set; } = default!;
-    [JsonProperty("result")]
+    [property: JsonPropertyName("result")]
     public T Result { get; set; } 
 }

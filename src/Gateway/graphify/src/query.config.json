@@ -156,6 +156,22 @@
                 "port": "443",
                 "method": "GET"
             }
+        },
+        {
+            "name": "userAchievements",
+            "args": [
+                {
+                    "name": "userId",
+                    "type": "String",
+                    "for": "urlPath"
+                }
+            ],
+            "resolver": {
+                "host": "http://usermanagementservice-service",
+                "endpoint": "/api/v1/progress/{userId}/achievements",
+                "port": "443",
+                "method": "GET"
+            }
         }
     ],
     "mutations": [

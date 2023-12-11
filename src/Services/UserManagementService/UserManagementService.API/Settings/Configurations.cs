@@ -5,8 +5,7 @@ namespace UserManagementService.API.Settings;
 
 internal static class Configurations
 {
-    internal static IServiceCollection AddSettingsConfigurations
-    (
+    internal static IServiceCollection AddSettingsConfigurations(
         this IServiceCollection services,
         ConfigurationManager configuration
     )

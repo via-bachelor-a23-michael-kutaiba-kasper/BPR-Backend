@@ -3,7 +3,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using RecommendationService.Infrastructure.AppSettings;
-using StringContent = System.Net.Http.StringContent;
+using UserManagementService.Infrastructure.AppSettings;
+using UserManagementService.Infrastructure.Exceptions;
 
 namespace UserManagementService.Infrastructure.ApiGateway;
 
@@ -31,6 +32,10 @@ public class ApiGateway : IApiGateway
         StringContent payload = new StringContent(serializedQuery, Encoding.UTF8, "application/json");
 
         HttpResponseMessage responseFromGateway = await _client.PostAsync(_gatewayConfig.Url, payload);
+        if (!responseFromGateway.IsSuccessStatusCode)
+        {
+            throw new HttpException($"Unable to query api gateway, status code: {responseFromGateway.StatusCode}");
+        }
         string responseBodyJsonString = await responseFromGateway.Content.ReadAsStringAsync();
 
         dynamic jsonElement = Deserialize<JObject>(responseBodyJsonString);

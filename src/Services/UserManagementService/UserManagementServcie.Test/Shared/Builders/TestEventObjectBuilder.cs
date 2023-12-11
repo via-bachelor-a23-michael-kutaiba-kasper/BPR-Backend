@@ -1,7 +1,6 @@
-using Dapper;
-using Npgsql;
+
 using UserManagementService.Domain.Models;
-using UserManagementService.Infrastructure;
+using UserManagementService.Domain.Models.Events;
 
 namespace UserManagementServcie.Test.Shared.Builders;
 
@@ -16,7 +15,7 @@ public class TestEventObjectBuilder
 
     public Event NewTestEvent(Action<Event>? configureEvent = null)
     {
-        Event newEvent = new()
+        var newEvent = new Event()
         {
             Id = nextId,
             Category = Category.Music,

@@ -8,7 +8,8 @@ namespace UserManagementService.Infrastructure;
 
 public static class InfrastructureServiceExtension
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection collection)
+    public static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection collection)
     {
         collection.AddScoped<IEventBus, PubSubEventBus>();
         collection.AddScoped<ISendNotificationStrategyFactory, FcmSendNotificationSendNotificationStrategyFactory>();

@@ -1,13 +1,13 @@
 using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using UserManagementService.API.Controllers.V1.Dtos;
+using UserManagementService.API.Controllers.V1.ExpProgress.Dtos;
 using UserManagementService.Application.V1.GetUserExpProgres;
 using UserManagementService.Application.V1.GetUserExpProgres.Exceptions;
 using UserManagementService.Application.V1.ProcessExpProgress;
 using UserManagementService.Application.V1.ProcessExpProgress.Model.Strategy;
 
-namespace UserManagementService.API.Controllers.V1;
+namespace UserManagementService.API.Controllers.V1.ExpProgress;
 
 [ApiController]
 [Route("api/v1/progress")]

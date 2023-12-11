@@ -113,6 +113,14 @@ type ExpProgressResponse {
     status: Status
 }
 
+type UserAchievement {
+    icon: String,
+    name: String,
+    unlockDate: String,
+    description: String,
+    expReward: Int
+}
+
 type EventResponse {
     result: Event
     status: Status
@@ -173,6 +181,7 @@ type Query {
     recommendations(userId: String!, limit: Int): RecommendationsResponse
     interestSurvey(userId: String!): InterestSurveyResponse
     expProgress(userId: String!): ExpProgressResponse
+    userAchievements(userId: String!) : [UserAchievement]
 }
 
 type Mutation {

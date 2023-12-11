@@ -48,6 +48,7 @@ module "api_gateway" {
     "QUERY_RECOMMENDATIONS_HOST"      = module.recommendation_service.service_url
     "QUERY_STOREINTERESTSURVEY_HOST"  = module.recommendation_service.service_url
     "QUERY_INTERESTSURVEY_HOST"       = module.recommendation_service.service_url
+    "QUERY_USERACHIEVEMENTS_HOST"     = module.usermanagement_service.service_url
     "QUERY_EXPPROGRESS_HOST"          = module.usermanagement_service.service_url
   }
   cloud_sql_instance = google_sql_database_instance.main.connection_name

@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS achievement
 (
     id          INT,
     name        VARCHAR,
-    unlock_date TIMESTAMPTZ,
     description VARCHAR,
     reward      BIGINT,
     icon        VARCHAR,
@@ -30,15 +29,6 @@ CREATE TABLE IF NOT EXISTS timed_criteria
     id   INT GENERATED ALWAYS AS IDENTITY,
     goal BIGINT,
     type VARCHAR, --monthly, weekly, exp_monthly, attendance_monthly,
-    PRIMARY KEY (id)
-);
-
-
-CREATE TABLE IF NOT EXISTS unlockable_progress
-(
-    id       INT GENERATED ALWAYS AS IDENTITY,
-    progress BIGINT,
-    date     TIMESTAMPTZ,
     PRIMARY KEY (id)
 );
 
@@ -82,12 +72,14 @@ CREATE TABLE IF NOT EXISTS user_achievement
 
 CREATE TABLE IF NOT EXISTS unlockable_achievement_progress
 (
-    unlockable_progress_id INT,
+    id                     INT GENERATED ALWAYS AS IDENTITY,
     achievement_id         INT,
     user_id                VARCHAR,
-    FOREIGN KEY (unlockable_progress_id) REFERENCES unlockable_progress (id),
+    progress               BIGINT,
+    date                   TIMESTAMPTZ,
     FOREIGN KEY (achievement_id) REFERENCES achievement (id),
-    primary key (unlockable_progress_id, achievement_id, user_id)
+    primary key (id),
+    UNIQUE (user_id, achievement_id)
 );
 
 
@@ -96,7 +88,7 @@ CREATE TABLE IF NOT EXISTS unlockable_monthly_goal_progress
     unlockable_progress_id INT,
     goal_id                INT,
     user_id                VARCHAR,
-    FOREIGN KEY (unlockable_progress_id) REFERENCES unlockable_progress (id),
+    FOREIGN KEY (unlockable_progress_id) REFERENCES unlockable_achievement_progress (id),
     FOREIGN KEY (goal_id) REFERENCES monthly_exp_goal (id),
     primary key (unlockable_progress_id, goal_id, user_id)
 );
