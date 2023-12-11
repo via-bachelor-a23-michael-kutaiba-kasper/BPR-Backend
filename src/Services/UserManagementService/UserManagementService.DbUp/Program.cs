@@ -9,12 +9,15 @@ using UserManagementService.Infrastructure;
 var connectionStringManager = new ConnectionStringManager();
 var connectionString = connectionStringManager.GetConnectionString();
 var connection = new NpgsqlConnection(connectionString);
+connection.Open();
 connection.Execute("CREATE SCHEMA IF NOT EXISTS user_progress; SET SCHEMA 'user_progress';");
+connection.Close();
 Console.WriteLine(connectionString);
 EnsureDatabase.For.PostgresqlDatabase(connectionString);
 var upgrader =
     DeployChanges.To
         .PostgresqlDatabase(connectionString)
+        .JournalToPostgresqlTable("user_postgres", "schemaversions")
         .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
         .LogToConsole()
         .Build();
