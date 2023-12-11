@@ -64,8 +64,8 @@ public class SqlUserAchievementsRepository : ISqlUserAchievementsRepository
 
     private const string GetUserAchievementsSql =
         """
-        SELECT * FROM user_achievement ua
-            JOIN achievement a on a.id = ua.achievement_id
+        SELECT * FROM user_progress.user_achievement ua
+            JOIN user_progress.achievement a on a.id = ua.achievement_id
                  WHERE user_id = @UserId;
         """;
 }

@@ -736,7 +736,7 @@ public class ProcessUserAchievementsIntegrationTests
         await connection.OpenAsync();
         const string sql =
             """
-            INSERT INTO unlockable_achievement_progress(achievement_id, user_id, progress, date)
+            INSERT INTO user_progress.unlockable_achievement_progress(achievement_id, user_id, progress, date)
             VALUES(@achievement_id, @user_id, @progress, @date)
             """;
         await connection.ExecuteAsync(sql, new
@@ -755,7 +755,7 @@ public class ProcessUserAchievementsIntegrationTests
         await connection.OpenAsync();
         const string sql =
             """
-            SELECT achievement_id FROM user_achievement WHERE user_id = @UserId AND achievement_id = @AchievementId;
+            SELECT achievement_id FROM user_progress.user_achievement WHERE user_id = @UserId AND achievement_id = @AchievementId;
             """;
         var query = await connection.QueryFirstOrDefaultAsync<int>(sql,
             new { UserId = userId, AchievementId = achievementId });
@@ -777,7 +777,7 @@ public class ProcessUserAchievementsIntegrationTests
         await connection.OpenAsync();
         const string sql =
             """
-            SELECT achievement_id FROM unlockable_achievement_progress WHERE user_id = @UserId AND achievement_id = @AchievementId;
+            SELECT achievement_id FROM user_progress.unlockable_achievement_progress WHERE user_id = @UserId AND achievement_id = @AchievementId;
             """;
         var query = await connection.QueryFirstOrDefaultAsync<int>(sql,
             new { UserId = userId, AchievementId = achievementId });
@@ -790,7 +790,7 @@ public class ProcessUserAchievementsIntegrationTests
         await connection.OpenAsync();
         const string sql =
             """
-            SELECT progress FROM unlockable_achievement_progress WHERE user_id = @UserId AND achievement_id = @AchievementId;
+            SELECT progress FROM user_progress.unlockable_achievement_progress WHERE user_id = @UserId AND achievement_id = @AchievementId;
             """;
         var query = await connection.QueryFirstOrDefaultAsync<int>(sql,
             new { UserId = userId, AchievementId = achievementId });

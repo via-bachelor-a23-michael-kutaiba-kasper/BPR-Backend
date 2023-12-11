@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using UserManagementService.Application.V1.FetchAllAchievements;
 using UserManagementService.Application.V1.FetchUserAchievements;
 using UserManagementService.Application.V1.GetUserExpProgres;
 using UserManagementService.Application.V1.ProcessExpProgress;
@@ -15,6 +16,7 @@ public static class V1ServiceExtension
         services.AddGetUserExpProgress();
         services.AddProcessAchievementsExtension();
         services.AddFetchUserAchievements();
+        services.AddFetchAllAchievements();
         return services;
     }
 }
