@@ -33,9 +33,8 @@ public class InterestSurveyRepository : IInterestSurveyRepository
             _logger.LogInformation("Retrieving newly completed interest surveys from PubSub");
 
             var topic = _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey];
-            var userIds = (await _eventBus.PullAsync<JToken>(topic.TopicId, topic.ProjectId,
-                    topic.SubscriptionNames[PubSubSubscriptionNames.Exp], 1000, new CancellationToken()))
-                .Select(o => o.ToString()).ToList();
+            var userIds = (await _eventBus.PullAsync<string>(topic.TopicId, topic.ProjectId,
+                topic.SubscriptionNames[PubSubSubscriptionNames.Exp], 1000, new CancellationToken())).ToList();
 
             _logger.LogInformation($"Retrieved {userIds.Count} newly completed interest surveys from PubSub");
 
