@@ -12,12 +12,14 @@ public static class ServiceExtension
         collection.AddScoped<IExpStrategy, NewlyCreatedEventsStrategy>();
         collection.AddScoped<IExpStrategy, NewReviewsStrategy>();
         collection.AddScoped<IExpStrategy, SurveyCompletedStrategy>();
+        collection.AddScoped<IExpStrategy, NewAchievementStrategy>();
 
         collection.AddScoped<IAttendeesRepository, AttendeesRepository>();
         collection.AddScoped<IEventsRepository, EventsRepository>();
         collection.AddScoped<IInterestSurveyRepository, InterestSurveyRepository>();
         collection.AddScoped<IProgressRepository, ProgressRepository>();
         collection.AddScoped<IReviewRepository, ReviewRepository>();
+        collection.AddScoped<IAchievementsRepository, AchievementsRepository>();
 
         return collection;
     }
