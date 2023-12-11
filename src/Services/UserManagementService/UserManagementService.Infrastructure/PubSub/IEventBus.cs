@@ -120,7 +120,7 @@ public class PubSubEventBus : IEventBus
         foreach (var receivedMessage in response.ReceivedMessages)
         {
             var message = receivedMessage.Message.Data.ToStringUtf8();
-            JObject entityJObject = Deserialize<JObject>(message);
+            JToken entityJObject = Deserialize<JToken>(message);
             var entity = entityJObject.ToObject<T>();
             if (entity != null)
             {
