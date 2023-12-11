@@ -55,15 +55,16 @@ public class JoinEventTests
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new[] { "test" }
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new[] { "test" }
                 }
             },
-            SubscriptionName = "test"
         };
         var loggerMock = new Mock<ILogger<JoinEventHandler>>();
 
@@ -98,15 +99,16 @@ public class JoinEventTests
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
 
         userRepositoryMock.Setup(x => x.UserExistsAsync(existingUserId)).ReturnsAsync(true);
@@ -142,15 +144,16 @@ public class JoinEventTests
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new[] { "test" }
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new[] { "test" }
                 }
             },
-            SubscriptionName = "test"
         };
 
         userRepositoryMock.Setup(x => x.UserExistsAsync(existingUserId)).ReturnsAsync(true);
@@ -177,7 +180,7 @@ public class JoinEventTests
                 new User { UserId = Guid.NewGuid().ToString() },
                 new User { UserId = Guid.NewGuid().ToString() }
             };
-            
+
             e.MaxNumberOfAttendees = 2;
         });
 
@@ -194,15 +197,16 @@ public class JoinEventTests
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
 
         userRepositoryMock.Setup(x => x.UserExistsAsync(existingUserId)).ReturnsAsync(true);
@@ -215,7 +219,7 @@ public class JoinEventTests
 
         Assert.ThrowsAsync<MaximumAttendeesReachedException>(() => handler.Handle(request, new CancellationToken()));
     }
-    
+
     [Test]
     public void JoinEvent_UserIsHostOfEvent_ThrowsUserIsAlreadyHostOfEventException()
     {
@@ -228,7 +232,7 @@ public class JoinEventTests
             {
                 new User { UserId = Guid.NewGuid().ToString() }
             };
-            
+
             e.MaxNumberOfAttendees = 2;
             e.Host = new User { UserId = existingUserId };
         });
@@ -246,15 +250,16 @@ public class JoinEventTests
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new[] { "test" }
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new[] { "test" }
                 }
             },
-            SubscriptionName = "test"
         };
 
         userRepositoryMock.Setup(x => x.UserExistsAsync(existingUserId)).ReturnsAsync(true);
@@ -267,5 +272,4 @@ public class JoinEventTests
 
         Assert.ThrowsAsync<UserIsAlreadyHostOfEventException>(() => handler.Handle(request, new CancellationToken()));
     }
-    
 }

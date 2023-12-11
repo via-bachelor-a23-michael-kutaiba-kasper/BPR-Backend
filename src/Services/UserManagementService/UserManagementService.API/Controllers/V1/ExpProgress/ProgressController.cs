@@ -51,12 +51,13 @@ public class ProgressController : ControllerBase
             var dto = new ReadUserExpDto
             {
                 TotalExp = progress.TotalExp,
+                Stage = progress.Stage,
                 Level = new ReadLevelDto
                 {
                     Value = progress.Level.Value,
                     MinExp = progress.Level.MinExp,
                     MaxExp = progress.Level.MaxExp,
-                    Name = progress.Level.Name
+                    Name = progress.Level.Name,
                 },
                 ExpProgressHistory = progress.ExpProgressHistory.Select(entry => new ReadExpProgressEntryDto()
                 {

@@ -53,6 +53,7 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
             const imageElement = page.locator("picture > img").first();
             const imageUrl = (await imageElement.getAttribute("src")) ?? "";
 
+            const UNLIMITED = -1;
             const event: Event = {
                 title,
                 price,
@@ -67,6 +68,7 @@ export class FaengsletScraperStrategy implements IScraperStrategy {
                 city: "Horsens",
                 lat: 55.87406,
                 lng: 9.8363,
+                maxNumberOfAttendees: UNLIMITED,
                 images: [imageUrl],
                 adultsOnly: false,
                 isPaid: price != null || price != undefined,

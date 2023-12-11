@@ -20,33 +20,37 @@ public class CreateEventIntegrationTests
     private readonly ConnectionStringManager _connectionStringManager = new();
     private readonly IOptions<PubSub> _pubsubOptions = Options.Create(new PubSub()
         {
-            SubscriptionName = "eventmanagement",
             Topics = new[]
             {
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             }
         });

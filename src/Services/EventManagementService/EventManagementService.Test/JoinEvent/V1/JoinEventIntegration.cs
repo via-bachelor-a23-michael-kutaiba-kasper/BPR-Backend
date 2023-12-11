@@ -51,15 +51,16 @@ public class JoinEventIntegration
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
         
         var eventRepository = new EventRepository(_connectionStringManager);
@@ -101,16 +102,17 @@ public class JoinEventIntegration
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
         var eventRepository = new EventRepository(_connectionStringManager);
 
@@ -154,16 +156,17 @@ public class JoinEventIntegration
                 new Topic
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 
                 new Topic
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
 
         var existingEvent = dataBuilder.NewTestEvent((e) =>
@@ -208,16 +211,17 @@ public class JoinEventIntegration
                 new Topic
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 
                 new Topic
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
 
         var existingEvent = dataBuilder.NewTestEvent((e) =>
