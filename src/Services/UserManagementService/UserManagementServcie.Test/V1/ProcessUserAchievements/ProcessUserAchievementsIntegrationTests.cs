@@ -19,7 +19,7 @@ using UserManagementService.Infrastructure.Notifications;
 using UserManagementService.Infrastructure.PubSub;
 using UserManagementService.Infrastructure.Util;
 
-namespace UserManagementServcie.Test.ProcessUserAchievements.V1;
+namespace UserManagementServcie.Test.V1.ProcessUserAchievements;
 
 [TestFixture]
 public class ProcessUserAchievementsIntegrationTests

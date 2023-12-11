@@ -1,4 +1,4 @@
-namespace UserManagementService.API.Controllers.V1.Dtos;
+namespace UserManagementService.API.Controllers.V1.ExpProgress.Dtos;
 
 public class ReadUserExpDto
 {

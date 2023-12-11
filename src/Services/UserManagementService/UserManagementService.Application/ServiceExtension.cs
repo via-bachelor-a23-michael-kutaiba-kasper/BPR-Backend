@@ -11,8 +11,6 @@ public static class ServiceExtension
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddV1ServiceCollection();
-        services.AddProcessExpProgress();
-        services.AddGetUserExpProgress();
         return services;
     }
 }
