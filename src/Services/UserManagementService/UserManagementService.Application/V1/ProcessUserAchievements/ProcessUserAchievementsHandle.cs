@@ -20,7 +20,7 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
     private readonly ISqlAchievementRepository _sqlAchievementRepository;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<ProcessUserAchievementsHandle> _logger;
-    private readonly IReadOnlyCollection<ICheckAchievementStrategy> _strategies;
+    private readonly IEnumerable<ICheckAchievementStrategy> _strategies;
     private readonly INotifier _notifier;
     private readonly IEventBus _eventBus;
     private readonly IOptions<PubSub> _pubsubConfig;
@@ -30,7 +30,7 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
         ISqlAchievementRepository sqlAchievementRepository,
         IUserRepository userRepository,
         ILogger<ProcessUserAchievementsHandle> logger,
-        IReadOnlyCollection<ICheckAchievementStrategy> strategies,
+        IEnumerable<ICheckAchievementStrategy> strategies,
         INotifier notifier,
         IEventBus eventBus,
         IOptions<PubSub> pubsubConfig
