@@ -192,7 +192,7 @@ type Query {
     interestSurvey(userId: String!): InterestSurveyResponse
     expProgress(userId: String!): ExpProgressResponse
     userAchievements(userId: String!): [UserAchievement]
-    allAchievements() : [AllAchievements]
+    allAchievements: [AllAchievements]
 }
 
 type Mutation {
