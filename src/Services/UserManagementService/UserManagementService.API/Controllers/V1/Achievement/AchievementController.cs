@@ -60,7 +60,7 @@ public class AchievementController : ControllerBase
         }
     }
 
-    [HttpGet("/achievements")]
+    [HttpGet("achievements")]
     public async Task<ActionResult<IReadOnlyCollection<AllAchievementsDto>>> GetAllAchievements()
     {
         try
