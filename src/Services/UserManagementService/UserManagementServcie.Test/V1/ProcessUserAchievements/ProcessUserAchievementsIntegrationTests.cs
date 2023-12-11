@@ -164,7 +164,6 @@ public class ProcessUserAchievementsIntegrationTests
             new CheckMusicAndPerformingArtsStrategy(sqlRepo),
             new CheckRecreationAndHobbiesStrategy(sqlRepo),
             new CheckSocialAndCommunityStrategy(sqlRepo),
-            new CheckUserSurveyAchievement(sqlRepo, eventBussMockStrategy.Object, _options)
         });
 
         await MockUserProgress(new UnlockableAchievementProgressTable
@@ -282,7 +281,6 @@ public class ProcessUserAchievementsIntegrationTests
             new CheckMusicAndPerformingArtsStrategy(sqlRepo),
             new CheckRecreationAndHobbiesStrategy(sqlRepo),
             new CheckSocialAndCommunityStrategy(sqlRepo),
-            new CheckUserSurveyAchievement(sqlRepo, eventBussMockStrategy.Object, _options)
         });
 
         await MockUserProgress(new UnlockableAchievementProgressTable
@@ -417,7 +415,6 @@ public class ProcessUserAchievementsIntegrationTests
             new CheckMusicAndPerformingArtsStrategy(sqlRepo),
             new CheckRecreationAndHobbiesStrategy(sqlRepo),
             new CheckSocialAndCommunityStrategy(sqlRepo),
-            new CheckUserSurveyAchievement(sqlRepo, eventBussMockStrategy.Object, _options)
         });
 
         await MockUserProgress(new UnlockableAchievementProgressTable
@@ -555,7 +552,6 @@ public class ProcessUserAchievementsIntegrationTests
             new CheckMusicAndPerformingArtsStrategy(sqlRepo),
             new CheckRecreationAndHobbiesStrategy(sqlRepo),
             new CheckSocialAndCommunityStrategy(sqlRepo),
-            new CheckUserSurveyAchievement(sqlRepo, eventBussMockStrategy.Object, _options)
         });
 
         await MockUserProgress(new UnlockableAchievementProgressTable
@@ -687,7 +683,7 @@ public class ProcessUserAchievementsIntegrationTests
             new CheckMusicAndPerformingArtsStrategy(sqlRepo),
             new CheckRecreationAndHobbiesStrategy(sqlRepo),
             new CheckSocialAndCommunityStrategy(sqlRepo),
-            new CheckUserSurveyAchievement(sqlRepo, eventBussMockStrategy.Object, _options)
+            
         });
 
         await MockUserProgress(new UnlockableAchievementProgressTable
