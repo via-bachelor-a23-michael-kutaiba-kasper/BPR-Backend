@@ -155,6 +155,16 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
                         user_id = userId,
                         unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime()
                     });
+                    
+                    if (eventBus is not null)
+                    {
+                        var topic = _pubsubConfig.Value.Topics[PubSubTopics.VibeverseAchievementsNewAchievement];
+                        await eventBus.PublishAsync(topic.TopicId, topic.ProjectId, new
+                        {
+                            Name=achievement.GetDescription(),
+                            Reward = AchievementReward.Tier3
+                        });
+                    }
                 }
 
                 await _sqlAchievementRepository.UpsertAchievementProgress(new UnlockableAchievementProgressTable
