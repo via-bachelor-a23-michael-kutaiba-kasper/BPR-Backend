@@ -122,6 +122,15 @@ type UserAchievement {
     expReward: Int
 }
 
+type AllAchievements {
+    icon: String
+    name: String
+    unlockDate: String
+    description: String
+    expReward: Int
+    requirement: Int
+}
+
 type EventResponse {
     result: Event
     status: Status
@@ -183,6 +192,7 @@ type Query {
     interestSurvey(userId: String!): InterestSurveyResponse
     expProgress(userId: String!): ExpProgressResponse
     userAchievements(userId: String!): [UserAchievement]
+    allAchievements() : [AllAchievements]
 }
 
 type Mutation {
