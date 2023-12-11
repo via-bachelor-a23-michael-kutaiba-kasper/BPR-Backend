@@ -36,11 +36,11 @@ public class FetchUserAchievementsHandler
     {
         try
         {
-            /*var userExists = await _userRepository.UserExists(request.UserId);
+            var userExists = await _userRepository.UserExists(request.UserId);
             if (!userExists)
             {
                 throw new UserNotFoundException($"No user with id {request.UserId} have been found");
-            }*/
+            }
 
             var userAchievements = await _sqlUserAchievementsRepository.FetchUserAchievementByUserId(request.UserId);
             _logger.LogInformation(
