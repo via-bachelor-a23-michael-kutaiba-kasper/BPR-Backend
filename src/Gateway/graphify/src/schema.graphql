@@ -103,6 +103,7 @@ type ExpProgressHistoryEntry {
 }
 
 type ExpProgress {
+    stage: Int
     totalExp: Int
     level: Level
     expProgressHistory: [ExpProgressHistoryEntry]
@@ -114,19 +115,19 @@ type ExpProgressResponse {
 }
 
 type UserAchievement {
-    icon: String,
-    name: String,
-    unlockDate: String,
-    description: String,
+    icon: String
+    name: String
+    unlockDate: String
+    description: String
     expReward: Int
 }
 
 type AllAchievements {
-    icon: String,
-    name: String,
-    unlockDate: String,
-    description: String,
-    expReward: Int,
+    icon: String
+    name: String
+    unlockDate: String
+    description: String
+    expReward: Int
     requirement: Int
 }
 
@@ -190,7 +191,7 @@ type Query {
     recommendations(userId: String!, limit: Int): RecommendationsResponse
     interestSurvey(userId: String!): InterestSurveyResponse
     expProgress(userId: String!): ExpProgressResponse
-    userAchievements(userId: String!) : [UserAchievement]
+    userAchievements(userId: String!): [UserAchievement]
     allAchievements() : [AllAchievements]
 }
 

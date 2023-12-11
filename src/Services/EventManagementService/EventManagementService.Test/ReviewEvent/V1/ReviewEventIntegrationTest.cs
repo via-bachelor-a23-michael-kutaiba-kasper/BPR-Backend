@@ -52,20 +52,22 @@ public class ReviewEventIntegrationTest
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
 
         var handler = new ReviewEventHandler
@@ -114,20 +116,22 @@ public class ReviewEventIntegrationTest
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
 
         var handler = new ReviewEventHandler
@@ -181,20 +185,22 @@ public class ReviewEventIntegrationTest
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 },
                 new Topic()
                 {
                     ProjectId = "test",
-                    TopicId = "test"
+                    TopicId = "test",
+                    SubscriptionNames = new []{"test"}
                 }
             },
-            SubscriptionName = "test"
         };
 
         var handler = new ReviewEventHandler
