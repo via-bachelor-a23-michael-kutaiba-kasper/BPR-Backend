@@ -11,6 +11,7 @@ using UserManagementService.Application.V1.ProcessUserAchievements.Model.Strateg
 using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
 using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
+using UserManagementService.Domain.Util;
 using UserManagementService.Infrastructure;
 using UserManagementService.Infrastructure.AppSettings;
 using UserManagementService.Infrastructure.Notifications;
@@ -29,6 +30,33 @@ public class ProcessUserAchievementsIntegrationTests
     {
         Topics = new[]
         {
+            new Topic
+            {
+                TopicId = "Test",
+                ProjectId = "Test",
+                SubscriptionNames = new[]
+                {
+                    "Test"
+                }
+            },
+            new Topic
+            {
+                TopicId = "Test",
+                ProjectId = "Test",
+                SubscriptionNames = new[]
+                {
+                    "Test"
+                }
+            },
+            new Topic
+            {
+                TopicId = "Test",
+                ProjectId = "Test",
+                SubscriptionNames = new[]
+                {
+                    "Test"
+                }
+            },
             new Topic
             {
                 TopicId = "Test",
@@ -179,6 +207,7 @@ public class ProcessUserAchievementsIntegrationTests
     {
         // Arrange
         const string userId = "MyId";
+        var cat = Category.Music;
         var sqlLoggerMock = new Mock<ILogger<SqlAchievementRepository>>();
         var userLoggerMock = new Mock<ILogger<UserRepository>>();
         var handlerLoggerMock = new Mock<ILogger<ProcessUserAchievementsHandle>>();
@@ -197,7 +226,7 @@ public class ProcessUserAchievementsIntegrationTests
             DateTimeOffset.UtcNow.ToUniversalTime(),
             false, true, false,
             "hostId", "TestAccessCode",
-            Category.Music, "location", "city",
+            cat, "location", "city",
             0, 0
         ).Build();
         joinedEvents.Add(ev);
@@ -254,13 +283,22 @@ public class ProcessUserAchievementsIntegrationTests
             eventBussMock.Object,
             _options
         );
+        var categoryGroupAttribute =
+            Attribute.GetCustomAttribute(cat.GetType().GetField(cat.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var achievementGroupAttribute =
+            Attribute.GetCustomAttribute(achievement.GetType().GetField(achievement.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var categoryGroup = categoryGroupAttribute?.Group;
+        var achievementGroup = achievementGroupAttribute?.Group;
 
         // Act
         await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
         var unlocked = await GetUnlockedAchievements(userId, (int)achievement);
 
         // Assert
-        if (achievement.GetDescription().Contains('1') || achievement == UserAchievement.NewComer)
+        if (achievement == UserAchievement.NewComer ||
+            (achievement.GetDescription().Contains('1') && categoryGroup == achievementGroup))
         {
             Assert.That((int)achievement, Is.EqualTo(unlocked));
         }
@@ -296,6 +334,7 @@ public class ProcessUserAchievementsIntegrationTests
         UserAchievement achievement, int oldProgress)
     {
         // Arrange
+        var cat = Category.Music;
         const string userId = "MyId";
         var sqlLoggerMock = new Mock<ILogger<SqlAchievementRepository>>();
         var userLoggerMock = new Mock<ILogger<UserRepository>>();
@@ -315,7 +354,7 @@ public class ProcessUserAchievementsIntegrationTests
             DateTimeOffset.UtcNow.ToUniversalTime(),
             false, true, false,
             "hostId", "TestAccessCode",
-            Category.Music, "location", "city",
+            cat, "location", "city",
             0, 0
         ).Build();
         joinedEvents.Add(ev);
@@ -376,11 +415,20 @@ public class ProcessUserAchievementsIntegrationTests
         // Act
         await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
         var unlocked = await GetUnlockedAchievements(userId, (int)achievement);
+        var categoryGroupAttribute =
+            Attribute.GetCustomAttribute(cat.GetType().GetField(cat.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var achievementGroupAttribute =
+            Attribute.GetCustomAttribute(achievement.GetType().GetField(achievement.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var categoryGroup = categoryGroupAttribute?.Group;
+        var achievementGroup = achievementGroupAttribute?.Group;
 
         // Assert
 
-        if (achievement.GetDescription().Contains('2') || achievement.GetDescription().Contains('1') ||
-            achievement == UserAchievement.NewComer)
+        if ((achievement == UserAchievement.NewComer ||
+             achievement.GetDescription().Contains('1') ||
+             achievement.GetDescription().Contains('2')) && categoryGroup == achievementGroup)
         {
             Assert.That((int)achievement, Is.EqualTo(unlocked));
         }
@@ -417,6 +465,7 @@ public class ProcessUserAchievementsIntegrationTests
         UserAchievement achievement, int oldProgress)
     {
         // Arrange
+        var cat = Category.Music;
         const string userId = "MyId";
         var sqlLoggerMock = new Mock<ILogger<SqlAchievementRepository>>();
         var userLoggerMock = new Mock<ILogger<UserRepository>>();
@@ -436,7 +485,7 @@ public class ProcessUserAchievementsIntegrationTests
             DateTimeOffset.UtcNow.ToUniversalTime(),
             false, true, false,
             "hostId", "TestAccessCode",
-            Category.Music, "location", "city",
+            cat, "location", "city",
             0, 0
         ).Build();
         joinedEvents.Add(ev);
@@ -497,12 +546,21 @@ public class ProcessUserAchievementsIntegrationTests
         // Act
         await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
         var unlocked = await GetUnlockedAchievements(userId, (int)achievement);
+        var categoryGroupAttribute =
+            Attribute.GetCustomAttribute(cat.GetType().GetField(cat.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var achievementGroupAttribute =
+            Attribute.GetCustomAttribute(achievement.GetType().GetField(achievement.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var categoryGroup = categoryGroupAttribute?.Group;
+        var achievementGroup = achievementGroupAttribute?.Group;
+
 
         // Assert
 
-        if (achievement.GetDescription().Contains('2') || achievement.GetDescription().Contains('1') ||
-            achievement.GetDescription().Contains('3') ||
-            achievement == UserAchievement.NewComer)
+        if ((achievement == UserAchievement.NewComer || achievement.GetDescription().Contains('1') ||
+             achievement.GetDescription().Contains('2') || achievement.GetDescription().Contains('3')) &&
+            categoryGroup == achievementGroup)
         {
             Assert.That((int)achievement, Is.EqualTo(unlocked));
         }
@@ -532,6 +590,7 @@ public class ProcessUserAchievementsIntegrationTests
     public async Task InsufficientProgress_UpdateProgress_ForTier1Only(UserAchievement achievement, int oldProgress)
     {
         // Arrange
+        var cat = Category.Music;
         const string userId = "MyId";
         var sqlLoggerMock = new Mock<ILogger<SqlAchievementRepository>>();
         var userLoggerMock = new Mock<ILogger<UserRepository>>();
@@ -551,7 +610,7 @@ public class ProcessUserAchievementsIntegrationTests
             DateTimeOffset.UtcNow.ToUniversalTime(),
             false, true, false,
             "hostId", "TestAccessCode",
-            Category.Music, "location", "city",
+            cat, "location", "city",
             0, 0
         ).Build();
         joinedEvents.Add(ev);
@@ -613,12 +672,19 @@ public class ProcessUserAchievementsIntegrationTests
         await handler.Handle(new ProcessUserAchievementsRequest(userId), ct);
         var progressedAchievement = await GetProgressedAchievements(userId, (int)achievement);
         var progress = await GetProgressForAchievements(userId, (int)achievement);
-
+        var categoryGroupAttribute =
+            Attribute.GetCustomAttribute(cat.GetType().GetField(cat.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var achievementGroupAttribute =
+            Attribute.GetCustomAttribute(achievement.GetType().GetField(achievement.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var categoryGroup = categoryGroupAttribute?.Group;
+        var achievementGroup = achievementGroupAttribute?.Group;
         // Assert
-        if (achievement.GetDescription().Contains('1'))
+        if (achievement.GetDescription().Contains('1') && categoryGroup == achievementGroup)
         {
             Assert.That((int)achievement, Is.EqualTo(progressedAchievement));
-            Assert.That(oldProgress + 1 , Is.EqualTo(progress));
+            Assert.That(oldProgress + 1, Is.EqualTo(progress));
         }
 
         if (achievement.GetDescription().Contains('1') ||
@@ -648,6 +714,7 @@ public class ProcessUserAchievementsIntegrationTests
 
     private async Task<int> GetUnlockedAchievements(string userId, int achievementId)
     {
+        var id = 0;
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
         const string sql =
@@ -656,7 +723,16 @@ public class ProcessUserAchievementsIntegrationTests
             """;
         var query = await connection.QueryFirstOrDefaultAsync<int>(sql,
             new { UserId = userId, AchievementId = achievementId });
-        return query;
+        if (query == default(int))
+        {
+            id = -1;
+        }
+        else
+        {
+            id = query;
+        }
+
+        return id;
     }
 
     private async Task<int> GetProgressedAchievements(string userId, int achievementId)
@@ -671,6 +747,7 @@ public class ProcessUserAchievementsIntegrationTests
             new { UserId = userId, AchievementId = achievementId });
         return query;
     }
+
     private async Task<int> GetProgressForAchievements(string userId, int achievementId)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());

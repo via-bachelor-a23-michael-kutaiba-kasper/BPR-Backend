@@ -29,9 +29,12 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
     {
         var newProgress = 0;
 
-        var currentProgress =
+        var currentUnlockedAchievemnts =
             await _sqlAchievementRepository.GetUserProgress(userId, (int)achievement, eventCategory);
-        if (currentProgress.Contains((int)achievement))
+
+        var currentProgressForAchievement =
+            await _sqlAchievementRepository.GetUserAchievementsProgress(userId, (int)achievement);
+        if (currentUnlockedAchievemnts.Contains((int)achievement))
         {
             return -1;
         }
@@ -39,19 +42,28 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
         var categoryGroupAttribute =
             Attribute.GetCustomAttribute(eventCategory.GetType().GetField(eventCategory.ToString())!,
                 typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
+        var achievementGroupAttribute =
+            Attribute.GetCustomAttribute(achievement.GetType().GetField(achievement.ToString())!,
+                typeof(CategoryGroupAttribute)) as CategoryGroupAttribute;
         var categoryGroup = categoryGroupAttribute?.Group;
+        var achievementGroup = achievementGroupAttribute?.Group;
 
-        var oldProgress = await _sqlAchievementRepository.GetProgressForAnAchievement(userId, (int)achievement);
-        /*if (!string.IsNullOrEmpty(categoryGroup)) //Todo: not sure about this part
+        var oldProgress = currentProgressForAchievement;
+        if (
+            achievement == UserAchievement.NewComer || (!string.IsNullOrEmpty(categoryGroup) &&
+                                                        categoryGroup == achievementGroup)
+        )
         {
             // Calculate the new progress
-            /*newProgress++;
-            newProgress += oldProgress;#1#
-            oldProgress++;
-        }*/
+            newProgress += oldProgress + 1;
+        }
+        else
+        {
+            return -1;
+        }
 
 
-        return oldProgress;
+        return newProgress;
     }
 
     protected async Task UpdateProgress(string userId, IReadOnlyCollection<UserAchievement> achievements,
@@ -65,9 +77,7 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
                 return;
             }
 
-
-            var currentProgress =
-                await _sqlAchievementRepository.GetProgressForAnAchievement(userId, (int)achievement) + result;
+            var currentProgress = result;
             if (achievement.GetDescription().Contains('1'))
             {
                 if (currentProgress >= 5)

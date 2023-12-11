@@ -18,7 +18,7 @@ public interface ISqlAchievementRepository
 
     Task<IReadOnlyCollection<int>> GetUserProgress(string userId, int achievementId, Category eventCategory);
     Task<IReadOnlyCollection<UserAchievementJoinTable>?> GetUserAchievement(string userId);
-    Task<IReadOnlyCollection<AchievementTable>> GetAchievements();
+    Task<int> GetUserAchievementsProgress(string userId, int achievementid);
     Task<int> GetProgressForAnAchievement(string userId, int achievement);
 }
 
@@ -153,24 +153,30 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         }
     }
 
-    public async Task<IReadOnlyCollection<AchievementTable>> GetAchievements()
+    public async Task<int> GetUserAchievementsProgress(string userId, int achievementid)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
         try
         {
             var query =
-                await connection.QueryAsync<AchievementTable>(GetAchievementsSql);
+                await connection.QueryAsync<int>(GetAchievementsProgressSql,
+                    new { UserId = userId, Achievementid = achievementid });
 
-            var achievements = query.ToList();
 
-            _logger.LogInformation($"{achievements.Count()} achievements retrieved form database");
-            return achievements;
+            var enumerable = query.ToList();
+            if (!enumerable.Any())
+            {
+                return 0;
+            }
+
+            _logger.LogInformation($"{enumerable} achievements progress retrieved form database");
+            return enumerable.First();
         }
         catch (Exception e)
         {
-            _logger.LogError($"Unable to query achievements, {e.StackTrace}");
-            throw new QueryUserAchievementsException("Something went wrong while querying achievement", e);
+            _logger.LogError($"Unable to query achievements progress, {e.StackTrace}");
+            throw new QueryUserAchievementsException("Something went wrong while querying achievement progress", e);
         }
     }
 
@@ -201,9 +207,9 @@ public class SqlAchievementRepository : ISqlAchievementRepository
         SELECT * FROM user_achievement ua JOIN achievement a on a.id = ua.achievement_id WHERE user_id = @user_id;
         """;
 
-    private const string GetAchievementsSql =
+    private const string GetAchievementsProgressSql =
         """
-        SELECT * FROM achievement
+        SELECT progress FROM unlockable_achievement_progress WHERE user_id = @UserId AND achievement_id = @Achievementid
         """;
 
     private const string UpsertUserAchievementProgressSql =
