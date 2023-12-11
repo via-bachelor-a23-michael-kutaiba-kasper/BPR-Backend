@@ -181,7 +181,7 @@ public class SqlAchievementRepository : ISqlAchievementRepository
 
     private const string InsertNewUserAchievementSql =
         """
-        INSERT INTO user_progress.user_achievement(achievement_id, user_id, unlocked_date) VALUES (@achievement_id, @user_id, @unlocked_date);
+        INSERT INTO user_progress.user_achievement(achievement_id, user_id, unlocked_date) VALUES (@achievement_id, @user_id, @unlocked_date) ON CONFLICT DO NOTHING ;
         """;
 
     private const string GetUserAchievementSql =
