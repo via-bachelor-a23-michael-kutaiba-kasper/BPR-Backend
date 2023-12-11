@@ -10,5 +10,6 @@ public static class PubSubTopics
 }
 public static class TopicSubs
 {
-    public const int UserManagementAchievements= 0;
+    public const int UserManagementExp= 0;
+    public const int UserManagementAchievements= 1;
 }
