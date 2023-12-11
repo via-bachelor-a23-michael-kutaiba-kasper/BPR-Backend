@@ -8,7 +8,6 @@ public static class ProcessUserAchievementsExtension
 {
     public static IServiceCollection AddProcessAchievementsExtension(this IServiceCollection services)
     {
-        services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<ISqlAchievementRepository, SqlAchievementRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICheckAchievementStrategy, CheckCulinaryAndDrinksStrategy>();
