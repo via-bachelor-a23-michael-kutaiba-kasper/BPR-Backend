@@ -52,7 +52,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest, Event>
             _logger.LogInformation($"Event has been successfully created at: {DateTimeOffset.UtcNow}");
 
             await _eventBus.PublishAsync(_pubsubOptions.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].TopicId,
-                _pubsubOptions.Value.SubscriptionName, mappedEvent);
+                _pubsubOptions.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].ProjectId, mappedEvent);
             
             return mappedEvent;
         }

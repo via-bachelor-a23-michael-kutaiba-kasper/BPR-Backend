@@ -2,6 +2,7 @@ using System.Text.Json;
 using EventManagementService.Application.V1.ProcessExternalEvents.Exceptions;
 using EventManagementService.Domain.Models.Events;
 using EventManagementService.Infrastructure.AppSettings;
+using EventManagementService.Infrastructure.EventBus;
 using Google.Api.Gax;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.PubSub.V1;
@@ -37,7 +38,7 @@ public class PubSubExternalEvents : IPubSubExternalEvents
         _subscriptionName = new SubscriptionName
         (
             _options.Value.Topics.First().ProjectId,
-            _options.Value.SubscriptionName
+            _options.Value.Topics[PubSubTopics.VibeVerseEventsScraped].SubscriptionNames.First()
         );
         _topicName = new TopicName
         (
