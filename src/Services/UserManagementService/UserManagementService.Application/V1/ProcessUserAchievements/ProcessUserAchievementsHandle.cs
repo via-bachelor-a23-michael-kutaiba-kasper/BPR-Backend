@@ -6,6 +6,7 @@ using UserManagementService.Application.V1.ProcessUserAchievements.Exceptions;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model;
 using UserManagementService.Application.V1.ProcessUserAchievements.Model.Strategy;
 using UserManagementService.Application.V1.ProcessUserAchievements.Repository;
+using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
 using UserManagementService.Infrastructure.AppSettings;
 using UserManagementService.Infrastructure.Notifications;
@@ -64,6 +65,15 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
 
                 await ProcessAchievements(newJoined.UserId, newJoined.Event.Category);
             }
+
+            var usersWithSurvey = await GetUserIdFromPubSubForSurvey();
+            if (usersWithSurvey.Any())
+            {
+                foreach (var userId in usersWithSurvey)
+                {
+                    await AddSurveyAchievement(userId);
+                }
+            }
         }
         catch (Exception e)
         {
@@ -101,5 +111,29 @@ public class ProcessUserAchievementsHandle : IRequestHandler<ProcessUserAchievem
     private async Task<IReadOnlyCollection<UserAchievementJoinTable>?> GetUserAchievements(string userId)
     {
         return await _sqlAchievementRepository.GetUserAchievement(userId);
+    }
+
+    private async Task AddSurveyAchievement(string userId)
+    {
+        await _sqlAchievementRepository.InsertUserAchievement(new UserAchievementTable
+        {
+            achievement_id = (int)UserAchievement.NewComer,
+            unlocked_date = DateTimeOffset.UtcNow.ToUniversalTime(),
+            user_id = userId
+        });
+    }
+
+    private async Task<IReadOnlyCollection<string>> GetUserIdFromPubSubForSurvey()
+    {
+        var userIds = await _eventBus.PullAsync<string>
+        (
+            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].TopicId,
+            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].ProjectId,
+            _pubsubConfig.Value.Topics[PubSubTopics.NewSurvey].SubscriptionNames[TopicSubs.UserManagementAchievements],
+            10,
+            new CancellationToken()
+        );
+
+        return userIds.ToList();
     }
 }

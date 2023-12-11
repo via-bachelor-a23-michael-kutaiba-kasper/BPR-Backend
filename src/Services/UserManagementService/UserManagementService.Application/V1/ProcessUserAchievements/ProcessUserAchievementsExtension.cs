@@ -17,7 +17,6 @@ public static class ProcessUserAchievementsExtension
         services.AddScoped<ICheckAchievementStrategy, CheckMusicAndPerformingArtsStrategy>();
         services.AddScoped<ICheckAchievementStrategy, CheckRecreationAndHobbiesStrategy>();
         services.AddScoped<ICheckAchievementStrategy, CheckSocialAndCommunityStrategy>();
-        services.AddScoped<ICheckAchievementStrategy, CheckUserSurveyAchievement>();
         return services;
     }
 }
