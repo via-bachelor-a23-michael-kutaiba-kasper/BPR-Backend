@@ -3,6 +3,7 @@ namespace UserManagementService.API.Controllers.V1.ExpProgress.Dtos;
 public class ReadUserExpDto
 {
     public long TotalExp { get; set; }
+    public int Stage { get; set; }
     public ReadLevelDto Level { get; set; }
     public IReadOnlyCollection<ReadExpProgressEntryDto> ExpProgressHistory { get; set; }
 }
