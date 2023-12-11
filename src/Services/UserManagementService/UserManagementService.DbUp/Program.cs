@@ -17,7 +17,7 @@ EnsureDatabase.For.PostgresqlDatabase(connectionString);
 var upgrader =
     DeployChanges.To
         .PostgresqlDatabase(connectionString)
-        .JournalToPostgresqlTable("user_postgres", "schemaversions")
+        .JournalToPostgresqlTable("user_progress", "schemaversions")
         .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
         .LogToConsole()
         .Build();
