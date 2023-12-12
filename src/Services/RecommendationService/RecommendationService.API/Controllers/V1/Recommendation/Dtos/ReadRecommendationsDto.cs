@@ -1,6 +1,3 @@
-using EventManagementService.Domain.Models.Events;
-using RecommendationService.Domain.Events;
-
 namespace RecommendationService.API.Controllers.V1.Recommendation.Dtos;
 
 public class ReadRecommendationsDto

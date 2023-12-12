@@ -6,6 +6,7 @@ using Moq;
 using RecommendationService.Application.V1.StoreInterestSurveyResult;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Exceptions;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Repositories;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 using RecommendationService.Infrastructure.AppSettings;
 using RecommendationService.Infrastructure.EventBus;

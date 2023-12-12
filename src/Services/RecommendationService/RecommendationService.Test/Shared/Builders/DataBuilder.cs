@@ -2,6 +2,7 @@ using Dapper;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using Npgsql;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 using RecommendationService.Infrastructure;
 

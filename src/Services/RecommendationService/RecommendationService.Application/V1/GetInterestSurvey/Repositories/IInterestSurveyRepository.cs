@@ -3,6 +3,7 @@ using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.Logging;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 using RecommendationService.Domain.Util;
 using RecommendationService.Infrastructure;
@@ -12,7 +13,6 @@ namespace RecommendationService.Application.V1.GetInterestSurvey.Repositories;
 public interface IInterestSurveyRepository
 {
     public Task<InterestSurvey?> GetInterestSurvey(string userId);
-    public Task<InterestSurvey> StoreInterestSurvey(string userId, InterestSurvey survey);
 }
 
 public class FirebaseInterestSurveyRepository : IInterestSurveyRepository
@@ -47,7 +47,7 @@ public class FirebaseInterestSurveyRepository : IInterestSurveyRepository
             return null;
         }
 
-        var surveySerialized = (string) data["interestSurvey"];
+        var surveySerialized = (string)data["interestSurvey"];
         if (surveySerialized is null)
         {
             return null;
@@ -73,31 +73,7 @@ public class FirebaseInterestSurveyRepository : IInterestSurveyRepository
         };
     }
 
-    public async Task<InterestSurvey> StoreInterestSurvey(string userId, InterestSurvey survey)
-    {
-        var docRef = _reference.Document(userId);
-
-        var surveyDto = new InterestSurveyDto()
-        {
-            User = survey.User,
-            Categories = survey.Categories.Select(category => category.GetDescription()).ToList(),
-            Keywords = survey.Keywords.Select(kw => kw.GetDescription()).ToList(),
-        };
-        var surveyDtoSerialized = JsonSerializer.Serialize(surveyDto, new JsonSerializerOptions()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
-
-        var data = new Dictionary<string, string>
-        {
-            {"interestSurvey", surveyDtoSerialized}
-        };
-        await docRef.SetAsync(data);
-
-        return survey;
-    }
-
-    class InterestSurveyDto
+    private class InterestSurveyDto
     {
         public User User { get; set; }
         public IReadOnlyCollection<string> Keywords { get; set; }

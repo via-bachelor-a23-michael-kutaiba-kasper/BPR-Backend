@@ -1,3 +1,4 @@
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 using RecommendationService.Domain.Util;
 

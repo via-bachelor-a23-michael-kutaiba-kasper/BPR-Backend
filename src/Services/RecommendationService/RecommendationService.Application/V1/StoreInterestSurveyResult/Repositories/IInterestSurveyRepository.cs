@@ -3,6 +3,7 @@ using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.Logging;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 using RecommendationService.Domain.Util;
 using RecommendationService.Infrastructure;
@@ -97,7 +98,7 @@ public class FirebaseInterestSurveyRepository : IInterestSurveyRepository
         return survey;
     }
 
-    class InterestSurveyDto
+    private class InterestSurveyDto
     {
         public User User { get; set; }
         public IReadOnlyCollection<string> Keywords{ get; set; }

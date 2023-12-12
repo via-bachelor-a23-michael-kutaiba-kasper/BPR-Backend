@@ -5,6 +5,7 @@ using Moq;
 using RecommendationService.Application.V1.GetInterestSurvey;
 using RecommendationService.Application.V1.GetInterestSurvey.Exceptions;
 using RecommendationService.Application.V1.GetInterestSurvey.Repositories;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 
 namespace RecommendationService.Test.V1.GetInterestSurvey;

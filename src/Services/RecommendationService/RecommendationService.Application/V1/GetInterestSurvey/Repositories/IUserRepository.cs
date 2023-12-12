@@ -2,6 +2,7 @@ using EventManagementService.Domain.Models;
 using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Logging;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Exceptions;
+using RecommendationService.Domain;
 using RecommendationService.Infrastructure;
 
 namespace RecommendationService.Application.V1.GetInterestSurvey.Repositories;

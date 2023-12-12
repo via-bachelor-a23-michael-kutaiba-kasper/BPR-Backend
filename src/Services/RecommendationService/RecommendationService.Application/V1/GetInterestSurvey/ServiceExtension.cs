@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using RecommendationService.Application.V1.StoreInterestSurveyResult.Repositories;
 using FirebaseInterestSurveyRepository = RecommendationService.Application.V1.GetInterestSurvey.Repositories.FirebaseInterestSurveyRepository;
 using FirebaseUserRepository = RecommendationService.Application.V1.GetInterestSurvey.Repositories.FirebaseUserRepository;
 using IInterestSurveyRepository = RecommendationService.Application.V1.GetInterestSurvey.Repositories.IInterestSurveyRepository;

@@ -7,6 +7,7 @@ using RecommendationService.API.Controllers.V1.InterestSurvey.Dtos;
 using RecommendationService.Application.V1.GetInterestSurvey;
 using RecommendationService.Application.V1.StoreInterestSurveyResult;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Exceptions;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 using RecommendationService.Domain.Util;
 using UserNotFoundException = RecommendationService.Application.V1.GetRecommendations.Exceptions.UserNotFoundException;
@@ -63,19 +64,21 @@ public class InterestSurveyController : ControllerBase
             _logger.LogError($"Failed to retrieve interest survey for: {userId}");
             _logger.LogError(e.Message);
             _logger.LogError(e.StackTrace);
-            return StatusCode((int) HttpStatusCode.InternalServerError);
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 
     [HttpPost]
-    public async Task<ActionResult<ReadInterestSurveyDto>> StoreInterestSurvey(
-        [FromBody] StoreInterestSurveyDto request)
+    public async Task<ActionResult<ReadInterestSurveyDto>> StoreInterestSurvey
+    (
+        [FromBody] StoreInterestSurveyDto request
+    )
     {
         try
         {
-            var domainSurvey = new Domain.Events.InterestSurvey
+            var domainSurvey = new Domain.InterestSurvey
             {
-                User = new User {UserId = request.UserId},
+                User = new User { UserId = request.UserId },
                 Categories = request.Categories.Select(EnumExtensions.GetEnumValueFromDescription<Category>).ToList(),
                 Keywords = request.Keywords.Select(EnumExtensions.GetEnumValueFromDescription<Keyword>).ToList()
             };
@@ -101,7 +104,7 @@ public class InterestSurveyController : ControllerBase
             _logger.LogError($"Failed to store interest survey for user: {request.UserId}");
             _logger.LogError(e.Message);
             _logger.LogError(e.StackTrace);
-            return StatusCode((int) HttpStatusCode.InternalServerError);
+            return StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }

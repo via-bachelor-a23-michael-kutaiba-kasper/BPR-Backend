@@ -1,3 +1,4 @@
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 
 namespace EventManagementService.Domain.Models.Events;

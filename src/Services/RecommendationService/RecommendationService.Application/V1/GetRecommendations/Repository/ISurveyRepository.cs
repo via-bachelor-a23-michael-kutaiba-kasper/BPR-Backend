@@ -1,5 +1,6 @@
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 
 namespace RecommendationService.Application.V1.GetRecommendations.Repository;
