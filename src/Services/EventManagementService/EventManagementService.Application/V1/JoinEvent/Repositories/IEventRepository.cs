@@ -58,7 +58,7 @@ public class EventRepository : IEventRepository
             Images = images,
             Title = existingEventQueryResult.title,
             Url = existingEventQueryResult.url,
-            Attendees = attendeeIds.Select(attendeeId=> new User{UserId = attendeeId}),
+            Attendees = attendeeIds.Select(attendeeId => new User { UserId = attendeeId }),
             Id = existingEventQueryResult.id,
             Location = "Vejlevej 14, 8700 Horsens, Denmark",
             City = "Horsens",

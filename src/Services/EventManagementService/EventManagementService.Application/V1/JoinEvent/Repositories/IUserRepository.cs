@@ -53,7 +53,7 @@ public class UserRepository : IUserRepository
             // TODO: Make custom exception
             throw new Exception("User device has not been registered with FCM");
         }
-        
+
         var data = snapshot.ToDictionary();
         if (!data.ContainsKey("token"))
         {
@@ -62,6 +62,6 @@ public class UserRepository : IUserRepository
 
         Console.WriteLine(JsonSerializer.Serialize(data));
 
-        return (string) data["token"];
+        return (string)data["token"];
     }
 }

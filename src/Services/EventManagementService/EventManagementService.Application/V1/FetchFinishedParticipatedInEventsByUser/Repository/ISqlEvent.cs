@@ -38,18 +38,19 @@ public class SqlEvent : ISqlEvent
         try
         {
             List<Event> events = new();
-            
+
             var eventEntities = await connection.QueryAsync<EventEntity>
             (
                 GetFinishedParticipatedEventsByUserIdSql,
                 new { urId = userId, now = DateTimeOffset.UtcNow.ToUniversalTime() }
             ) ?? new List<EventEntity>();
-            
+
             var eventIds = eventEntities.Select(e => e.id);
             var indexedKeywords = await GetIndexedKeywordsByEventId(connection, eventIds.ToList());
-            var eventAttendeeEntities = eventIds.Any() ?  await connection.QueryAsync<EventAttendeeEntity>(
-                    $"SELECT * FROM postgres.public.event_attendee WHERE event_id IN {SqlUtil.AsIntList(eventIds.ToList())}") :
-                new List<EventAttendeeEntity>();
+            var eventAttendeeEntities = eventIds.Any()
+                ? await connection.QueryAsync<EventAttendeeEntity>(
+                    $"SELECT * FROM postgres.public.event_attendee WHERE event_id IN {SqlUtil.AsIntList(eventIds.ToList())}")
+                : new List<EventAttendeeEntity>();
             var indexedImages = await GetIndexedImagesByEventId(connection, eventIds.ToList());
             var domainEvents = eventEntities.Select(e => new Event
             {
@@ -77,7 +78,8 @@ public class SqlEvent : ISqlEvent
                 LastUpdateDate = e.last_update_date,
                 MaxNumberOfAttendees = e.max_number_of_attendees,
                 Keywords = indexedKeywords[e.id].Select(id => (Keyword)id),
-                Attendees = eventAttendeeEntities.Where(ea => ea.event_id == e.id).Select(ea => ea.user_id).Select(id => new User { UserId = id })
+                Attendees = eventAttendeeEntities.Where(ea => ea.event_id == e.id).Select(ea => ea.user_id)
+                    .Select(id => new User { UserId = id })
             });
             events.AddRange(domainEvents);
 
@@ -90,42 +92,44 @@ public class SqlEvent : ISqlEvent
             throw new CannotQueryFinishedParticipatedEventsUser("Unable to query events for user", e);
         }
     }
-    
+
     private async Task<IDictionary<int, List<int>>> GetIndexedKeywordsByEventId(NpgsqlConnection connection,
         IReadOnlyCollection<int> eventIds)
     {
         var queryEventKeywords =
             $"SELECT * from event_keyword WHERE event_id in {SqlUtil.AsIntList(eventIds.ToList())}";
-        var eventKeywordEntities = eventIds.Any() ?  await connection.QueryAsync<EventKeywordEntity>(queryEventKeywords) :
-            new List<EventKeywordEntity>();
+        var eventKeywordEntities = eventIds.Any()
+            ? await connection.QueryAsync<EventKeywordEntity>(queryEventKeywords)
+            : new List<EventKeywordEntity>();
         return IndexKeywordsByEventId(eventKeywordEntities.ToList());
     }
-    
-    
-    private async Task<IDictionary<int, List<string>>> GetIndexedImagesByEventId(NpgsqlConnection connection,
+
+
+    private static async Task<IDictionary<int, List<string>>> GetIndexedImagesByEventId(NpgsqlConnection connection,
         IReadOnlyCollection<int> eventIds)
     {
         var queryEventImages =
             $"SELECT * from image WHERE event_id in {SqlUtil.AsIntList(eventIds.ToList())}";
-        var eventImages = eventIds.Any() ?  await connection.QueryAsync<EventImageEntity>(queryEventImages) :
-            new List<EventImageEntity>();
-        
+        var eventImages = eventIds.Any()
+            ? await connection.QueryAsync<EventImageEntity>(queryEventImages)
+            : new List<EventImageEntity>();
+
         Dictionary<int, List<string>> indexedImages = new();
         foreach (var entity in eventImages)
         {
             if (!indexedImages.ContainsKey(entity.event_id))
             {
-                indexedImages[entity.event_id] = new List<string>() {entity.uri};
+                indexedImages[entity.event_id] = new List<string>() { entity.uri };
                 continue;
             }
-            
+
             indexedImages[entity.event_id].Add(entity.uri);
         }
 
         return indexedImages;
     }
-    
-    private IDictionary<int, List<int>> IndexKeywordsByEventId(
+
+    private static IDictionary<int, List<int>> IndexKeywordsByEventId(
         IReadOnlyCollection<EventKeywordEntity> eventKeywordEntities)
     {
         Dictionary<int, List<int>> indexedKeywords = new();

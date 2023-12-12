@@ -53,7 +53,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventRequest, Event>
 
             await _eventBus.PublishAsync(_pubsubOptions.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].TopicId,
                 _pubsubOptions.Value.Topics[PubSubTopics.VibeVerseEventsNewEvent].ProjectId, mappedEvent);
-            
+
             return mappedEvent;
         }
         catch (Exception e)

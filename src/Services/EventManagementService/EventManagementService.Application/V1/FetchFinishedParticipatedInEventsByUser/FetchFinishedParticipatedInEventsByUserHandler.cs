@@ -1,6 +1,5 @@
 using EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser.Exceptions;
 using EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser.Repository;
-using EventManagementService.Application.V1.FetchReviewsByUser.Exceptions;
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
 using MediatR;
@@ -49,7 +48,7 @@ public class FetchFinishedParticipatedInEventsByUserHandler :
                 var userIds = ev.Attendees
                     .Select(a => a.UserId)
                     .Concat(new List<string> { ev.Host.UserId });
-                
+
                 var nonMappedUserIds = userIds.Where(id => !usersMap.ContainsKey(id));
                 var nonMappedUsers = await _firebaseUser.GetUsers(nonMappedUserIds.ToList());
                 foreach (var user in nonMappedUsers)
@@ -61,6 +60,7 @@ public class FetchFinishedParticipatedInEventsByUserHandler :
 
                     usersMap[user.UserId] = user;
                 }
+
                 ev.Host = usersMap[ev.Host.UserId];
                 ev.Attendees = ev.Attendees.Select(user => usersMap[user.UserId]);
             }

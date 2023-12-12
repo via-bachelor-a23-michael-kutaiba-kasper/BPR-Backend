@@ -2,7 +2,7 @@ namespace EventManagementService.Application.V1.FetchEventById.Data;
 
 public class EventEntity
 {
-    public int id{ get; set; }
+    public int id { get; set; }
     public string title { get; set; }
     public DateTimeOffset start_date { get; set; }
     public DateTimeOffset end_date { get; set; }
@@ -10,14 +10,14 @@ public class EventEntity
     public DateTimeOffset last_update_date { get; set; }
     public bool is_private { get; set; }
     public bool adult_only { get; set; }
-    public bool is_paid{ get; set; }
+    public bool is_paid { get; set; }
     public string host_id { get; set; }
     public int max_number_of_attendees { get; set; }
     public string url { get; set; }
     public string description { get; set; }
     public string location { get; set; }
     public int category_id { get; set; }
-    public int location_id{ get; set; }
+    public int location_id { get; set; }
     public string access_code { get; set; }
     public string street_number { get; set; }
     public string street_name { get; set; }

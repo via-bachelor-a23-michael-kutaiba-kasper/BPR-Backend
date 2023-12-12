@@ -128,6 +128,7 @@ public class SqlExternalEvents : ISqlExternalEvents
                 await writer.WriteAsync(et.GeoLocation.Lat, NpgsqlDbType.Numeric);
                 await writer.WriteAsync(et.GeoLocation.Lng, NpgsqlDbType.Numeric);
             }
+
             await writer.CompleteAsync();
         }
     }
