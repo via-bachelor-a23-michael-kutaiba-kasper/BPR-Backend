@@ -23,6 +23,7 @@
     <EmbeddedResource Include="Migrations\0002_exp_progress_history.sql" />
     <EmbeddedResource Include="Migrations\0003_populate_achievement_enum_table.sql" />
     <EmbeddedResource Include="Migrations\0004_populate_levels.sql" />
+    <EmbeddedResource Include="Migrations\0005_remove_unused_tabels.sql" />
 
   </ItemGroup>
 

@@ -1,4 +1,3 @@
-
 using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Logging;
 using UserManagementService.Infrastructure;
