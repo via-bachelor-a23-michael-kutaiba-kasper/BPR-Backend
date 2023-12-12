@@ -213,7 +213,6 @@ public class ProcessUserAchievementsIntegrationTests
     [TestCase(UserAchievement.Cheetah1, 4)]
     [TestCase(UserAchievement.Cheetah2, 4)]
     [TestCase(UserAchievement.Cheetah3, 4)]
-    [TestCase(UserAchievement.NewComer, 4)]
     public async Task TheCorrectAchievementUnlocks_WithValidTier1_UnlockesOnyTier1Achievements(
         UserAchievement achievement, int oldProgress)
     {
@@ -347,7 +346,6 @@ public class ProcessUserAchievementsIntegrationTests
     [TestCase(UserAchievement.Cheetah1, 20)]
     [TestCase(UserAchievement.Cheetah2, 20)]
     [TestCase(UserAchievement.Cheetah3, 20)]
-    [TestCase(UserAchievement.NewComer, 20)]
     public async Task TheCorrectAchievementUnlocks_WithValidTier2_UnlockesOnyTier2Achievements(
         UserAchievement achievement, int oldProgress)
     {
@@ -484,7 +482,6 @@ public class ProcessUserAchievementsIntegrationTests
     [TestCase(UserAchievement.Cheetah1, 50)]
     [TestCase(UserAchievement.Cheetah2, 50)]
     [TestCase(UserAchievement.Cheetah3, 50)]
-    [TestCase(UserAchievement.NewComer, 50)]
     public async Task TheCorrectAchievementUnlocks_WithValidTier3_UnlockesOnyTier3Achievements(
         UserAchievement achievement, int oldProgress)
     {
@@ -588,7 +585,7 @@ public class ProcessUserAchievementsIntegrationTests
 
         // Assert
 
-        if ((achievement == UserAchievement.NewComer || achievement.GetDescription().Contains('1') ||
+        if ((achievement.GetDescription().Contains('1') ||
              achievement.GetDescription().Contains('2') || achievement.GetDescription().Contains('3')) &&
             categoryGroup == achievementGroup)
         {

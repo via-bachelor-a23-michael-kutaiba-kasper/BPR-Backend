@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using RecommendationService.Application.V1.GetInterestSurvey.Exceptions;
 using RecommendationService.Application.V1.GetInterestSurvey.Repositories;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 
 namespace RecommendationService.Application.V1.GetInterestSurvey;

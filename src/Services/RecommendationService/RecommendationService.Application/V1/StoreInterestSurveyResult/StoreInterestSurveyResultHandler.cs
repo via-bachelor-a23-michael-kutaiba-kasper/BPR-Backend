@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Exceptions;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Repositories;
 using RecommendationService.Application.V1.StoreInterestSurveyResult.Validation;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 using RecommendationService.Infrastructure;
 using RecommendationService.Infrastructure.AppSettings;
@@ -21,12 +22,14 @@ public class StoreInterestSurveyResultHandler : IRequestHandler<StoreInterestSur
     private readonly IEventBus _eventBus;
     private readonly IOptions<PubSub> _pubsubConfig;
 
-    public StoreInterestSurveyResultHandler(
+    public StoreInterestSurveyResultHandler
+    (
         ILogger<StoreInterestSurveyResultHandler> logger,
         IInterestSurveyRepository surveyRepository,
         IUserRepository userRepository,
         IEventBus eventBus,
-        IOptions<PubSub> pubsubConfig)
+        IOptions<PubSub> pubsubConfig
+    )
     {
         _logger = logger;
         _surveyRepository = surveyRepository;
@@ -51,8 +54,8 @@ public class StoreInterestSurveyResultHandler : IRequestHandler<StoreInterestSur
         {
             throw new InterestSurveyAlreadyCompletedException(request.userId);
         }
-        
-        validator.validate(request.survey);
+
+        validator.Validate(request.survey);
 
         _logger.LogInformation($"Storing interest survey for user {request.userId}");
         var storedSurvey = await _surveyRepository.StoreInterestSurvey(request.userId, request.survey);
@@ -67,7 +70,7 @@ public class StoreInterestSurveyResultHandler : IRequestHandler<StoreInterestSur
         {
             _logger.LogError("Failed to publish new interest survey message to Event Bus");
         }
-        
+
         return storedSurvey;
     }
 }

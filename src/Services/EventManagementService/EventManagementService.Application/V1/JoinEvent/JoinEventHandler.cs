@@ -23,9 +23,16 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
     private readonly IOptions<PubSub> _pubsubConfig;
     private readonly INotifier _notifier;
 
-    public JoinEventHandler(ILogger<JoinEventHandler> logger, IEventRepository eventRepository,
-        IInvitationRepository invitationRepository, IUserRepository userRepository, IEventBus eventBus,
-        IOptions<PubSub> pubsubConfig, INotifier notifier)
+    public JoinEventHandler
+    (
+        ILogger<JoinEventHandler> logger,
+        IEventRepository eventRepository,
+        IInvitationRepository invitationRepository,
+        IUserRepository userRepository,
+        IEventBus eventBus,
+        IOptions<PubSub> pubsubConfig,
+        INotifier notifier
+    )
     {
         _logger = logger;
         _eventRepository = eventRepository;
@@ -87,7 +94,8 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
 
         try
         {
-            var hostNotificationToken = await _userRepository.GetNotificationTokenByUserIdAsync(existingEvent.Host.UserId);
+            var hostNotificationToken =
+                await _userRepository.GetNotificationTokenByUserIdAsync(existingEvent.Host.UserId);
             await _notifier.SendNotificationAsync(new UserNotification
             {
                 Title = "New attendee",
@@ -99,12 +107,12 @@ public class JoinEventHandler : IRequestHandler<JoinEventRequest>
         {
             _logger.LogError($"{e.StackTrace}");
         }
-        
+
         await _eventBus.PublishAsync(_pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].TopicId,
             _pubsubConfig.Value.Topics[PubSubTopics.VibeVerseEventsNewAttendee].ProjectId,
             new
             {
-                UserId= request.UserId,
+                UserId = request.UserId,
                 Event = existingEvent
             });
         _logger.LogInformation($"User {request.UserId} has been added as attendee to event {request.EventId}");

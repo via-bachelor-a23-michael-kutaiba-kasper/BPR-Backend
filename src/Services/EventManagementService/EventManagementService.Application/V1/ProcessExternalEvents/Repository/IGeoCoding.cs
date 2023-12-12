@@ -26,9 +26,9 @@ public class GeoCoding : IGeoCoding
         _logger.LogInformation("Fetching the GeoLocation for address{Address}", address);
         var apiKey = Environment.GetEnvironmentVariable("GOOGLE_API_KEY");
         var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key={apiKey}";
-        
+
         _logger.LogInformation($"API_KEY ->: {apiKey}");
-        
+
 
         var result = await _httpClient.GetAsync(uri);
 
@@ -46,8 +46,10 @@ public class GeoCoding : IGeoCoding
         return response!;
     }
 
-    private static void ValidateHttpResponse(
-        HttpResponseMessage responseMessage)
+    private static void ValidateHttpResponse
+    (
+        HttpResponseMessage responseMessage
+    )
     {
         if (!responseMessage.IsSuccessStatusCode)
         {

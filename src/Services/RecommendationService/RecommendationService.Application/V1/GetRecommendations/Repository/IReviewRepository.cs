@@ -42,21 +42,21 @@ public class ReviewRepository : IReviewRepository
         }
     }
 
-    private string EventsByUserQuery => """
-query ReviewsByUser($userId: String) {
-  reviewsByUser(userId: $userId) {
-    result {
-      id
-      rate
-      reviewerId
-      eventId
-      reviewDate
-    }
-    status {
-      code
-      message
-    }
-  }
-}
-""";
+    private static string EventsByUserQuery => """
+                                               query ReviewsByUser($userId: String) {
+                                                 reviewsByUser(userId: $userId) {
+                                                   result {
+                                                     id
+                                                     rate
+                                                     reviewerId
+                                                     eventId
+                                                     reviewDate
+                                                   }
+                                                   status {
+                                                     code
+                                                     message
+                                                   }
+                                                 }
+                                               }
+                                               """;
 }

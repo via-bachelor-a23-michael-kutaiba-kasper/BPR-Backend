@@ -1,5 +1,3 @@
-using UserManagementService.Domain.Models;
-
 namespace UserManagementService.Application.V1.ProcessExpProgress.Model.ExpGeneratingEvents;
 
 public class RateEventEvent : ExpGeneratingEventDecorator

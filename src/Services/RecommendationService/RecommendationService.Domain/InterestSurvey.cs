@@ -1,7 +1,8 @@
 using EventManagementService.Domain.Models;
 using EventManagementService.Domain.Models.Events;
+using RecommendationService.Domain.Events;
 
-namespace RecommendationService.Domain.Events;
+namespace RecommendationService.Domain;
 
 public class InterestSurvey
 {

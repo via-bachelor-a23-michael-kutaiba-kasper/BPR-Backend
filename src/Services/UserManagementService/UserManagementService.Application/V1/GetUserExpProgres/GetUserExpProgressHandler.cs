@@ -7,7 +7,7 @@ using UserManagementService.Domain.Models;
 
 namespace UserManagementService.Application.V1.GetUserExpProgres;
 
-public record GetUserExpProgressRequest(string userId) : IRequest<Progress>;
+public record GetUserExpProgressRequest(string UserId) : IRequest<Progress>;
 
 public class GetUserExpProgressHandler: IRequestHandler<GetUserExpProgressRequest, Progress>
 {
@@ -26,12 +26,12 @@ public class GetUserExpProgressHandler: IRequestHandler<GetUserExpProgressReques
 
     public async Task<Progress> Handle(GetUserExpProgressRequest request, CancellationToken cancellationToken)
     {
-        if (!await _userRepository.UserExistsAsync(request.userId))
+        if (!await _userRepository.UserExistsAsync(request.UserId))
         {
-            throw new UserNotFoundException(request.userId);
+            throw new UserNotFoundException(request.UserId);
         }
 
-        var progress = await _progressRepository.GetUserExpProgressAsync(request.userId);
+        var progress = await _progressRepository.GetUserExpProgressAsync(request.UserId);
 
         var allLevels = await _levelRepository.GetAllLevelsAsync();
         var level = ResolveLevel(allLevels, progress.TotalExp);

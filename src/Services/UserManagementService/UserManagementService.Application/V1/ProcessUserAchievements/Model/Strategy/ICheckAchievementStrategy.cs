@@ -1,4 +1,3 @@
-using UserManagementService.Domain.Models;
 using UserManagementService.Domain.Models.Events;
 using UserManagementService.Infrastructure.PubSub;
 

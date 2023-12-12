@@ -3,7 +3,6 @@ using EventManagementService.Domain.Models;
 using EventManagementService.Infrastructure;
 using FirebaseAdmin.Auth;
 using Microsoft.Extensions.Logging;
-using UserIdentifier = FirebaseAdmin.Auth.UserIdentifier;
 
 namespace EventManagementService.Application.V1.FetchAllEvents.Repository;
 
@@ -14,14 +13,13 @@ public interface IUserRepository
 
 public class UserRepository : IUserRepository
 {
-
     private readonly ILogger<UserRepository> _logger;
-        
+
     public UserRepository(ILogger<UserRepository> logger)
     {
         _logger = logger;
     }
-    
+
     public async Task<IReadOnlyCollection<User>> GetUsersAsync(IReadOnlyCollection<string> userIds)
     {
         try

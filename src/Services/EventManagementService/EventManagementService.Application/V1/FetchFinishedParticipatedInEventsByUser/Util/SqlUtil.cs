@@ -1,6 +1,6 @@
 namespace EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser.Util;
 
-public class SqlUtil
+public static class SqlUtil
 {
     public static string AsIntList(IReadOnlyCollection<int> xs)
     {

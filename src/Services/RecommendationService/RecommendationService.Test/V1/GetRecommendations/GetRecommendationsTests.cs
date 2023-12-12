@@ -5,6 +5,7 @@ using Moq;
 using RecommendationService.Application.V1.GetRecommendations;
 using RecommendationService.Application.V1.GetRecommendations.Engine;
 using RecommendationService.Application.V1.GetRecommendations.Repository;
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 using RecommendationService.Infrastructure;
 using RecommendationService.Test.Shared;

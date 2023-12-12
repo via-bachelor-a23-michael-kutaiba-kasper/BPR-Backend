@@ -1,3 +1,4 @@
+using RecommendationService.Domain;
 using RecommendationService.Domain.Events;
 
 namespace RecommendationService.Application.V1.StoreInterestSurveyResult.Validation.ValidationRules;

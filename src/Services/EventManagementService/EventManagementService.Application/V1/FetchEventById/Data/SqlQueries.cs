@@ -5,9 +5,6 @@ public static class SqlQueries
     public static string QueryEventAttendees =>
         "SELECT user_id FROM public.event_attendee ea WHERE ea.event_id = @eventId";
 
-    public static string AddAttendeeToEvent =>
-        "INSERT INTO public.event_attendee(user_id, event_id) VALUES (@userId, @eventId)";
-
     public static string QueryAllFromEventTableByEventId => """
                                                             SELECT e.id,
                                                             title,
@@ -28,7 +25,7 @@ public static class SqlQueries
                                                             city,
                                                             geolocation_lat,
                                                             geolocation_lng
-                                                            FROM event e 
+                                                            FROM event e
                                                             WHERE e.id = @eventId;
                                                             """;
 

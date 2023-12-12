@@ -1,4 +1,4 @@
-namespace EventManagementService.Domain.Models;
+namespace RecommendationService.Domain;
 
 public class User
 {

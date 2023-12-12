@@ -17,9 +17,12 @@ public class EventRepository : IEventRepository
 {
     private readonly ILogger<EventRepository> _logger;
     private readonly IConnectionStringManager _connectionStringManager;
-    private readonly IUserRepository _userRepository;
 
-    public EventRepository(ILogger<EventRepository> logger, IConnectionStringManager connectionStringManager)
+    public EventRepository
+    (
+        ILogger<EventRepository> logger,
+        IConnectionStringManager connectionStringManager
+    )
     {
         _logger = logger;
         _connectionStringManager = connectionStringManager;
@@ -60,12 +63,12 @@ public class EventRepository : IEventRepository
                 StartDate = eventEntity.start_date,
                 LastUpdateDate = eventEntity.last_update_date,
                 MaxNumberOfAttendees = eventEntity.max_number_of_attendees,
-                Host = new User{ UserId = eventEntity.host_id },
+                Host = new User { UserId = eventEntity.host_id },
                 IsPaid = eventEntity.is_paid,
                 Images = images,
                 Title = eventEntity.title,
                 Url = eventEntity.url,
-                Attendees = attendeeIds.Select(id => new User(){UserId = id}),
+                Attendees = attendeeIds.Select(id => new User() { UserId = id }),
                 Id = eventEntity.id,
                 Location = eventEntity.location,
                 GeoLocation = new GeoLocation

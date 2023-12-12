@@ -24,7 +24,7 @@ public class UserRepository : IUserRepository
         try
         {
             var userRecord = await auth!.GetUserAsync(userId);
-            
+
             return new User
             {
                 UserId = userRecord.Uid,
@@ -39,7 +39,7 @@ public class UserRepository : IUserRepository
             return null;
         }
     }
-    
+
     public async Task<IReadOnlyCollection<User>> GetUsersAsync(IReadOnlyCollection<string> userIds)
     {
         var auth = FirebaseAuth.DefaultInstance;
