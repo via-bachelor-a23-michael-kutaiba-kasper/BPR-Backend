@@ -40,6 +40,10 @@ public class AttendeesController : ControllerBase
         {
             return Conflict(e.Message);
         }
+        catch (EventHasEndedException e)
+        {
+            return BadRequest(e.Message);
+        }
         catch (Exception e)
         {
             _logger.LogError(e.Message, e);
