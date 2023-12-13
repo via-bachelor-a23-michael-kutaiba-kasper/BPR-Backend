@@ -105,7 +105,7 @@
             "resolver": {
                 "host": "http://eventmanagementservice-service",
                 "port": 80,
-                "endpoint": "/api/v1/events/finishedJoinedEvents",
+                "endpoint": "/api/v1/events/joinedEvents",
                 "method": "GET"
             }
         },
