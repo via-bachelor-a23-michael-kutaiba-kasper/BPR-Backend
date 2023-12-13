@@ -85,7 +85,7 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
             var currentProgress = result;
             if (achievement.GetDescription().Contains('1'))
             {
-                if (currentProgress >= 5)
+                if (currentProgress >= AchievementsRequirements.Tier1)
                 {
                     await _sqlAchievementRepository.InsertUserAchievement(new UserAchievementTable
                     {
@@ -117,7 +117,7 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
 
             if (achievement.GetDescription().Contains('2'))
             {
-                if (currentProgress >= 20)
+                if (currentProgress >= AchievementsRequirements.Tier2)
                 {
                     await _sqlAchievementRepository.InsertUserAchievement(new UserAchievementTable
                     {
@@ -149,7 +149,7 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
 
             if (achievement.GetDescription().Contains('3'))
             {
-                if (currentProgress >= 50)
+                if (currentProgress >= AchievementsRequirements.Tier3)
                 {
                     await _sqlAchievementRepository.InsertUserAchievement(new UserAchievementTable
                     {
