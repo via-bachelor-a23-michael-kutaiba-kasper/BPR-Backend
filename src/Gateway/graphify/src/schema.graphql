@@ -119,8 +119,8 @@ type UserAchievement {
     name: String
     unlockDate: String
     description: String
-    expReward: Int,
-    progress: Int,
+    expReward: Int
+    progress: Int
     requirement: Int
 }
 
@@ -177,7 +177,6 @@ type UserAchievementResponse {
     status: Status
 }
 
-
 type AllAchievementsResponse {
     result: [AllAchievements]
     status: Status
@@ -199,7 +198,11 @@ type Query {
     allPublicEvents: EventsResponse
     event(eventId: Int): EventResponse
     reviewsByUser(userId: String): ReviewsByUserResponse
-    finishedJoinedEvents(userId: String): EventsResponse
+    """
+    Fetches the events the user has joined.
+    eventState can either be "COMPLETED" og "CURRENT"
+    """
+    joinedEvents(userId: String!, eventState: String!): EventsResponse
     recommendations(userId: String!, limit: Int): RecommendationsResponse
     interestSurvey(userId: String!): InterestSurveyResponse
     expProgress(userId: String!): ExpProgressResponse

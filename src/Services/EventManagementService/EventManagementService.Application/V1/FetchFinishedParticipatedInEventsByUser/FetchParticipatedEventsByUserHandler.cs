@@ -9,19 +9,19 @@ using InvalidUserIdException =
 
 namespace EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser;
 
-public record FetchFinishedParticipatedInEventsByUserRequest(string UserId) : IRequest<IReadOnlyCollection<Event>>;
+public record FetchParticipatedInEventsByUserRequest(string UserId, string EventState = EventState.Completed) : IRequest<IReadOnlyCollection<Event>>;
 
-public class FetchFinishedParticipatedInEventsByUserHandler :
-    IRequestHandler<FetchFinishedParticipatedInEventsByUserRequest, IReadOnlyCollection<Event>>
+public class FetchParticipatedEventsByUserHandler :
+    IRequestHandler<FetchParticipatedInEventsByUserRequest, IReadOnlyCollection<Event>>
 {
     private readonly ISqlEvent _sqlEvent;
     private readonly IFirebaseUser _firebaseUser;
-    private readonly ILogger<FetchFinishedParticipatedInEventsByUserHandler> _logger;
+    private readonly ILogger<FetchParticipatedEventsByUserHandler> _logger;
 
-    public FetchFinishedParticipatedInEventsByUserHandler
+    public FetchParticipatedEventsByUserHandler
     (
         ISqlEvent sqlEvent,
-        ILogger<FetchFinishedParticipatedInEventsByUserHandler> logger,
+        ILogger<FetchParticipatedEventsByUserHandler> logger,
         IFirebaseUser firebaseUser
     )
     {
@@ -32,7 +32,7 @@ public class FetchFinishedParticipatedInEventsByUserHandler :
 
     public async Task<IReadOnlyCollection<Event>> Handle
     (
-        FetchFinishedParticipatedInEventsByUserRequest request,
+        FetchParticipatedInEventsByUserRequest request,
         CancellationToken cancellationToken
     )
     {
@@ -41,7 +41,7 @@ public class FetchFinishedParticipatedInEventsByUserHandler :
             IDictionary<string, User> usersMap = new Dictionary<string, User>();
             if (string.IsNullOrEmpty(request.UserId) || string.IsNullOrWhiteSpace(request.UserId))
                 throw new InvalidUserIdException("The user id must not be null");
-            var events = await _sqlEvent.FetchFinishedParticipatedEventsByUserId(request.UserId);
+            var events = await _sqlEvent.FetchFinishedParticipatedEventsByUserId(request.UserId, request.EventState);
 
             foreach (var ev in events)
             {
@@ -62,11 +62,11 @@ public class FetchFinishedParticipatedInEventsByUserHandler :
                 }
 
                 ev.Host = usersMap[ev.Host.UserId];
-                ev.Attendees = ev.Attendees.Select(user => usersMap[user.UserId]);
+                ev.Attendees = ev.Attendees?.Select(user => usersMap[user.UserId]);
             }
 
             _logger.LogInformation(
-                $"{events.Count()} events have been successfully fetched for user {request.UserId} at {DateTimeOffset.UtcNow}");
+                $"{events.Count} events have been successfully fetched for user {request.UserId} at {DateTimeOffset.UtcNow}");
             return events;
         }
         catch (Exception e)

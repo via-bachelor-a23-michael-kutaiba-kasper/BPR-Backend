@@ -89,10 +89,15 @@
             }
         },
         {
-            "name": "finishedJoinedEvents",
+            "name": "joinedEvents",
             "args": [
                 {
                     "name": "userId",
+                    "type": "String!",
+                    "for": "urlQueryParam"
+                },
+                {
+                    "name": "eventState",
                     "type": "String!",
                     "for": "urlQueryParam"
                 }

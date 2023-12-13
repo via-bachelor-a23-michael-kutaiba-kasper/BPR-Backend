@@ -12,7 +12,7 @@ namespace EventManagementService.Application.V1.FetchFinishedParticipatedInEvent
 
 public interface ISqlEvent
 {
-    Task<IReadOnlyCollection<Event>> FetchFinishedParticipatedEventsByUserId(string userId);
+    Task<IReadOnlyCollection<Event>> FetchFinishedParticipatedEventsByUserId(string userId, string eventState = EventState.Completed);
 }
 
 public class SqlEvent : ISqlEvent
@@ -30,7 +30,7 @@ public class SqlEvent : ISqlEvent
         _connectionStringManager = connectionStringManager;
     }
 
-    public async Task<IReadOnlyCollection<Event>> FetchFinishedParticipatedEventsByUserId(string userId)
+    public async Task<IReadOnlyCollection<Event>> FetchFinishedParticipatedEventsByUserId(string userId, string eventState = EventState.Completed)
     {
         await using var connection = new NpgsqlConnection(_connectionStringManager.GetConnectionString());
         await connection.OpenAsync();
@@ -39,9 +39,16 @@ public class SqlEvent : ISqlEvent
         {
             List<Event> events = new();
 
+            var query = eventState switch
+            {
+                EventState.Completed => GetFinishedParticipatedEventsByUserIdSql,
+                EventState.Current => GetCurrentParticipatedEventsByUserIdSql,
+                _ => throw new ArgumentException($"Unknown event state {eventState}")
+            };
+            
             var eventEntities = await connection.QueryAsync<EventEntity>
             (
-                GetFinishedParticipatedEventsByUserIdSql,
+                query,
                 new { urId = userId, now = DateTimeOffset.UtcNow.ToUniversalTime() }
             ) ?? new List<EventEntity>();
 
@@ -154,5 +161,12 @@ public class SqlEvent : ISqlEvent
         SELECT * FROM event e
             JOIN public.event_attendee ea on e.id = ea.event_id
                  WHERE ea.user_id = @urId AND e.end_date < @now
+        """;
+    
+    private const string GetCurrentParticipatedEventsByUserIdSql = 
+        """
+        SELECT * FROM event e
+            JOIN public.event_attendee ea on e.id = ea.event_id
+                 WHERE ea.user_id = @urId AND e.end_date > @now
         """;
 }

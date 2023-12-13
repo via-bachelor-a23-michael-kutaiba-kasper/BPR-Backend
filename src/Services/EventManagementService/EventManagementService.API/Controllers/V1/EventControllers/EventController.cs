@@ -131,13 +131,13 @@ public class EventController : ControllerBase
         }
     }
 
-    [HttpGet("finishedJoinedEvents")]
-    public async Task<ActionResult<IReadOnlyCollection<EventDto>>> GetFinishedJoinedEventsByUserId(
-        [FromQuery] string? userId)
+    [HttpGet("joinedEvents")]
+    public async Task<ActionResult<IReadOnlyCollection<EventDto>>> GetJoinedEVentsByUser(
+        [FromQuery] string? userId, [FromQuery] string eventState =  EventState.Completed)
     {
         try
         {
-            var events = await _mediator.Send(new FetchFinishedParticipatedInEventsByUserRequest(userId));
+            var events = await _mediator.Send(new FetchParticipatedInEventsByUserRequest(userId, eventState));
             return Ok(EventMapper.FromEventListToDtoList(events));
         }
         catch (Exception e) when (e is InvalidUserIdException)
