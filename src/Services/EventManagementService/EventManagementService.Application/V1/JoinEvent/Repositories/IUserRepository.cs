@@ -1,5 +1,6 @@
 using System.Text.Json;
 using EventManagementService.Infrastructure;
+using EventManagementService.Infrastructure.Exceptions;
 using FirebaseAdmin.Auth;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.Logging;
@@ -50,8 +51,7 @@ public class UserRepository : IUserRepository
 
         if (!snapshot.Exists)
         {
-            // TODO: Make custom exception
-            throw new Exception("User device has not been registered with FCM");
+            throw new SnapshotDoesNotExistException("User device has not been registered with FCM");
         }
 
         var data = snapshot.ToDictionary();
@@ -59,8 +59,6 @@ public class UserRepository : IUserRepository
         {
             throw new Exception("User device has not been registered with FCM");
         }
-
-        Console.WriteLine(JsonSerializer.Serialize(data));
 
         return (string)data["token"];
     }
