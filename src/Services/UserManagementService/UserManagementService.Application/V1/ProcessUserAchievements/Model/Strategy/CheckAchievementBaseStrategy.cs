@@ -34,12 +34,12 @@ public abstract class CheckAchievementBaseStrategy : ICheckAchievementStrategy
     {
         var newProgress = 0;
 
-        var currentUnlockedAchievemnts =
+        var currentUnlockedAchievements =
             await _sqlAchievementRepository.GetUserProgress(userId, (int)achievement, eventCategory);
 
         var currentProgressForAchievement =
             await _sqlAchievementRepository.GetUserAchievementsProgress(userId, (int)achievement);
-        if (currentUnlockedAchievemnts.Contains((int)achievement))
+        if (currentUnlockedAchievements.Contains((int)achievement))
         {
             return -1;
         }
