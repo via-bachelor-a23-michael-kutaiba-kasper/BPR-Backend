@@ -1,4 +1,3 @@
-using Dapper;
 using EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser;
 using EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser.Exceptions;
 using EventManagementService.Application.V1.FetchFinishedParticipatedInEventsByUser.Repository;
@@ -10,12 +9,11 @@ using EventManagementService.Test.Shared;
 using EventManagementService.Test.Shared.Builders;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Npgsql;
 
-namespace EventManagementService.Test.FetchFinishedParticipatedInEventsByUser.V1;
+namespace EventManagementService.Test.FetchParticipatedInEventsByUser.V1;
 
 [TestFixture]
-public class FetchFinishedParticipatedInEventsByUserIntegrationTests
+public class FetchParticipatedInEventsByUserIntegrationTests
 {
     private readonly TestDataContext _context = new();
     private readonly ConnectionStringManager _connectionStringManager = new();
