@@ -97,7 +97,7 @@ public enum Category
     [CategoryGroup("Social and Community")] [Description("Social Issues")]
     SocialIssues = 30,
 
-    [CategoryGroup("Recreation and Hobbies")] [Description("Sports")]
+    [CategoryGroup("Health and Wellness")] [Description("Sports")]
     Sports = 31,
 
     [CategoryGroup("Cultural and Artistic")] [Description("Theater")]
