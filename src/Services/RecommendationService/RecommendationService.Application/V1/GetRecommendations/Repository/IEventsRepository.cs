@@ -30,51 +30,101 @@ public class EventsRepository : IEventsRepository
         var response = await _apiGateway.QueryAsync<IEnumerable<ReadEventDto>>(new ApiGatewayQuery
         {
             Query = JoinedEventsQuery,
-            Variables = new { userId, eventState = "COMPLETED" }
+            Variables = new { userId = userId, eventState = "COMPLETED" }
+        }, "joinedEvents");
+
+        var response2 = await _apiGateway.QueryAsync<IEnumerable<ReadEventDto>>(new ApiGatewayQuery
+        {
+            Query = JoinedEventsQuery,
+            Variables = new { userId = userId, eventState = "CURRENT" }
         }, "joinedEvents");
 
         return response.Result.Select(e => new Event()
-        {
-            Keywords = e.Keywords.Select(EnumExtensions.GetEnumValueFromDescription<Keyword>),
-            Category = EnumExtensions.GetEnumValueFromDescription<Category>(e.Category),
-            GeoLocation = new GeoLocation()
             {
-                Lat = e.GeoLocation.Lat,
-                Lng = e.GeoLocation.Lng
-            },
-            Description = e.Description,
-            Attendees = e.Attendees.Select(a => new User()
-            {
-                CreationDate = a.CreationDate,
-                DisplayName = a.DisplayName,
-                PhotoUrl = a.PhotoUrl,
-                UserId = a.UserId,
-                LastSeenOnline = a.LastSeenOnline
-            }),
-            City = e.City,
-            Host = new User()
-            {
-                CreationDate = e.Host.CreationDate,
-                DisplayName = e.Host.DisplayName,
-                PhotoUrl = e.Host.PhotoUrl,
-                UserId = e.Host.UserId,
-                LastSeenOnline = e.Host.LastSeenOnline
-            },
-            Id = e.Id,
-            Images = e.Images,
-            Location = e.Location,
-            Title = e.Title,
-            Url = e.Url,
-            AccessCode = e.AccessCode,
-            AdultsOnly = e.AdultsOnly,
-            CreatedDate = e.CreatedDate,
-            EndDate = e.EndDate,
-            IsPaid = e.IsPaid,
-            IsPrivate = e.IsPrivate,
-            StartDate = e.StartDate,
-            LastUpdateDate = e.LastUpdateDate,
-            MaxNumberOfAttendees = e.MaxNumberOfAttendees
-        }).ToList();
+                Keywords = e.Keywords.Select(EnumExtensions.GetEnumValueFromDescription<Keyword>),
+                Category = EnumExtensions.GetEnumValueFromDescription<Category>(e.Category),
+                GeoLocation = new GeoLocation()
+                {
+                    Lat = e.GeoLocation.Lat,
+                    Lng = e.GeoLocation.Lng
+                },
+                Description = e.Description,
+                Attendees = e.Attendees.Select(a => new User()
+                {
+                    CreationDate = a.CreationDate,
+                    DisplayName = a.DisplayName,
+                    PhotoUrl = a.PhotoUrl,
+                    UserId = a.UserId,
+                    LastSeenOnline = a.LastSeenOnline
+                }),
+                City = e.City,
+                Host = new User()
+                {
+                    CreationDate = e.Host.CreationDate,
+                    DisplayName = e.Host.DisplayName,
+                    PhotoUrl = e.Host.PhotoUrl,
+                    UserId = e.Host.UserId,
+                    LastSeenOnline = e.Host.LastSeenOnline
+                },
+                Id = e.Id,
+                Images = e.Images,
+                Location = e.Location,
+                Title = e.Title,
+                Url = e.Url,
+                AccessCode = e.AccessCode,
+                AdultsOnly = e.AdultsOnly,
+                CreatedDate = e.CreatedDate,
+                EndDate = e.EndDate,
+                IsPaid = e.IsPaid,
+                IsPrivate = e.IsPrivate,
+                StartDate = e.StartDate,
+                LastUpdateDate = e.LastUpdateDate,
+                MaxNumberOfAttendees = e.MaxNumberOfAttendees
+            }).Concat(
+                response2.Result.Select(e => new Event()
+                {
+                    Keywords = e.Keywords.Select(EnumExtensions.GetEnumValueFromDescription<Keyword>),
+                    Category = EnumExtensions.GetEnumValueFromDescription<Category>(e.Category),
+                    GeoLocation = new GeoLocation()
+                    {
+                        Lat = e.GeoLocation.Lat,
+                        Lng = e.GeoLocation.Lng
+                    },
+                    Description = e.Description,
+                    Attendees = e.Attendees.Select(a => new User()
+                    {
+                        CreationDate = a.CreationDate,
+                        DisplayName = a.DisplayName,
+                        PhotoUrl = a.PhotoUrl,
+                        UserId = a.UserId,
+                        LastSeenOnline = a.LastSeenOnline
+                    }),
+                    City = e.City,
+                    Host = new User()
+                    {
+                        CreationDate = e.Host.CreationDate,
+                        DisplayName = e.Host.DisplayName,
+                        PhotoUrl = e.Host.PhotoUrl,
+                        UserId = e.Host.UserId,
+                        LastSeenOnline = e.Host.LastSeenOnline
+                    },
+                    Id = e.Id,
+                    Images = e.Images,
+                    Location = e.Location,
+                    Title = e.Title,
+                    Url = e.Url,
+                    AccessCode = e.AccessCode,
+                    AdultsOnly = e.AdultsOnly,
+                    CreatedDate = e.CreatedDate,
+                    EndDate = e.EndDate,
+                    IsPaid = e.IsPaid,
+                    IsPrivate = e.IsPrivate,
+                    StartDate = e.StartDate,
+                    LastUpdateDate = e.LastUpdateDate,
+                    MaxNumberOfAttendees = e.MaxNumberOfAttendees
+                })
+            )
+            .ToList();
     }
 
     public async Task<IReadOnlyCollection<Event>> GetAllEventsAsync(DateTimeOffset? from = null)
@@ -173,53 +223,49 @@ public class EventsRepository : IEventsRepository
     }
 
     private static string JoinedEventsQuery => """
-                                                                   query($userId: String, $eventState: String){
-                                                                    joinedEvents(userId: $userId, eventState: $eventState) {
-                                                                      result {
-                                                                       id
-                                                                       title
-                                                                       startDate
-                                                                       endDate
-                                                                       createdDate
-                                                                       lastUpdateDate
-                                                                       isPrivate
-                                                                       adultsOnly
-                                                                       isPaid
-                                                                       host {
-                                                                         userId
-                                                                         displayName
-                                                                         photoUrl
-                                                                         lastSeenOnline
-                                                                         creationDate
-                                                                       }
-                                                                       maxNumberOfAttendees
-                                                                       url
-                                                                       description
-                                                                       accessCode
-                                                                       category
-                                                                       keywords
-                                                                       images
-                                                                       attendees {
-                                                                         userId
-                                                                         displayName
-                                                                         photoUrl
-                                                                         lastSeenOnline
-                                                                         creationDate
-                                                                       }
-                                                                       geoLocation {
-                                                                         lat
-                                                                         lng
-                                                                       }
-                                                                       city
-                                                                       location
-                                                                     }
-                                                                     status {
-                                                                       message
-                                                                       code
-                                                                     }
-                                                                   }
-                                                                   }
-                                                       """;
+                                               query($userId: String!, $eventState: String!) {
+                                                 joinedEvents(userId: $userId, eventState: $eventState) {
+                                                   result {
+                                                     id
+                                                     title
+                                                     startDate
+                                                     endDate
+                                                     createdDate
+                                                     lastUpdateDate
+                                                     isPrivate
+                                                     adultsOnly
+                                                     isPaid
+                                                     host {
+                                                       userId
+                                                       displayName
+                                                       photoUrl
+                                                       lastSeenOnline
+                                                       creationDate
+                                                     }
+                                                     maxNumberOfAttendees
+                                                     url
+                                                     description
+                                                     accessCode
+                                                     category
+                                                     keywords
+                                                     images
+                                                     attendees {
+                                                       userId
+                                                       displayName
+                                                       photoUrl
+                                                       lastSeenOnline
+                                                       creationDate
+                                                     }
+                                                     geoLocation {
+                                                       lat
+                                                       lng
+                                                     }
+                                                     city
+                                                     location
+                                                   }
+                                                 }
+                                               }
+                                               """;
 
     private static string EventsQuery => """
                                                query Events($from: String) {

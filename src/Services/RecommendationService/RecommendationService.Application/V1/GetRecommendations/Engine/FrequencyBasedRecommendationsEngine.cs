@@ -21,7 +21,6 @@ public class FrequencyBasedRecommendationsEngine : IRecommendationsEngine
         var relevantReviews = reviews
             .Where(review => review.ReviewerId == user.UserId)
             .ToList();
-
         var weights = CalculateWeights(relevantEvents, GetFrequencyMaps(relevantEvents, survey), relevantReviews);
 
         // tuple where (score, event)
