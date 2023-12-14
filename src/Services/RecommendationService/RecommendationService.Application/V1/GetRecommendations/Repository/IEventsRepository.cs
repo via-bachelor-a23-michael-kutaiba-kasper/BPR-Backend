@@ -174,7 +174,7 @@ public class EventsRepository : IEventsRepository
 
     private static string JoinedEventsQuery => """
                                                                    query($userId: String, $eventState: String){
-                                                                    finishedJoinedEvents(userId: $userId, eventState: $eventState) {
+                                                                    joinedEvents(userId: $userId, eventState: $eventState) {
                                                                       result {
                                                                        id
                                                                        title
