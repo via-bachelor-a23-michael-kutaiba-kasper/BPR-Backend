@@ -29,9 +29,9 @@ public class EventsRepository : IEventsRepository
     {
         var response = await _apiGateway.QueryAsync<IEnumerable<ReadEventDto>>(new ApiGatewayQuery
         {
-            Query = FinishedJoinedEventsQuery,
-            Variables = new { userId }
-        }, "finishedJoinedEvents");
+            Query = JoinedEventsQuery,
+            Variables = new { userId, eventState = "COMPLETED" }
+        }, "joinedEvents");
 
         return response.Result.Select(e => new Event()
         {
@@ -172,9 +172,9 @@ public class EventsRepository : IEventsRepository
         public IEnumerable<ReadUserDto>? Attendees { get; set; }
     }
 
-    private static string FinishedJoinedEventsQuery => """
-                                                                   query($userId: String){
-                                                                    finishedJoinedEvents(userId: $userId) {
+    private static string JoinedEventsQuery => """
+                                                                   query($userId: String, $eventState: String){
+                                                                    finishedJoinedEvents(userId: $userId, eventState: $eventState) {
                                                                       result {
                                                                        id
                                                                        title
