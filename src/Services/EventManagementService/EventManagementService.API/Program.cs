@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Options configs
 builder.Services.AddSettingsConfigurations(builder.Configuration);
 
+
 // Add services to the container.
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

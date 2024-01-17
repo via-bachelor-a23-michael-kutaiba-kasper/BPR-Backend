@@ -16,6 +16,7 @@ Gateway gatewayConfig = builder.Configuration.GetSection("Gateway").Get<Gateway>
 // NOTE: Not able to access IOptions from infrastructure project, so this will suffice for now.
 builder.Services.AddScoped<IApiGateway>(_ => new ApiGateway(gatewayConfig));
 
+
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
