@@ -70,7 +70,7 @@ public class EventsRepository : IEventsRepository
             Query = EventQuery,
             Variables = new
             {
-                event_id = eventId
+                eventId = eventId
             }
         }, "event");
         var e = response.Result;
